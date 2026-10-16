@@ -1,6 +1,6 @@
 # Dirección visual (Fase 2)
 
-Estado: **3 propuestas en prototipo, falta que Fernando elija una**.
+Estado: **elegida la dirección D** (15 de octubre de 2026). Prototipo en `prototipos/d-elegida/`. Las propuestas A, B y C quedan como historial.
 
 ## Punto de partida
 
@@ -173,7 +173,77 @@ Lecciones para la construcción real (Fase 4):
 
 ## Elección (tarea 2.6)
 
-Pendiente.
+Fernando eligió una combinación, el 15 de octubre de 2026:
+
+| Parte | Viene de | Detalle |
+|---|---|---|
+| Portada | C (sello) | Hero salvia con la constelación de discos (uno al centro, seis alrededor), precio en sello, greca andina como borde, botón "Ver catálogo" |
+| Catálogo | C (filtros) + B (láminas) | Filtros rápidos por categoría bajo el título "Catálogo"; productos en láminas blancas sobre fondo liquen, con bordes redondeados (12 px) y un botón "+" discreto para agregar sin entrar |
+| Ficha | C (sello) | Panel salvia con el disco del producto y el reverso como disco pequeño; datos, compra, beneficios en píldoras |
+| Recomendados | Idea de A | Carrusel sutil "También te puede interesar" al final de la ficha: láminas pequeñas que se deslizan, flechas solo en escritorio, borde derecho desvanecido |
+| Descartado | A como portada | "Parece una línea de tiempo con los productos" |
+
+Decisión tomada al combinar: una sola familia tipográfica, la de C, también en las láminas (no la serif de B), para no mezclar tres tipografías.
+
+### Ajustes pedidos por Fernando (segunda vuelta, 15-oct-2026)
+
+| Pedido | Cómo quedó |
+|---|---|
+| Que el contenido no ocupe toda la pantalla, ~85 % de 1920 px, como florayfauna.pe | `.contenedor` con ancho máximo de 1632 px, centrado. Las franjas de color (hero, catálogo, pie) siguen de borde a borde; el contenido va dentro |
+| Catálogo a 5 columnas (a 4 se ve muy grande) | 5 columnas desde 1240 px; 4 entre 1000 y 1239; 3 desde 700; 2 en celular |
+| No mostrar códigos ECN (son internos) | Las láminas muestran presentación, nombre y precio. El código solo vive en enlaces y datos internos |
+| Ficha: información como en A, producto como en B, sin que sea invasivo | Producto en una lámina blanca de máximo 420 px (300 px en celular) con miniaturas frente/reverso; información con el orden de A: marca, nombre, presentación, precio, descripción, compra, WhatsApp, Qué es, Beneficios (con puntos jade), Modo de uso. Zona de la ficha de máximo 1080 px |
+| Pie como el del sitio anterior | Cuatro bloques: marca (logo en disco blanco, lema "Productos naturales que se pueden rastrear hasta quien los cosecha. Sin promesas milagrosas.", redes), Catálogo, Tu pedido, Dónde estamos; franja legal con © y aclaraciones de salud. "Mis pedidos" se quitó porque ya no hay cuentas. Redes: TikTok y LinkedIn, que son las que tienen enlace real en el sitio anterior |
+
+### Tercera vuelta (15-oct-2026)
+
+| Pedido | Cómo quedó |
+|---|---|
+| Cabecera que se marque y no parezca parte del hero | Cabecera blanca, fija arriba siempre (sticky), con filete inferior y sombra suave al desplazarse. El hero pasa a ser un panel salvia debajo |
+| Más espacio lateral (en 1920 × 1200 aún se veía todo ocupado) | `--ancho-max` baja a 1360 px (~280 px de aire a cada lado en 1920). En escritorio el hero y el catálogo son paneles redondeados (20 px) dentro de ese ancho; en celular siguen de borde a borde |
+| Buscador al centro de la cabecera | Formulario de búsqueda centrado. En la portada filtra mientras se escribe (sin tildes ni mayúsculas, por nombre, marca, categoría, subcategoría y presentación) y se combina con los filtros; en otras páginas lleva a la portada con `?q=`. Sin resultados: mensaje y botón "Ver todo el catálogo". En celular: logo, buscador y carrito en una sola fila |
+| Botón de WhatsApp con su logo | Logo de WhatsApp en blanco sobre el círculo salvia (Simple Icons, CC0) |
+| Redes del pie con logo en blanco | TikTok (Simple Icons, CC0) y LinkedIn (ícono propio: Simple Icons ya no lo incluye) en el color del texto |
+| Quitar "Los productos naturales no reemplazan un tratamiento médico…" | Quitado. Queda solo el aviso de suplementos que exige el plan |
+
+Los títulos de las columnas del pie van en mayúsculas espaciadas porque así está en la referencia que eligió Fernando; en el resto del sitio no se usan.
+
+### Tokens finales
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--salvia` | `#2F5D50` | Campos grandes (hero, panel de ficha, pie), botones, filtro activo |
+| `--jade` | `#7A9B87` | Anillo de discos, borde de filtros y píldoras, greca, foco |
+| `--niebla` | `#F7F7F7` | Fondo general |
+| `--liquen` | `#E4ECE7` | Fondo del catálogo, detrás de las láminas |
+| `--papel` | `#FFFFFF` | Láminas, discos, texto sobre salvia |
+| `--monte` | `#1C3A31` | Texto sobre fondos claros, sello de precio |
+| `--cafe` | `#211E1E` | Reservado para detalles mínimos |
+| Derivados | `color-mix()` | `--papel-suave`, `--monte-suave`, `--filete`, `--salvia-hundido`, `--sombra`, `--sombra-suave` |
+| `--losa` | Zilla Slab 500/700 (OFL) | Titulares, nombres de producto, precios |
+| `--texto` | Hind 400/500/600 (OFL) | Texto, botones, datos |
+| `--radio-lamina` / `--radio-foto` | 12 px / 8 px | Láminas y fotos dentro de ellas |
+| `--ancho-max` | 1360 px | Ancho máximo del contenido (~280 px de aire a cada lado en 1920) |
+| `--radio-panel` | 20 px | Paneles del hero y del catálogo en escritorio |
+| `--alto-cabecera` | 68 px | Cabecera fija; también desplaza los anclas para que no queden debajo |
+| `--margen` | 16 px celular / 40 px escritorio | Aire mínimo a los lados |
+| `--curva` | `cubic-bezier(.2, .7, .2, 1)` | Transiciones |
+| `--rebote` | `cubic-bezier(.3, 1.4, .5, 1)` | Entrada de los discos |
+| `--rapido` / `--medio` | .2 s / .45 s | Duraciones |
+
+Amulya y Young Serif ya no se usan: con esta elección desaparece el pendiente de licencia de Amulya (T1).
+
+### Movimiento de la dirección elegida
+
+- Momento orquestado: los discos del hero aparecen del centro hacia afuera, una vez.
+- Respuesta a acciones: las láminas se reacomodan al filtrar; el contador del carrito salta al agregar; aviso "Agregado".
+- Firma: la foto tocada (disco o lámina) se transforma en el disco de la ficha. El nombre de la transición se pone solo en la foto tocada, así un producto puede aparecer dos veces en la portada.
+- Sin movimiento con `prefers-reduced-motion`.
+
+### Para la construcción (Fases 3 y 4)
+
+- La constelación necesita 7 productos y hoy solo hay 2 marcados como `destacado`. Regla propuesta: centro = primer destacado; anillo = resto de destacados, luego `mas_vendido`, luego uno por subcategoría hasta completar 6. Si se marcan más destacados en la hoja (tarea S5), la portada los usa solos.
+- Recomendados: misma subcategoría, luego misma categoría, luego destacados; nunca el mismo producto; máximo 8.
 
 ## Notas de lo probado y descartado
 

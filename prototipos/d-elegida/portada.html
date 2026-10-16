@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D · Elegida · El Chico Naturista</title>
+<script>document.documentElement.classList.add('js');</script>
+<link rel="icon" href="../img/logo-64.png">
+<link rel="stylesheet" href="estilo.css">
+<style>
+/* Hero de C, ahora como panel debajo de la cabecera */
+@media (min-width: 900px) { .hero { margin-top: 20px; } }
+.entrada { display: grid; gap: 28px; padding-block: 28px 40px; }
+.entrada h1 { margin: 0; font: 700 clamp(2.6rem, 10vw, 4.75rem)/.95 var(--losa); letter-spacing: -.015em; max-width: 10ch; }
+.entrada p { margin: 14px 0 0; max-width: 34ch; color: var(--papel-suave); }
+.entrada .boton { margin-top: 22px; }
+@media (min-width: 900px) { .entrada { grid-template-columns: 1fr minmax(0, 440px); align-items: center; gap: 56px; padding-block: 48px; } }
+
+/* Uno al centro y seis alrededor, como el sello del logo */
+.constelacion { position: relative; width: min(100%, 440px); aspect-ratio: 1; justify-self: center; }
+.constelacion .disco { position: absolute; width: 23%; aspect-ratio: 1; border-width: clamp(3px, .9vw, 6px);
+  left: calc(50% + 38% * cos(var(--a)) - 11.5%); top: calc(50% + 38% * sin(var(--a)) - 11.5%); }
+.constelacion .disco.centro { width: 46%; left: 27%; top: 27%; border-width: clamp(4px, 1.2vw, 8px); }
+.constelacion .sello-precio { right: -12%; top: 50%; translate: 0 -50%; }
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not(.listo) .constelacion .disco { opacity: 0; transform: scale(.82); }
+  .constelacion .disco { transition: opacity .35s ease calc(var(--i) * 70ms + 150ms), transform .65s var(--rebote) calc(var(--i) * 70ms + 150ms); }
+}
+
+/* Catálogo: filtros de C y láminas de B sobre liquen */
+.catalogo { background: var(--liquen); }
+.catalogo > .contenedor { padding-block: 32px 40px; }
+@media (min-width: 900px) { .catalogo { margin-top: 24px; } }
+.catalogo h2 { margin: 0; font: 700 clamp(1.9rem, 5vw, 2.5rem)/1 var(--losa); }
+.filtros { display: flex; gap: 8px; margin: 16px calc(-1 * var(--margen)) 18px; padding: 0 var(--margen) 4px; list-style: none; overflow-x: auto; scrollbar-width: none; }
+.filtros::-webkit-scrollbar { display: none; }
+@media (min-width: 900px) { .filtros { margin-inline: 0; padding-inline: 0; } }
+.filtros li { flex: none; }
+.filtros button { white-space: nowrap; height: 40px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--jade); background: var(--papel); color: var(--monte); font-weight: 500; font-size: .9375rem; cursor: pointer; }
+.filtros button[aria-pressed="true"] { background: var(--salvia); border-color: var(--salvia); color: var(--papel); }
+.resultado { margin: 0 0 14px; font-size: .9375rem; color: var(--monte-suave); }
+.rejilla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 700px) { .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+@media (min-width: 1000px) { .rejilla { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1240px) { .rejilla { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; } }
+.vacio { grid-column: 1 / -1; padding: 28px 0; }
+.vacio p { margin: 0 0 14px; }
+</style>
+</head>
+<body>
+<header class="sitio-cabecera" data-cabecera></header>
+
+<section class="hero banda campo" aria-labelledby="titulo">
+  <div class="contenedor entrada">
+    <div>
+      <h1 id="titulo">Productos naturales del Perú</h1>
+      <p>Arma tu pedido aquí y lo coordinamos por WhatsApp. Delivery el mismo día en Lima.</p>
+      <a class="boton claro" href="#catalogo">Ver catálogo</a>
+    </div>
+    <div class="constelacion" id="constelacion"></div>
+  </div>
+  <svg class="greca" aria-hidden="true" preserveAspectRatio="none">
+    <defs>
+      <pattern id="g" width="24" height="22" patternUnits="userSpaceOnUse">
+        <path d="M0 3h24M0 19h24" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M0 16l6-10 6 10 6-10 6 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M6 16v-3M18 16v-3" stroke="currentColor" stroke-width="1.5"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#g)"/>
+  </svg>
+</section>
+
+<main>
+  <section class="catalogo banda" id="catalogo" aria-labelledby="t-cat">
+    <div class="contenedor">
+      <h2 id="t-cat">Catálogo</h2>
+      <ul class="filtros" id="filtros" aria-label="Filtrar por categoría"></ul>
+      <p class="resultado" id="resultado" aria-live="polite"></p>
+      <div class="rejilla" id="rejilla"></div>
+    </div>
+  </section>
+  <section class="servicio contenedor" aria-label="Cómo trabajamos">
+    <p><strong>Envío gratis desde S/&nbsp;120</strong>A todo el Perú. En Lima y Callao el envío cuesta S/&nbsp;10.</p>
+    <p><strong>Delivery el mismo día en Lima</strong>Confirmamos disponibilidad y hora por WhatsApp.</p>
+    <p><strong>Pagas al confirmar</strong>Yape, Plin o transferencia bancaria.</p>
+  </section>
+</main>
+<footer class="pie campo" data-pie></footer>
+<a class="flotante" href="#">WhatsApp</a>
+<div class="aviso" data-aviso role="status" aria-live="polite"></div>
+
+<script src="../datos.js"></script>
+<script src="vistas.js"></script>
+<script src="../comun.js"></script>
+<script>
+(function () {
+  var E = window.ECN, P = E.productos;
+
+  var centro = E.buscar('ECN-001');
+  var anillo = ['ECN-005', 'ECN-004', 'ECN-020', 'ECN-006', 'ECN-009', 'ECN-025'].map(E.buscar);
+  var disco = function (p, clase, extra, tam) {
+    return '<a class="disco' + clase + '" href="ficha.html?p=' + p.codigo + '" data-ficha="' + p.codigo + '" style="' + extra + '" aria-label="' + p.nombre + ', ' + E.soles(p.precio) + '">' +
+      '<img src="' + E.foto(p.imagenes[0], tam, 'cuadro') + '" alt="">' + (clase ? '<span class="sello-precio">' + E.soles(p.precio) + '</span>' : '') + '</a>';
+  };
+  document.getElementById('constelacion').innerHTML = disco(centro, ' centro', '--i:0', 600) +
+    anillo.map(function (p, k) { return disco(p, '', '--a:' + (-90 + k * 60) + 'deg;--i:' + (k + 1), 300); }).join('');
+
+  var cats = ['Frescos', 'Abarrotes', 'Cuidado personal'];
+  var cuenta = function (c) { return P.filter(function (p) { return p.categoria === c; }).length; };
+  document.getElementById('filtros').innerHTML = '<li><button type="button" aria-pressed="true" data-cat="">Todo (' + P.length + ')</button></li>' +
+    cats.map(function (c) { return '<li><button type="button" aria-pressed="false" data-cat="' + c + '">' + c + ' (' + cuenta(c) + ')</button></li>'; }).join('');
+
+  var estado = { cat: '', q: new URLSearchParams(location.search).get('q') || '' };
+  var buscador = document.querySelector('[data-buscador]');
+  var campo = buscador.querySelector('input');
+
+  function pintar() {
+    var lista = P.filter(function (p) { return (!estado.cat || p.categoria === estado.cat) && E.coincide(p, estado.q); });
+    var rejilla = document.getElementById('rejilla');
+    if (!lista.length) {
+      rejilla.innerHTML = '<div class="vacio"><p>No encontramos productos para esa búsqueda. Prueba con otra palabra o mira todo el catálogo.</p><button class="boton" type="button" data-limpiar>Ver todo el catálogo</button></div>';
+    } else {
+      rejilla.innerHTML = lista.map(function (p, i) { return E.lamina(p, { diferida: i > 9, nombreTransicion: true }); }).join('');
+    }
+    var texto = lista.length + (lista.length === 1 ? ' producto' : ' productos');
+    if (estado.q) texto += ' para «' + estado.q + '»';
+    if (estado.cat) texto += ' en ' + estado.cat;
+    document.getElementById('resultado').textContent = texto;
+  }
+  // Movimiento que responde a la acción: las láminas se reacomodan
+  function cambiar(fn) {
+    if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.startViewTransition(fn); else fn();
+  }
+
+  document.getElementById('filtros').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#filtros button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    estado.cat = b.dataset.cat;
+    cambiar(pintar);
+  });
+  // Buscar mientras se escribe; Enter lleva al catálogo
+  campo.addEventListener('input', function () { estado.q = campo.value.trim(); pintar(); });
+  buscador.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    estado.q = campo.value.trim();
+    pintar();
+    document.getElementById('catalogo').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  });
+  document.getElementById('rejilla').addEventListener('click', function (ev) {
+    if (!ev.target.closest('[data-limpiar]')) return;
+    estado.q = ''; estado.cat = ''; campo.value = '';
+    document.querySelectorAll('#filtros button').forEach(function (x, i) { x.setAttribute('aria-pressed', String(i === 0)); });
+    pintar();
+  });
+
+  pintar();
+  if (estado.q) document.getElementById('catalogo').scrollIntoView();
+})();
+</script>
+</body>
+</html>

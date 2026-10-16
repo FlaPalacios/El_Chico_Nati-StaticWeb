@@ -20,6 +20,8 @@ Antes de cualquier tarea, lee `PLAN-v2.md` y trabaja solo en la fase activa (ver
 - Fuentes e imágenes locales, salvo las fotos de productos en Cloudinary (URL con `f_auto,q_auto`).
 - Precios en formato `S/ 46.00`. El total se calcula en el navegador.
 - Si algo falla en el checkout, igual se debe abrir WhatsApp con el pedido.
+- Todo texto que viene de la hoja o del cliente se inserta escapado: en Astro `{expr}`, en Alpine `x-text` y `:attr`. Prohibido `set:html`, `x-html` e `innerHTML` con esos datos; lo que se arme en el navegador usa `<template>` + `textContent`.
+- Fuentes: solo con licencia OFL u otra que permita redistribuir, con su archivo de licencia al lado.
 - Alpine.js en su build CSP: lógica en `Alpine.data(...)`/`Alpine.store(...)`, nada de expresiones complejas en atributos.
 - Movimiento solo con `transform` y `opacity`, siempre con alternativa para `prefers-reduced-motion`.
 

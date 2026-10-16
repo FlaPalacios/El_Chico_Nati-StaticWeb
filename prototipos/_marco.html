@@ -13,7 +13,10 @@
   var m = document.getElementById('m');
   m.width = q.get('w') || 390;
   m.height = q.get('h') || 2600;
-  m.src = q.get('u');
+  // Solo rutas conocidas de los prototipos: nunca otra dirección ni "javascript:".
+  var u = q.get('u') || '';
+  if (/^(index\.html|[a-z]-[a-z]+\/(portada|ficha)\.html(\?p=ECN-\d{3})?)$/.test(u)) m.src = u;
+  else document.title = 'ruta no permitida';
   m.onload = function () {
     var d = m.contentDocument;
     document.title = 'ancho=' + m.contentWindow.innerWidth + ' desborde=' + (d.documentElement.scrollWidth > m.contentWindow.innerWidth);

@@ -1,16 +1,20 @@
 Tipografías de El Chico Naturista
 =================================
 
-Copiadas del sitio anterior a public/fonts/. Se sirven desde el propio sitio,
-sin Google ni Fontshare. (Esta nota vive en docs/ para no publicarse.)
-La Fase 2 decide si se quedan; las declaraciones @font-face llegan en la Fase 3
-(src/styles/global.css).
+Dirección elegida en la Fase 2 (docs/direccion-visual.md): Zilla Slab + Hind.
+Se sirven desde el propio sitio (public/fonts/), sin Google ni otros servicios.
+Esta nota vive en docs/ para no publicarse.
 
 Hind (Indian Type Foundry)
-  Licencia: SIL Open Font License 1.1. Permite uso comercial y servirla desde
-  el propio sitio. Pesos: 400, 500, 600, 700 (subconjunto latino).
+  Licencia: SIL Open Font License 1.1 (OFL-hind.txt junto a las fuentes).
+  Permite uso comercial y servirla desde el propio sitio. Pesos: 400, 500, 600, 700.
 
-Amulya (Indian Type Foundry, distribuida por Fontshare)
-  Licencia: ITF Free Font License. Revisar en https://www.fontshare.com/fonts/amulya
-  que permita servirla desde el propio sitio antes de publicar (pendiente v1.0).
-  Pesos: 400, 500, 700.
+Zilla Slab (Mozilla Foundation)
+  Licencia: SIL Open Font License 1.1 (OFL-zilla-slab.txt). Pesos: 500, 700.
+  Hoy está en prototipos/fuentes/; pasa a public/fonts/ en la Fase 3.
+
+Young Serif: OFL, solo la usa el prototipo B (historial). No va a la web.
+
+Amulya: retirada el 15-oct-2026. Su licencia (ITF / Fontshare) no es OFL y dice
+"All rights reserved"; no se redistribuye en un repositorio público. Estuvo en los
+commits ECN-v0.1 y ECN-v0.2 (prototipos), así que sigue en el historial de git.

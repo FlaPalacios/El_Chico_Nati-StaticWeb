@@ -54,6 +54,7 @@ Usuarios: el cliente (compra como invitado) y el equipo (Fernando y colaboradore
 |---|---|---|
 | Precedencia de datos | El Master manda sobre el TSV y las descripciones (sección 3) | Pedido explícito; el Master es el registro operativo |
 | Hosting | Cloudflare Pages (plan gratuito). Local hasta la Fase 7 | Decidido por Fernando el 15-oct-2026: Vercel gratis no permite uso comercial, y el dominio ya está comprado en Cloudflare, así que DNS y hosting quedan en la misma cuenta |
+| Dirección visual | D: portada de C (sello), láminas de B (herbario) redondeadas y sin códigos a 5 columnas, ficha con la información de A y el producto en lámina contenida, carrusel de recomendados, pie como el sitio anterior, contenido a 1360 px máximo con paneles redondeados, cabecera blanca fija con buscador al centro. Zilla Slab + Hind. Detalle y tokens en `docs/direccion-visual.md` | Elegida por Fernando el 15-oct-2026 (Fase 2) |
 | Correo de contacto | `contacto@elchiconaturista.com` | Decidido por Fernando el 15-oct-2026 (reemplaza al `.pe` del sitio anterior) |
 | Actualización desde la hoja | Un flujo de GitHub Actions baja el CSV publicado cada hora y, solo si cambió, hace commit de `data/catalogo-inicial.tsv`. El hosting compila con cada push | Sirve con cualquier hosting, no gasta compilaciones si no hay cambios y deja historial de cada cambio de datos |
 | Datos en el repo | Solo un TSV limpio con columnas públicas (`data/catalogo-inicial.tsv`), generado por script | El TSV original trae la columna `stock`; subirlo a un repo público rompería la regla de stock |

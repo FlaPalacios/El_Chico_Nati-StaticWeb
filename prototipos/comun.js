@@ -57,6 +57,15 @@
     }
   });
 
+  // Transición foto → ficha: el nombre se pone solo en la foto que se tocó,
+  // así un mismo producto puede aparecer dos veces en la página sin chocar.
+  document.addEventListener('click', function (ev) {
+    var enlace = ev.target.closest('a[data-ficha]');
+    if (!enlace) return;
+    var foto = enlace.querySelector('img') || (enlace.closest('[data-lamina]') || enlace).querySelector('img');
+    if (foto) foto.style.viewTransitionName = 'f-' + enlace.dataset.ficha;
+  });
+
   document.addEventListener('DOMContentLoaded', function () {
     pintarContador(false);
     var marcar = function () { document.documentElement.classList.add('listo'); };

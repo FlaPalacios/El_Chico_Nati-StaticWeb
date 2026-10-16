@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>D · Ficha · El Chico Naturista</title>
+<link rel="icon" href="../img/logo-64.png">
+<link rel="stylesheet" href="estilo.css">
+<style>
+/* Zona de la ficha: más angosta que el contenedor para que el producto no invada */
+.zona { max-width: 1080px; margin-inline: auto; padding-top: 20px; }
+.ruta { margin: 0 0 18px; font-size: .9375rem; color: var(--monte-suave); }
+.ruta a { text-decoration-color: var(--filete); }
+.ficha { display: grid; gap: 28px; }
+@media (min-width: 900px) { .ficha { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 64px; align-items: start; } }
+
+/* Producto en lámina (de B), contenido */
+.galeria { background: var(--papel); border-radius: var(--radio-lamina); border: 1px solid var(--filete); padding: 20px; }
+@media (min-width: 900px) { .galeria { position: sticky; top: calc(var(--alto-cabecera) + 24px); padding: 28px; } }
+.galeria .principal { width: 100%; max-width: 300px; margin-inline: auto; aspect-ratio: 1; object-fit: contain; border-radius: var(--radio-foto); }
+@media (min-width: 900px) { .galeria .principal { max-width: none; } }
+.miniaturas { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
+.miniaturas button { width: 64px; height: 64px; padding: 4px; background: var(--papel); border: 1px solid var(--filete); border-radius: var(--radio-foto); cursor: pointer; }
+.miniaturas button[aria-pressed="true"] { border-color: var(--salvia); box-shadow: inset 0 0 0 1px var(--salvia); }
+.miniaturas img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Información (orden de A) */
+.datos .marca-producto { margin: 0; font-weight: 600; font-size: .9375rem; color: var(--monte-suave); }
+.datos h1 { margin: 4px 0 4px; font: 700 clamp(1.9rem, 4.5vw, 2.6rem)/1.02 var(--losa); letter-spacing: -.01em; }
+.datos .presentacion { margin: 0; color: var(--monte-suave); }
+.datos .precio { margin: 16px 0 0; font: 700 1.75rem/1 var(--losa); font-variant-numeric: tabular-nums; }
+.corta { margin: 12px 0 0; max-width: 46ch; }
+.compra { display: grid; grid-template-columns: auto 1fr; gap: 10px; margin-top: 22px; max-width: 460px; }
+.cantidad { display: inline-flex; align-items: center; background: var(--papel); border: 1.5px solid var(--jade); border-radius: 999px; }
+.cantidad button { width: 44px; height: 48px; border: 0; background: none; font-size: 1.25rem; font-weight: 600; color: var(--monte); cursor: pointer; border-radius: 999px; }
+.cantidad output { min-width: 2ch; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+.consulta { display: inline-block; margin-top: 14px; font-weight: 600; }
+.detalle { margin-top: 32px; display: grid; gap: 24px; max-width: 62ch; }
+.detalle h2 { margin: 0 0 6px; font: 700 1.1875rem/1.2 var(--losa); }
+.detalle p { margin: 0; }
+.beneficios { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.beneficios li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; align-items: baseline; }
+.beneficios li::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--jade); translate: 0 -1px; }
+
+/* Carrusel sutil de recomendados */
+.relacionados { margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--filete); }
+.relacionados header { display: flex; align-items: center; gap: 12px; }
+.relacionados h2 { margin: 0; font: 500 1.25rem/1.2 var(--losa); }
+.flechas { margin-left: auto; display: none; gap: 8px; }
+@media (min-width: 900px) { .flechas { display: flex; } }
+.flechas button { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--jade); background: var(--papel); color: var(--salvia); display: grid; place-items: center; cursor: pointer; }
+/* aria-disabled y no disabled: así el foco no se pierde al llegar al extremo */
+.flechas button[aria-disabled="true"] { opacity: .35; cursor: default; }
+.flechas svg { width: 16px; height: 16px; }
+/* 8 px arriba y a los lados: el anillo de foco (3 + 3 px) no se recorta */
+.carrusel { list-style: none; margin: 14px calc(-1 * var(--margen)) 0; padding: 8px var(--margen) 16px; display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--margen); scrollbar-width: none;
+  mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent); }
+@media (min-width: 900px) { .carrusel { margin-inline: -8px; padding-inline: 8px; scroll-padding-inline: 8px; } }
+.flechas[hidden] { display: none; }
+/* En la ficha en celular el flotante tapaba "Agregar al carrito"; aquí ya está "Consultar por WhatsApp" */
+@media (max-width: 899px) { .flotante { display: none; } }
+.carrusel::-webkit-scrollbar { display: none; }
+.carrusel > li { flex: 0 0 150px; scroll-snap-align: start; display: flex; }
+@media (min-width: 900px) { .carrusel > li { flex-basis: 184px; } }
+.carrusel .lamina { width: 100%; padding: 10px; }
+.carrusel .rotulo h3 { font-size: .9375rem; }
+.carrusel .rotulo .precio { font-size: 1rem; padding-right: 38px; }
+.carrusel .lamina .mas { width: 32px; height: 32px; right: 8px; bottom: 8px; }
+</style>
+</head>
+<body>
+<header class="sitio-cabecera" data-cabecera></header>
+<main class="contenedor">
+  <div class="zona">
+    <nav class="ruta" aria-label="Ruta" id="ruta"></nav>
+    <div class="ficha" id="ficha"></div>
+  </div>
+  <section class="relacionados" aria-labelledby="t-rel">
+    <header>
+      <h2 id="t-rel">También te puede interesar</h2>
+      <div class="flechas">
+        <button type="button" data-mover="-1" aria-label="Ver anteriores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <button type="button" data-mover="1" aria-label="Ver siguientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    </header>
+    <ul class="carrusel" id="carrusel"></ul>
+  </section>
+</main>
+<footer class="pie campo" data-pie></footer>
+<a class="flotante" href="#">WhatsApp</a>
+<div class="aviso" data-aviso role="status" aria-live="polite"></div>
+<script src="../datos.js"></script>
+<script src="vistas.js"></script>
+<script src="../comun.js"></script>
+<script>
+(function () {
+  var E = window.ECN;
+  var p = E.buscar(new URLSearchParams(location.search).get('p') || 'ECN-001') || E.productos[0];
+  document.title = p.nombre + ' · D · El Chico Naturista';
+  document.getElementById('ruta').innerHTML = '<a href="portada.html">Inicio</a> / ' + p.categoria + ' / ' + p.subcategoria;
+
+  var mini = p.imagenes.length > 1 ? '<div class="miniaturas">' + p.imagenes.map(function (u, i) {
+    return '<button type="button" data-foto="' + E.foto(u, 840, 'cuadro') + '" aria-pressed="' + (i === 0) + '" aria-label="Ver ' + (i === 0 ? 'frente' : 'reverso') + ' del empaque"><img src="' + E.foto(u, 140, 'cuadro') + '" alt=""></button>';
+  }).join('') + '</div>' : '';
+  var sec = function (t, c) { return c ? '<section><h2>' + t + '</h2>' + c + '</section>' : ''; };
+
+  document.getElementById('ficha').innerHTML =
+    '<div class="galeria"><img class="principal" id="principal" src="' + E.foto(p.imagenes[0], 840, 'cuadro') + '" alt="' + p.nombre + '" style="view-transition-name:f-' + p.codigo + '">' + mini + '</div>' +
+    '<div class="datos" data-producto>' +
+      '<p class="marca-producto">' + p.marca + '</p><h1>' + p.nombre + '</h1><p class="presentacion">' + p.presentacion + '</p>' +
+      '<p class="precio">' + E.soles(p.precio) + '</p><p class="corta">' + p.corta + '</p>' +
+      '<div class="compra"><div class="cantidad" data-cantidad><button type="button" data-menos aria-label="Quitar uno">−</button><output aria-live="polite">1</output><button type="button" data-mas aria-label="Agregar uno">+</button></div>' +
+      '<button class="boton" type="button" data-agregar="' + p.nombre + '">Agregar al carrito</button></div>' +
+      '<a class="consulta" href="https://wa.me/' + E.tienda.whatsapp + '?text=' + encodeURIComponent('Hola, tengo una consulta sobre ' + p.nombre + ' (' + p.presentacion + ').') + '" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>' +
+      '<div class="detalle">' +
+        sec('Qué es', p.larga ? '<p>' + p.larga + '</p>' : '') +
+        sec('Beneficios', p.beneficios.length ? '<ul class="beneficios">' + p.beneficios.map(function (b) { return '<li>' + b + '</li>'; }).join('') + '</ul>' : '') +
+        sec('Modo de uso', p.uso ? '<p>' + p.uso + '</p>' : '') +
+      '</div></div>';
+
+  var carrusel = document.getElementById('carrusel');
+  carrusel.innerHTML = E.relacionados(p, 8).map(function (r) { return '<li>' + E.lamina(r, { tam: 300, diferida: true }) + '</li>'; }).join('');
+
+  var flechas = document.querySelectorAll('[data-mover]');
+  function estadoFlechas() {
+    // si todo cabe, las flechas no sirven: se ocultan
+    document.querySelector('.flechas').hidden = carrusel.scrollWidth <= carrusel.clientWidth + 4;
+    flechas[0].setAttribute('aria-disabled', String(carrusel.scrollLeft < 4));
+    flechas[1].setAttribute('aria-disabled', String(carrusel.scrollLeft + carrusel.clientWidth > carrusel.scrollWidth - 4));
+  }
+  carrusel.addEventListener('scroll', estadoFlechas, { passive: true });
+  addEventListener('resize', estadoFlechas);
+  estadoFlechas();
+
+  document.addEventListener('click', function (ev) {
+    var mover = ev.target.closest('[data-mover]');
+    if (mover) {
+      if (mover.getAttribute('aria-disabled') === 'true') return;
+      var suave = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      carrusel.scrollBy({ left: Number(mover.dataset.mover) * carrusel.clientWidth * .8, behavior: suave ? 'smooth' : 'auto' });
+      return;
+    }
+    var b = ev.target.closest('[data-foto]');
+    if (!b) return;
+    document.getElementById('principal').src = b.dataset.foto;
+    document.querySelectorAll('[data-foto]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+  });
+})();
+</script>
+</body>
+</html>

@@ -6,7 +6,11 @@ window.ECN = {
   "lema": "Productos naturales del Perú",
   "whatsappVisible": "+51 946 049 689",
   "horario": "Lunes a sábado, 9:00 a 19:00",
-  "direccion": "Los Olivos, Lima",
+  "direccion": "Las Camelias, Mz. K Lt. 17, Los Olivos, Lima",
+  "correo": "contacto@elchiconaturista.com",
+  "whatsapp": "51946049689",
+  "tiktok": "https://www.tiktok.com/@el.chico.naturista",
+  "linkedin": "https://www.linkedin.com/company/el-chico-naturista/",
   "envioGratisDesde": 120,
   "avisos": [
    "Envíos a todo el Perú. Delivery el mismo día en Lima",
