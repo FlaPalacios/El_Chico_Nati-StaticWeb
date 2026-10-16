@@ -1,0 +1,76 @@
+---
+// Carrusel sutil "También te puede interesar" al final de la ficha (idea de la dirección A).
+// Láminas pequeñas que se deslizan; flechas solo en escritorio y solo si hay algo que desplazar.
+import Lamina from './Lamina.astro';
+import Icono from './Icono.astro';
+
+interface Props { productos: any[] }
+const { productos } = Astro.props;
+---
+{productos.length > 0 && (
+  <section class="relacionados" aria-labelledby="t-relacionados" data-relacionados>
+    <header>
+      <h2 id="t-relacionados">También te puede interesar</h2>
+      <div class="flechas" data-flechas hidden>
+        <button type="button" data-mover="-1" aria-label="Ver anteriores"><Icono nombre="anterior" /></button>
+        <button type="button" data-mover="1" aria-label="Ver siguientes"><Icono nombre="siguiente" /></button>
+      </div>
+    </header>
+    <ul class="carrusel" data-carrusel-lista>
+      {productos.map((p) => <li><Lamina producto={p} sizes="(min-width: 900px) 184px, 150px" diferida /></li>)}
+    </ul>
+  </section>
+)}
+
+<script>
+  const raiz = document.querySelector('[data-relacionados]');
+  const lista = raiz?.querySelector('[data-carrusel-lista]');
+  const flechas = raiz?.querySelector('[data-flechas]');
+  if (raiz && lista && flechas) {
+    const [anterior, siguiente] = flechas.querySelectorAll('button');
+    // aria-disabled y no disabled: así el foco no se pierde al llegar al extremo
+    const estado = () => {
+      flechas.hidden = lista.scrollWidth <= lista.clientWidth + 4 || window.innerWidth < 900;
+      anterior.setAttribute('aria-disabled', String(lista.scrollLeft < 4));
+      const alFinal = lista.scrollLeft + lista.clientWidth > lista.scrollWidth - 4;
+      siguiente.setAttribute('aria-disabled', String(alFinal));
+      lista.classList.toggle('al-final', alFinal);
+    };
+    flechas.addEventListener('click', (ev) => {
+      const b = ev.target instanceof Element ? ev.target.closest('[data-mover]') : null;
+      if (!b || b.getAttribute('aria-disabled') === 'true') return;
+      const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      lista.scrollBy({ left: Number(b.getAttribute('data-mover')) * lista.clientWidth * 0.8, behavior: suave ? 'smooth' : 'auto' });
+    });
+    lista.addEventListener('scroll', estado, { passive: true });
+    // Con Tab, la lámina enfocada entra entera (no queda bajo el desvanecido del borde)
+    lista.addEventListener('focusin', (ev) => {
+      const li = ev.target instanceof Element ? ev.target.closest('li') : null;
+      li?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+    window.addEventListener('resize', estado);
+    estado();
+  }
+</script>
+
+<style>
+  .relacionados { margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--filete); }
+  header { display: flex; align-items: center; gap: 12px; }
+  h2 { margin: 0; font: 500 1.25rem/1.2 var(--losa); }
+  .flechas { margin-left: auto; display: flex; gap: 8px; }
+  .flechas button { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--jade); background: var(--papel); color: var(--salvia); display: grid; place-items: center; cursor: pointer; }
+  .flechas button[aria-disabled='true'] { opacity: .35; cursor: default; }
+  .flechas :global(svg) { width: 16px; height: 16px; }
+  /* 8 px arriba y a los lados: el anillo de foco (3 + 3 px) no se recorta */
+  .carrusel { list-style: none; margin: 14px calc(-1 * var(--margen)) 0; padding: 8px var(--margen) 16px; display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--margen); scrollbar-width: none;
+    mask-image: linear-gradient(to right, black calc(100% - 48px), transparent); } /* el borde derecho se desvanece: hay más */
+  @media (min-width: 900px) { .carrusel { margin-inline: -8px; padding-inline: 8px; scroll-padding-inline: 8px; } }
+  .carrusel.al-final { mask-image: none; } /* al llegar al final ya no hay nada que insinuar */
+  .carrusel::-webkit-scrollbar { display: none; }
+  .carrusel > li { flex: 0 0 150px; scroll-snap-align: start; display: flex; scroll-margin-inline: 56px; }
+  @media (min-width: 900px) { .carrusel > li { flex-basis: 184px; } }
+  .carrusel :global(.lamina) { width: 100%; padding: 10px; }
+  .carrusel :global(h3) { font-size: .9375rem; }
+  .carrusel :global(.precio) { font-size: 1rem; padding-right: 38px; min-height: 32px; }
+  .carrusel :global(.mas) { width: 32px; height: 32px; right: 8px; bottom: 8px; }
+</style>

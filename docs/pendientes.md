@@ -12,7 +12,7 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 | P4 | ECN-015 (Maca Roja): la foto muestra marca Ecoandino 200 g; los datos dicen Algarrobos Orgánicos 250 g. Aclarar antes de activarlo | Master y foto | v0.0 |
 | P5 | ECN-008 (Aceite de Almendras) está en "Cuidado corporal" pero es de uso capilar | Pestaña "Catálogo web" | v0.0 |
 | P6 | Afirmaciones de salud fuertes en beneficios ("Regula la presión arterial", "Acción antibacteriana", "Protección UV"...). Revisar con proveedor o especialista | Beneficios | v0.0 |
-| P7 | Marcar `mas_vendido` (propuesta: Galleta Cookie Dough, Aceite de Almendras, Leche de Almendras) y más `destacado`: la portada elegida muestra 7 productos en el hero y hoy solo hay 2 destacados | Pestaña "Catálogo web" | v0.0, ampliado en v0.2 |
+| P7 | Marcar `mas_vendido` (los más vendidos según el Master) y más `destacado`: la portada elegida muestra 7 productos en el hero y hoy solo hay 2 destacados | Pestaña "Catálogo web" | v0.0, ampliado en v0.2 |
 | P8 | Reescribir la pestaña Inicio del Master (todavía describe el flujo con backend) | Master | v0.0 |
 | P9 | Registrar el envío cobrado en la línea `ENVIO` de cada pedido | Master | v0.0 |
 
@@ -34,6 +34,7 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 | T12 | En celular, el botón flotante de WhatsApp puede tapar el "+" de las láminas de la columna derecha mientras se desliza. En el prototipo se ocultó solo en la ficha (tapaba "Agregar al carrito" y ahí ya está "Consultar por WhatsApp"). Decidir la regla final en la Fase 4 | Fase 4 |
 | T13 | Cloudflare Pages debe publicar solo `dist/`, nunca la raíz del repo (`prototipos/` no debe quedar en línea) | Fase 7 |
 | T15 | `/guia` (guía de estilos para QA) existe en el sitio con `noindex` y sin enlaces. Decidir en la Fase 7 si se publica o se excluye del build | Fase 7 |
+| T18 | Los paneles 2 y 3 del carrusel no repiten productos que ya están en la constelación del panel 1: por eso el panel 2 muestra Té Matcha, Algarrobina y Miel con Propóleo en lugar de Nibs y Kéfir (que ya están en el panel 1). Se cambia en `src/data/portada.json` | Cuando Fernando quiera |
 | T16 | El plan v1 tenía un cintillo de avisos arriba de la cabecera; la dirección elegida no lo usa (los avisos están en el hero y en la franja de servicio). Si se quiere, se agrega en la Fase 4 | Fase 4, decisión de Fernando |
 | T17 | `public/img/logo-512.png` y `.webp` todavía no se usan: quedan para la imagen al compartir en redes (Open Graph) en la Fase 6 | Fase 6 |
 | T9 | El logo limpio sale de un PNG con el fondo a cuadros pintado. Si existe el archivo original (vectorial o con transparencia real), reemplazarlo | Cuando aparezca |

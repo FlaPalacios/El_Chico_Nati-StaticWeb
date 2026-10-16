@@ -1,0 +1,59 @@
+---
+// Lámina de producto (de la dirección B): toda la tarjeta lleva a la ficha y el "+" agrega uno sin salir.
+// El código ECN es interno: no se muestra, solo viaja en atributos.
+import Icono from './Icono.astro';
+import SinFoto from './SinFoto.astro';
+import { fotoCuadro, srcsetCuadro } from '../lib/cloudinary.js';
+import { soles } from '../lib/formato.js';
+
+interface Props {
+  producto: {
+    codigo: string; slug: string; nombre: string; presentacion: string;
+    precio: number; precioAntes: number | null; imagenes: string[];
+  };
+  sizes?: string;
+  diferida?: boolean;
+  datos?: Record<string, string>; // atributos data-* para filtrar (catálogo)
+}
+const { producto: p, sizes = '(min-width: 1240px) 250px, (min-width: 1000px) 23vw, (min-width: 700px) 31vw, 46vw', diferida = false, datos = {} } = Astro.props;
+const foto = p.imagenes[0];
+---
+<article class="lamina" {...datos}>
+  <a href={`/producto/${p.slug}/`} data-ficha={p.codigo}>
+    {foto
+      ? <img src={fotoCuadro(foto, 480)} srcset={srcsetCuadro(foto, [240, 360, 480, 720])} sizes={sizes} alt="" width="480" height="480" loading={diferida ? 'lazy' : 'eager'} />
+      : <SinFoto />}
+    <div class="rotulo">
+      <span class="presentacion">{p.presentacion}</span>
+      <h3>{p.nombre}</h3>
+      <span class="precio">
+        {p.precioAntes && <span class="antes"><span class="oculto">Antes </span><s>{soles(p.precioAntes)}</s></span>}
+        {p.precioAntes && <span class="oculto">Ahora </span>}{soles(p.precio)}
+      </span>
+    </div>
+  </a>
+  <button class="mas" type="button" data-agregar={p.codigo} data-nombre={p.nombre} aria-label={`Agregar ${p.nombre} al carrito`}>
+    <Icono nombre="mas" />
+  </button>
+</article>
+
+<style>
+  .lamina { position: relative; display: flex; flex-direction: column; background: var(--papel); border-radius: var(--radio-lamina); padding: 12px; box-shadow: 0 1px 2px var(--sombra-suave); }
+  .lamina > a { display: flex; flex-direction: column; flex: 1; text-decoration: none; color: inherit; }
+  .lamina > a::after { content: ''; position: absolute; inset: 0; border-radius: inherit; } /* toda la lámina es el enlace */
+  .lamina > a:focus-visible { outline: none; }
+  .lamina:has(> a:focus-visible) { outline: 3px solid var(--foco); outline-offset: 3px; }
+  img, .lamina :global(.sin-foto) { width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: var(--radio-foto); }
+  .rotulo { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--filete); }
+  .presentacion { display: block; font-size: .8125rem; line-height: 1.3; color: var(--monte-suave); }
+  /* nombre siempre en dos líneas de alto: fotos y filetes quedan alineados en cada fila */
+  h3 { margin: 3px 0 0; min-height: 2.5em; font: 500 1rem/1.25 var(--losa); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  /* el precio ocupa el alto del "+": el botón queda a su lado y no pisa el nombre */
+  .precio { display: flex; align-items: center; flex-wrap: wrap; min-height: 38px; margin-top: 4px; padding-right: 44px; font: 700 1.0625rem/1.2 var(--losa); font-variant-numeric: tabular-nums; }
+  .antes { margin-right: 6px; font-weight: 500; color: var(--monte-suave); }
+  .mas { position: absolute; right: 10px; bottom: 10px; z-index: 1; width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--jade); background: var(--papel); color: var(--salvia); display: grid; place-items: center; cursor: pointer; }
+  .mas :global(svg) { width: 18px; height: 18px; }
+  .mas:hover { background: var(--salvia); color: var(--papel); border-color: var(--salvia); }
+  .mas:active { transform: scale(.94); }
+  @media (prefers-reduced-motion: no-preference) { .mas { transition: background-color var(--rapido), color var(--rapido); } }
+</style>

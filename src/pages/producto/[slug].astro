@@ -1,0 +1,129 @@
+---
+// Ficha de producto: información con el orden de A, producto en lámina contenida de B (estática),
+// recomendados al final. Una página por producto visible, generada al compilar.
+import Base from '../../layouts/Base.astro';
+import Relacionados from '../../components/Relacionados.astro';
+import SinFoto from '../../components/SinFoto.astro';
+import productos from '../../data/productos.json';
+import { fotoCuadro, srcsetCuadro } from '../../lib/cloudinary.js';
+import { soles } from '../../lib/formato.js';
+import { relacionados } from '../../lib/seleccion.js';
+import { enlaceWhatsapp } from '../../data/tienda.js';
+
+export function getStaticPaths() {
+  return productos.map((p) => ({ params: { slug: p.slug }, props: { producto: p } }));
+}
+
+const { producto: p } = Astro.props;
+const recomendados = relacionados(p, productos, 8);
+const consulta = enlaceWhatsapp(`Hola, tengo una consulta sobre ${p.nombre} (${p.presentacion}).`);
+const fotos = p.imagenes;
+const hayDetalle = Boolean(p.descripcionLarga || p.beneficios.length || p.modoUso);
+---
+<Base titulo={`${p.nombre} ${p.presentacion}`} descripcion={p.descripcionCorta || `${p.nombre}, ${p.presentacion}. ${soles(p.precio)}.`} mensajeWhatsapp={`Hola, tengo una consulta sobre ${p.nombre}.`}>
+  <main class="contenedor">
+    <div class="zona">
+      <nav class="ruta" aria-label="Ruta">
+        <a href="/">Inicio</a> / <a href={`/?cat=${p.categoriaSlug}#catalogo`}>{p.categoria}</a> / <a href={`/?cat=${p.categoriaSlug}&sub=${p.subcategoriaSlug}#catalogo`}>{p.subcategoria}</a>
+      </nav>
+
+      <div class="ficha">
+        <div class="galeria" data-galeria>
+          {fotos.length
+            ? <img class="principal" data-principal src={fotoCuadro(fotos[0], 840)} srcset={srcsetCuadro(fotos[0], [360, 480, 720, 840])} sizes="(min-width: 900px) 362px, 300px" alt={p.nombre} width="840" height="840" style={`view-transition-name: f-${p.codigo}`} />
+            : <SinFoto />}
+          {fotos.length > 1 && (
+            <div class="miniaturas">
+              {fotos.map((u, i) => (
+                <button type="button" data-foto={fotoCuadro(u, 840)} data-srcset={srcsetCuadro(u, [360, 480, 720, 840])} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={i === 0 ? 'Ver la foto principal' : 'Ver otra vista'}>
+                  <img src={fotoCuadro(u, 140)} alt="" width="56" height="56" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div class="datos" data-producto>
+          <p class="marca">{p.marca}</p>
+          <h1>{p.nombre}</h1>
+          <p class="presentacion">{p.presentacion}</p>
+          <p class="precio">
+            {p.precioAntes && <span class="antes"><span class="oculto">Antes </span><s>{soles(p.precioAntes)}</s></span>}
+            {p.precioAntes && <span class="oculto">Ahora </span>}{soles(p.precio)}
+          </p>
+          {p.descripcionCorta && <p class="corta">{p.descripcionCorta}</p>}
+
+          <div class="compra">
+            <div class="cantidad" data-cantidad role="group" aria-label="Cantidad">
+              <button type="button" data-paso="-1" aria-label="Quitar uno">−</button>
+              <output aria-live="polite">1</output>
+              <button type="button" data-paso="1" aria-label="Agregar uno">+</button>
+            </div>
+            <button class="boton" type="button" data-agregar={p.codigo} data-nombre={p.nombre}>Agregar al carrito</button>
+          </div>
+          <a class="consulta" href={consulta} target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
+
+          {hayDetalle && <div class="detalle">
+            {p.descripcionLarga && <section><h2>Qué es</h2><p>{p.descripcionLarga}</p></section>}
+            {p.beneficios.length > 0 && (
+              <section><h2>Beneficios</h2><ul class="beneficios">{p.beneficios.map((b) => <li>{b}</li>)}</ul></section>
+            )}
+            {p.modoUso && <section><h2>Modo de uso</h2><p>{p.modoUso}</p></section>}
+          </div>}
+        </div>
+      </div>
+    </div>
+
+    <Relacionados productos={recomendados} />
+  </main>
+</Base>
+
+<script>
+  // Miniaturas: cambian la foto principal (frente / otra cara)
+  const galeria = document.querySelector('[data-galeria]');
+  const principal = galeria?.querySelector('[data-principal]');
+  galeria?.addEventListener('click', (ev) => {
+    const b = ev.target instanceof Element ? ev.target.closest('[data-foto]') : null;
+    if (!b || !(principal instanceof HTMLImageElement)) return;
+    principal.src = b.getAttribute('data-foto') ?? principal.src;
+    principal.srcset = b.getAttribute('data-srcset') ?? '';
+    galeria.querySelectorAll('[data-foto]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  });
+</script>
+
+<style>
+  .zona { max-width: var(--ancho-ficha); margin-inline: auto; padding-top: 20px; }
+  .ruta { margin: 0 0 18px; font-size: .9375rem; color: var(--monte-suave); }
+  .ruta a { text-decoration-color: var(--filete); }
+  .ficha { display: grid; gap: 28px; }
+  @media (min-width: 900px) { .ficha { grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 64px; align-items: start; } }
+
+  /* Producto en lámina contenida y estática (la foto no sigue al desplazarse) */
+  .galeria { background: var(--papel); border-radius: var(--radio-lamina); border: 1px solid var(--filete); padding: 20px; }
+  @media (min-width: 900px) { .galeria { padding: 28px; } }
+  .principal, .galeria :global(.sin-foto) { width: 100%; max-width: 300px; margin-inline: auto; aspect-ratio: 1; object-fit: contain; border-radius: var(--radio-foto); }
+  @media (min-width: 900px) { .principal, .galeria :global(.sin-foto) { max-width: none; } }
+  .miniaturas { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
+  .miniaturas button { width: 64px; height: 64px; padding: 4px; background: var(--papel); border: 1px solid var(--filete); border-radius: var(--radio-foto); cursor: pointer; }
+  .miniaturas button[aria-pressed='true'] { border-color: var(--salvia); box-shadow: inset 0 0 0 1px var(--salvia); }
+  .miniaturas img { width: 100%; height: 100%; object-fit: contain; }
+
+  /* Información (orden de A) */
+  .marca { margin: 0; font-weight: 600; font-size: .9375rem; color: var(--monte-suave); }
+  h1 { margin: 4px 0; font: 700 clamp(1.9rem, 4.5vw, 2.6rem)/1.02 var(--losa); letter-spacing: -.01em; }
+  .presentacion { margin: 0; color: var(--monte-suave); }
+  .precio { margin: 16px 0 0; font: 700 1.75rem/1 var(--losa); font-variant-numeric: tabular-nums; }
+  .antes { margin-right: 8px; font-size: 1.125rem; font-weight: 500; color: var(--monte-suave); }
+  .corta { margin: 12px 0 0; max-width: 46ch; }
+  .compra { display: grid; grid-template-columns: auto 1fr; gap: 10px; margin-top: 22px; max-width: 460px; }
+  .cantidad { display: inline-flex; align-items: center; background: var(--papel); border: 1.5px solid var(--jade); border-radius: 999px; }
+  .cantidad button { width: 44px; height: 48px; border: 0; background: none; font-size: 1.25rem; font-weight: 600; color: var(--monte); cursor: pointer; border-radius: 999px; }
+  .cantidad output { min-width: 2ch; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .consulta { display: inline-block; margin-top: 14px; font-weight: 600; }
+  .detalle { margin-top: 32px; display: grid; gap: 24px; max-width: 62ch; }
+  .detalle h2 { margin: 0 0 6px; font: 700 1.1875rem/1.2 var(--losa); }
+  .detalle p { margin: 0; }
+  .beneficios { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .beneficios li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; align-items: baseline; }
+  .beneficios li::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--jade); translate: 0 -1px; }
+</style>

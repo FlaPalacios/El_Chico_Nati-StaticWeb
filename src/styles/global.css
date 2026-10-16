@@ -79,6 +79,7 @@ h1, h2, h3 { font-family: var(--losa); line-height: 1.1; }
 }
 
 /* Utilidades */
+[hidden] { display: none !important; } /* "hidden" gana aunque el componente tenga display propio */
 .oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .contenedor { width: min(100% - 2 * var(--margen), var(--ancho-max)); margin-inline: auto; }
 .campo { background: var(--salvia); color: var(--papel); --foco: var(--papel); }

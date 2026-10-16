@@ -1,0 +1,207 @@
+---
+// Catálogo de la portada: filtros rápidos por categoría (de C) y láminas (de B).
+// Todas las láminas vienen en el HTML; el script solo muestra, oculta y ordena (nunca arma HTML con datos).
+// Estado en la URL: ?q=&cat=&sub=&marca=&orden= (se puede compartir y volver atrás).
+import Lamina from './Lamina.astro';
+import { textoBuscable } from '../lib/buscar.js';
+
+interface Props {
+  productos: any[];
+  categorias: { nombre: string; slug: string; cantidad: number; subcategorias: { nombre: string; slug: string; cantidad: number }[] }[];
+  marcas: { nombre: string; slug: string; cantidad: number }[];
+}
+const { productos, categorias, marcas } = Astro.props;
+---
+<section class="catalogo banda" id="catalogo" aria-labelledby="t-catalogo" data-catalogo>
+  <div class="contenedor">
+    <h2 id="t-catalogo">Catálogo</h2>
+
+    <div class="controles" data-controles-catalogo hidden>
+      <ul class="filtros" aria-label="Filtrar por categoría">
+        <li><button type="button" data-cat="" aria-pressed="true">Todo ({productos.length})</button></li>
+        {categorias.map((c) => <li><button type="button" data-cat={c.slug} aria-pressed="false">{c.nombre} ({c.cantidad})</button></li>)}
+      </ul>
+      {categorias.filter((c) => c.subcategorias.length > 1).map((c) => (
+        <ul class="filtros sub" aria-label={`Subcategorías de ${c.nombre}`} data-subfiltros={c.slug} hidden>
+          <li><button type="button" data-sub="" aria-pressed="true">Todo {c.nombre.toLowerCase()}</button></li>
+          {c.subcategorias.map((s) => <li><button type="button" data-sub={s.slug} aria-pressed="false">{s.nombre} ({s.cantidad})</button></li>)}
+        </ul>
+      ))}
+      <div class="fila">
+        <p class="resultado" data-resultado aria-live="polite">{productos.length} productos</p>
+        <label>Marca
+          <select data-marca>
+            <option value="">Todas</option>
+            {marcas.map((m) => <option value={m.slug}>{m.nombre} ({m.cantidad})</option>)}
+          </select>
+        </label>
+        <label>Ordenar
+          <select data-orden>
+            <option value="">Destacados primero</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+            <option value="nombre">Nombre</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="rejilla" data-rejilla>
+      {productos.map((p, i) => (
+        <Lamina
+          producto={p}
+          diferida={i > 9}
+          datos={{
+            'data-cat': p.categoriaSlug,
+            'data-sub': p.subcategoriaSlug,
+            'data-marca': p.marcaSlug,
+            'data-precio': String(p.precio),
+            'data-nombre': p.nombre,
+            'data-destacado': p.destacado || p.masVendido ? '1' : '0',
+            'data-pos': String(i),
+            'data-texto': textoBuscable(p),
+          }}
+        />
+      ))}
+    </div>
+
+    <div class="vacio" data-vacio hidden>
+      <p>No encontramos productos con esa búsqueda. Prueba con otra palabra o mira todo el catálogo.</p>
+      <button class="boton" type="button" data-limpiar>Ver todo el catálogo</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { estadoDesdeUrl, pasaFiltros, comparador } from '../lib/catalogo.js';
+
+  const raiz = document.querySelector('[data-catalogo]');
+  const rejilla = raiz?.querySelector('[data-rejilla]');
+  if (raiz && rejilla) {
+    const laminas = [...rejilla.querySelectorAll(':scope > .lamina')];
+    const datos = new Map(laminas.map((el) => [el, {
+      cat: el.dataset.cat, sub: el.dataset.sub, marca: el.dataset.marca, texto: el.dataset.texto ?? '',
+      pos: Number(el.dataset.pos), precio: Number(el.dataset.precio), nombre: el.dataset.nombre ?? '', destacado: el.dataset.destacado === '1',
+    }]));
+    const botonesCat = [...raiz.querySelectorAll('button[data-cat]')];
+    const subfiltros = [...raiz.querySelectorAll('[data-subfiltros]')];
+    const selMarca = raiz.querySelector('[data-marca]');
+    const selOrden = raiz.querySelector('[data-orden]');
+    const resultado = raiz.querySelector('[data-resultado]');
+    const vacio = raiz.querySelector('[data-vacio]');
+    const buscador = document.querySelector('[data-cabecera] form[role="search"]');
+    const campo = buscador?.querySelector('input[name="q"]');
+    const nombresCat = Object.fromEntries(botonesCat.map((b) => [b.dataset.cat, b.textContent.replace(/\s*\(\d+\)$/, '')]));
+    const reducido = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Solo valen las opciones que existen en esta página (un enlace viejo no deja filtros invisibles)
+    const estado = estadoDesdeUrl(new URLSearchParams(location.search), {
+      categorias: botonesCat.map((b) => b.dataset.cat).filter(Boolean),
+      subcategorias: Object.fromEntries(laminas.map((el) => [el.dataset.sub, el.dataset.cat])),
+      marcas: [...(selMarca?.options ?? [])].map((o) => o.value).filter(Boolean),
+    });
+
+    const aplicar = () => {
+      // Se mueven los nodos (no solo lo visual): el orden del teclado y del lector de pantalla también cambia
+      rejilla.append(...[...laminas].sort((a, b) => comparador(estado.orden)(datos.get(a), datos.get(b))));
+
+      let visibles = 0;
+      for (const el of laminas) {
+        const ok = pasaFiltros(datos.get(el), estado);
+        el.hidden = !ok;
+        if (ok) visibles++;
+      }
+
+      botonesCat.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cat === estado.cat)));
+      subfiltros.forEach((ul) => {
+        const activo = ul.dataset.subfiltros === estado.cat;
+        ul.hidden = !activo;
+        if (activo) ul.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sub === estado.sub)));
+      });
+      if (selMarca) selMarca.value = estado.marca;
+      if (selOrden) selOrden.value = estado.orden;
+      if (campo && document.activeElement !== campo) campo.value = estado.q;
+
+      let texto = `${visibles} ${visibles === 1 ? 'producto' : 'productos'}`;
+      if (estado.q) texto += ` para «${estado.q}»`;
+      if (estado.cat) texto += ` en ${nombresCat[estado.cat]}`;
+      if (resultado) resultado.textContent = texto;
+      if (vacio) vacio.hidden = visibles > 0;
+
+      // La URL refleja el filtro (sin recargar)
+      const url = new URL(location.href);
+      for (const k of ['q', 'cat', 'sub', 'marca', 'orden']) {
+        if (estado[k]) url.searchParams.set(k, estado[k]); else url.searchParams.delete(k);
+      }
+      history.replaceState(null, '', url);
+    };
+
+    // Movimiento que responde a la acción: las láminas se reacomodan.
+    // Los nombres de transición se ponen solo durante el cambio (no viajan a la ficha).
+    let ultima = null;
+    const cambiar = (fn) => {
+      const hacer = () => { fn(); aplicar(); };
+      if (!document.startViewTransition || reducido()) { hacer(); return; }
+      laminas.forEach((el) => { el.style.viewTransitionName = `l-${el.querySelector('[data-ficha]')?.getAttribute('data-ficha')}`; });
+      const t = document.startViewTransition(hacer);
+      ultima = t;
+      // Solo limpia la última: si llega otro cambio seguido, sus nombres siguen puestos y también anima
+      t.finished.finally(() => { if (ultima === t) laminas.forEach((el) => { el.style.viewTransitionName = ''; }); });
+    };
+
+    raiz.addEventListener('click', (ev) => {
+      const b = ev.target instanceof Element ? ev.target.closest('button') : null;
+      if (!b) return;
+      if (b.dataset.cat !== undefined) cambiar(() => { estado.cat = b.dataset.cat; estado.sub = ''; });
+      else if (b.dataset.sub !== undefined) cambiar(() => { estado.sub = b.dataset.sub; });
+      else if (b.hasAttribute('data-limpiar')) {
+        cambiar(() => { Object.assign(estado, { q: '', cat: '', sub: '', marca: '', orden: '' }); });
+        botonesCat[0]?.focus(); // el botón pulsado se oculta: el foco no se pierde
+      }
+    });
+    selMarca?.addEventListener('change', () => cambiar(() => { estado.marca = selMarca.value; }));
+    selOrden?.addEventListener('change', () => cambiar(() => { estado.orden = selOrden.value; }));
+
+    // En la portada el buscador de la cabecera filtra aquí mismo
+    if (campo) campo.value = estado.q;
+    campo?.addEventListener('input', () => { estado.q = campo.value.trim().slice(0, 80); aplicar(); });
+    buscador?.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      estado.q = campo.value.trim().slice(0, 80);
+      aplicar();
+      raiz.scrollIntoView({ behavior: reducido() ? 'auto' : 'smooth' });
+    });
+
+    raiz.querySelector('[data-controles-catalogo]').hidden = false;
+    aplicar();
+    if (estado.q || estado.cat) raiz.scrollIntoView();
+  }
+</script>
+
+<style>
+  .catalogo { background: var(--liquen); }
+  .catalogo > .contenedor { padding-block: 32px 40px; }
+  @media (min-width: 900px) { .catalogo { margin-top: 24px; } }
+  h2 { margin: 0; font: 700 clamp(1.9rem, 5vw, 2.5rem)/1 var(--losa); }
+  /* 6 px de aire alrededor: la fila se desplaza (overflow) y sin ese margen recortaría el anillo de foco */
+  .filtros { display: flex; gap: 8px; margin: 10px calc(-1 * var(--margen)) 0; padding: 6px var(--margen); list-style: none; overflow-x: auto; scrollbar-width: none; }
+  .filtros::-webkit-scrollbar { display: none; }
+  @media (min-width: 900px) { .filtros { margin-inline: -6px; padding-inline: 6px; flex-wrap: wrap; } }
+  .filtros li { flex: none; }
+  .filtros button { white-space: nowrap; height: 40px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--jade); background: var(--papel); color: var(--monte); font-weight: 500; font-size: .9375rem; cursor: pointer; }
+  .filtros button[aria-pressed='true'] { background: var(--salvia); border-color: var(--salvia); color: var(--papel); }
+  .filtros.sub { margin-top: 2px; }
+  .filtros.sub button { height: 34px; padding: 0 14px; font-size: .875rem; border-color: var(--filete); }
+  .filtros.sub button[aria-pressed='true'] { background: var(--monte); border-color: var(--monte); color: var(--papel); }
+  .filtros button:focus-visible { outline-offset: 2px; }
+  .fila { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 16px 0 14px; }
+  .resultado { margin: 0 auto 0 0; font-size: .9375rem; color: var(--monte-suave); }
+  label { display: inline-flex; align-items: center; gap: 8px; font-size: .875rem; color: var(--monte-suave); }
+  select { height: 36px; padding: 0 10px; border: 1.5px solid var(--filete); border-radius: 10px; background: var(--papel); color: var(--monte); font-size: .875rem; }
+  .rejilla { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (min-width: 700px) { .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
+  @media (min-width: 1000px) { .rejilla { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (min-width: 1240px) { .rejilla { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; } }
+  .vacio { padding: 28px 0 8px; }
+  .vacio p { margin: 0 0 14px; }
+</style>

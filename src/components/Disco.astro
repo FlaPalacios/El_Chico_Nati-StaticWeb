@@ -1,0 +1,37 @@
+---
+// Producto sobre un disco blanco con anillo jade (forma del sello del logo).
+// El tamaño y la posición los decide quien lo usa (constelación, trío).
+import { fotoCuadro, srcsetCuadro } from '../lib/cloudinary.js';
+import { soles } from '../lib/formato.js';
+
+interface Props {
+  producto: { codigo: string; slug: string; nombre: string; precio: number; imagenes: string[] };
+  tam?: number;          // ancho máximo en que se dibuja, en px (para srcset/sizes)
+  conPrecio?: boolean;   // sello con el precio
+  clase?: string;
+  estilo?: string;       // variables de posición (--a, --i)
+  diferida?: boolean;
+}
+const { producto: p, tam = 240, conPrecio = false, clase, estilo, diferida = false } = Astro.props;
+const foto = p.imagenes[0];
+---
+<a class:list={['disco', clase]} href={`/producto/${p.slug}/`} data-ficha={p.codigo} style={estilo} aria-label={`${p.nombre}, ${soles(p.precio)}`}>
+  {foto && (
+    <img
+      src={fotoCuadro(foto, tam * 2)}
+      srcset={srcsetCuadro(foto, [Math.round(tam / 2), tam, tam * 2])}
+      sizes={`${tam}px`}
+      alt=""
+      width={tam}
+      height={tam}
+      loading={diferida ? 'lazy' : 'eager'}
+    />
+  )}
+  {conPrecio && <span class="sello-precio" aria-hidden="true">{soles(p.precio)}</span>}
+</a>
+
+<style>
+  .disco { position: relative; display: block; aspect-ratio: 1; border-radius: 50%; background: var(--papel); border: 6px solid var(--jade); text-decoration: none; --foco: var(--papel); }
+  .disco img { position: absolute; inset: 16%; width: 68%; height: 68%; object-fit: contain; }
+  .sello-precio { position: absolute; padding: 8px 12px; border-radius: 999px; background: var(--monte); color: var(--papel); border: 2px solid var(--papel); font: 700 1rem/1 var(--losa); white-space: nowrap; font-variant-numeric: tabular-nums; }
+</style>

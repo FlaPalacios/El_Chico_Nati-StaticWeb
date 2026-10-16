@@ -1,0 +1,35 @@
+---
+// Página no encontrada: explica qué pasó y ofrece por dónde seguir.
+import Base from '../layouts/Base.astro';
+import categorias from '../data/categorias.json';
+---
+<Base titulo="Página no encontrada">
+  <main class="contenedor no-encontrada">
+    <h1>Esta página no existe</h1>
+    <p>Puede que el enlace esté incompleto o que el producto ya no esté en la tienda. Busca lo que necesitas o entra por una categoría.</p>
+    <form class="buscar" role="search" action="/" method="get">
+      <label for="q404">Buscar productos</label>
+      <div>
+        <input id="q404" name="q" type="search" autocomplete="off" enterkeyhint="search" />
+        <button class="boton" type="submit">Buscar</button>
+      </div>
+    </form>
+    <ul class="categorias">
+      {categorias.map((c) => <li><a href={`/?cat=${c.slug}#catalogo`}>{c.nombre} <span>({c.cantidad})</span></a></li>)}
+      <li><a href="/#catalogo">Todo el catálogo</a></li>
+    </ul>
+  </main>
+</Base>
+
+<style>
+  .no-encontrada { max-width: 720px; padding-block: 56px 24px; }
+  h1 { margin: 0; font-size: clamp(2rem, 6vw, 3rem); }
+  p { margin: 14px 0 0; color: var(--monte-suave); max-width: 52ch; }
+  .buscar { margin-top: 28px; }
+  .buscar label { display: block; margin-bottom: 8px; font-weight: 600; }
+  .buscar div { display: flex; gap: 10px; }
+  .buscar input { flex: 1; min-width: 0; height: 50px; padding: 0 18px; border: 1.5px solid var(--filete); border-radius: 999px; background: var(--papel); }
+  .categorias { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .categorias a { display: inline-flex; align-items: center; height: 40px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--jade); background: var(--papel); text-decoration: none; font-weight: 500; }
+  .categorias span { margin-left: 4px; color: var(--monte-suave); }
+</style>

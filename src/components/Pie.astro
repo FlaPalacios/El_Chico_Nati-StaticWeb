@@ -71,5 +71,6 @@ const anio = new Date().getFullYear();
   .datos { color: var(--papel-suave); }
   .legal { display: grid; gap: 8px; padding-block: 18px 96px; border-top: 1px solid var(--filete-salvia); font-size: .875rem; color: var(--papel-suave); }
   .legal p { margin: 0; }
-  @media (min-width: 900px) { .legal { grid-template-columns: auto 1fr; gap: 40px; padding-bottom: 28px; } .legal p:last-child { justify-self: end; text-align: right; } }
+  /* a la derecha queda libre el lugar del botón flotante de WhatsApp */
+  @media (min-width: 900px) { .legal { grid-template-columns: auto 1fr; gap: 40px; padding-bottom: 28px; padding-right: 72px; } .legal p:last-child { justify-self: end; text-align: right; } }
 </style>

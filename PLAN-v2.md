@@ -111,7 +111,7 @@ Cruce hecho entre el Master (10 pestañas), los dos TSV y las 30 fotos de Cloudi
 | D8 | ECN-023, 024, 025 y 026 ya están publicados sin ninguna descripción | Sus borradores existen en `descripciones-faltantes.tsv`; verificarlos contra la etiqueta y cargarlos (tarea S4) |
 | D9 | 10 productos visibles no tienen `modo_uso` | La ficha oculta la sección si está vacía. No se inventa texto |
 | D10 | Los beneficios de varios productos publicados hacen afirmaciones de salud fuertes (por ejemplo "Regula la presión arterial", "Acción antibacteriana", "Protección UV") | No se reescriben desde el código. Se anota como riesgo (sección 12) para revisión del equipo |
-| D11 | `mas_vendido = no` en los 29 productos, así que el bloque "Más vendidos" nunca aparecería | Según Ventas del Master, los que más unidades vendieron son Galleta Cookie Dough, Aceite de Almendras y Leche de Almendras. Propuesta: marcarlos en la hoja (tarea S5). Si no se marcan, el bloque no aparece |
+| D11 | `mas_vendido = no` en los 29 productos, así que el bloque "Más vendidos" nunca aparecería | Propuesta: marcar en la hoja los más vendidos según el Master (tarea S5). Si no se marcan, el bloque no aparece |
 | D12 | Slugs que no calzan con el nombre (`kefir-de-leche-hiri`, `tinte-castano-claro-seminatural`, `aceite-almendras-cabello`) | Se mantienen: el slug es la URL y debe ser estable. No se cambia por estética |
 | D13 | La pestaña Inicio del Master describe el flujo con backend (subir stock en la web, exportar CSV semanal, registrar venta manual en el panel) | Reescritura en tarea S2 |
 | D14 | El plan v1 menciona una pestaña "Colección" en el Master | No existe. Se quita del plan |
@@ -325,7 +325,7 @@ En las fases con interfaz (2, 4, 5, 6) se cargan juntas la skill `frontend-desig
 | Ruta | Qué hace |
 |---|---|
 | `/` | Portada boutique: producto estrella (un `destacado`), beneficios breves, categorías, destacados, más vendidos y resto. Cada bloque aparece solo si tiene productos |
-| `/catalogo` | Búsqueda, filtros por categoría, subcategoría, marca y precio, orden. Todo en el navegador. El estado del filtro va en la URL (`?cat=abarrotes&marca=fit-rex`) para compartir y volver atrás |
+| `/#catalogo` (en la portada) | Catálogo dentro de la portada (dirección D): búsqueda desde la cabecera, filtros por categoría y, al elegir una, por subcategoría; marca y orden (destacados, precio, nombre). Todo en el navegador, sin armar HTML con datos: las 23 láminas vienen en el HTML y solo se muestran, ocultan u ordenan. El estado va en la URL (`?q=&cat=&sub=&marca=&orden=`). No hay ruta `/catalogo` aparte |
 | `/producto/[slug]` | Galería, descripción, beneficios, modo de uso (si existe), cantidad, agregar al carrito, consultar por WhatsApp. Generadas en la compilación |
 | Panel lateral y `/carrito` | Cantidades, quitar, "te faltan S/ X para envío gratis" |
 | `/checkout` | Nombre, teléfono, dirección, referencia, departamento, provincia y distrito en cascada, nota. Envío calculado al elegir distrito |
@@ -477,7 +477,7 @@ Listo cuando: `npm run sync && npm test && npm run build` en verde y los JSON no
 |---|---|---|
 | 4.1 | Tarjeta de producto: foto normalizada, nombre, presentación, precio, agregar con cantidad | Sin texto de stock; foto sin recuadro visible |
 | 4.2 | Portada con bloques condicionales | Si se quitan los destacados del TSV de prueba, el bloque desaparece |
-| 4.3 | `/catalogo`: búsqueda sin tildes (`cafe` encuentra "Café"), filtros, orden, estado en la URL | Pruebas con clics a 390 y 1280; atrás del navegador conserva filtros |
+| 4.3 | Catálogo en la portada (`/#catalogo`): búsqueda sin tildes (`cafe` encuentra "Café"), filtros por categoría y subcategoría, marca, orden, estado en la URL | Pruebas con clics a 390 y 1280; la URL refleja el filtro |
 | 4.4 | `/producto/[slug]`: galería con 1 o 2 fotos, secciones vacías ocultas, enlace WhatsApp sin JS | ECN-013 (sin modo de uso) no muestra la sección |
 | 4.5 | Transición foto → ficha con View Transitions | Funciona en Chrome; en otro navegador navega normal |
 | 4.6 | 404 con buscador y categorías | Ruta inexistente muestra la 404 |
@@ -489,7 +489,7 @@ Listo cuando: se recorre todo el catálogo en celular y escritorio sin errores e
 
 | ID | Tarea | Verificación |
 |---|---|---|
-| 5.1 | Store del carrito (Alpine) con las reglas de la sección 8 | Prueba: precio cambiado en el JSON se refleja en un carrito ya guardado |
+| 5.1 | Store del carrito con las reglas de la sección 8. Base hecha en la Fase 4 (`src/lib/carrito.js`: código y cantidad, 1 a 99, validación al leer; contador y aviso). Falta: quitar, cambiar cantidad, productos que dejaron de existir | Prueba: precio cambiado en el JSON se refleja en un carrito ya guardado |
 | 5.2 | Sincronización entre pestañas | Agregar en una pestaña actualiza el contador en otra |
 | 5.3 | Panel lateral y `/carrito` | Teclado: abre, recorre y cierra; el foco vuelve al botón |
 | 5.4 | `/checkout`: formulario, validación, cascada de ubigeo cargada solo aquí | Errores claros junto a cada campo |

@@ -1,0 +1,5 @@
+{
+  "nota": "Productos de los paneles 2 y 3 del carrusel de la portada (por código). Si alguno deja de estar visible, se completa solo con otros productos. Elegidos en el prototipo D (Fase 2).",
+  "panelEnvio": ["ECN-002", "ECN-005", "ECN-013"],
+  "panelWhatsapp": ["ECN-018", "ECN-020", "ECN-023"]
+}

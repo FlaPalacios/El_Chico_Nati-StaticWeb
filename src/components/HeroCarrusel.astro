@@ -1,0 +1,171 @@
+---
+// Hero a todo el ancho con 3 paneles que rotan (docs/direccion-visual.md, cuarta vuelta).
+// Sin JavaScript se ve solo el primer panel y los controles quedan ocultos.
+import Disco from './Disco.astro';
+import Greca from './Greca.astro';
+import productos from '../data/productos.json';
+import portada from '../data/portada.json';
+import envio from '../data/envio.json';
+import { tienda, enlaceWhatsapp } from '../data/tienda.js';
+import { constelacion, trio } from '../lib/seleccion.js';
+import { soles } from '../lib/formato.js';
+
+const { centro, anillo } = constelacion(productos);
+const usados = [centro, ...anillo].filter(Boolean).map((p) => p.codigo);
+const trioEnvio = trio(portada.panelEnvio, productos, usados);
+const trioWhatsapp = trio(portada.panelWhatsapp, productos, [...usados, ...trioEnvio.map((p) => p.codigo)]);
+const envioGratis = soles(envio.gratisDesde);
+const tarifaLima = envio.zonas[0]?.tarifa;
+const paneles = ['Productos naturales del Perú', 'Delivery el mismo día en Lima', 'Tu pedido, por WhatsApp'];
+---
+<section class="hero campo" aria-roledescription="carrusel" aria-label="Novedades de la tienda" data-carrusel>
+  <!-- Título principal fijo: siempre presente para lectores de pantalla, aunque se vea otro panel -->
+  <h1 class="oculto">{tienda.nombre}: productos naturales del Perú</h1>
+  <div class="diapositivas">
+    <article class="diapositiva activa" aria-roledescription="diapositiva" aria-label={`1 de 3: ${paneles[0]}`}>
+      <div class="contenedor entrada">
+        <div>
+          <h2 class="titulo">{paneles[0]}</h2>
+          <p>Arma tu pedido aquí y lo coordinamos por WhatsApp. Delivery el mismo día en Lima.</p>
+          <a class="boton claro" href="#catalogo">Ver catálogo</a>
+        </div>
+        {centro && (
+          <div class="constelacion">
+            <Disco producto={centro} tam={210} conPrecio clase="centro" estilo="--i: 0" />
+            {anillo.map((p, k) => <Disco producto={p} tam={110} estilo={`--a: ${-90 + k * 60}deg; --i: ${k + 1}`} />)}
+          </div>
+        )}
+      </div>
+    </article>
+
+    <article class="diapositiva" aria-roledescription="diapositiva" aria-label={`2 de 3: ${paneles[1]}`} inert>
+      <div class="contenedor entrada">
+        <div>
+          <h2 class="titulo">{paneles[1]}</h2>
+          <p>Y envío gratis a todo el Perú desde {envioGratis}.{tarifaLima ? ` En Lima y Callao el envío cuesta ${soles(tarifaLima)}.` : ''}</p>
+          <a class="boton claro" href="#catalogo">Ver catálogo</a>
+        </div>
+        <div class="trio">{trioEnvio.map((p, i) => <Disco producto={p} tam={i === 1 ? 210 : 170} conPrecio={i === 1} diferida />)}</div>
+      </div>
+    </article>
+
+    <article class="diapositiva" aria-roledescription="diapositiva" aria-label={`3 de 3: ${paneles[2]}`} inert>
+      <div class="contenedor entrada">
+        <div>
+          <h2 class="titulo">{paneles[2]}</h2>
+          <p>Arma tu carrito y te escribimos para confirmar disponibilidad y entrega. Pagas con Yape, Plin o transferencia.</p>
+          <a class="boton claro" href={enlaceWhatsapp(`Hola ${tienda.nombre}, quiero hacer un pedido.`)} target="_blank" rel="noopener noreferrer">Escribir por WhatsApp</a>
+        </div>
+        <div class="trio">{trioWhatsapp.map((p, i) => <Disco producto={p} tam={i === 1 ? 210 : 170} conPrecio={i === 1} diferida />)}</div>
+      </div>
+    </article>
+  </div>
+
+  <div class="contenedor controles" data-controles hidden>
+    <div class="puntos" role="group" aria-label="Elegir panel">
+      {paneles.map((t, i) => <button type="button" aria-label={`Panel ${i + 1}: ${t}`} aria-current={i === 0 ? 'true' : 'false'}></button>)}
+    </div>
+    <button class="pausa" type="button" data-pausa aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3v14H7zM14 5h3v14h-3z" /></svg>
+      <span>Pausar</span>
+    </button>
+  </div>
+  <Greca />
+</section>
+
+<script>
+  // Rota cada 7 s. Se pausa con el botón, al pasar el mouse o al entrar con el teclado,
+  // y no rota solo si el dispositivo pide reducir movimiento. Los paneles ocultos son inert.
+  const raiz = document.querySelector('[data-carrusel]');
+  if (raiz) {
+    const paneles = [...raiz.querySelectorAll('.diapositiva')];
+    const puntos = [...raiz.querySelectorAll('.puntos button')];
+    const pausa = raiz.querySelector('[data-pausa]');
+    const controles = raiz.querySelector('[data-controles]');
+    const PAUSA = 'M7 5h3v14H7zM14 5h3v14h-3z';
+    const PLAY = 'M8 5l11 7-11 7z';
+    let actual = 0;
+    let temporizador;
+    let pausadoPorUsuario = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let encima = false;
+
+    const mostrar = (n) => {
+      actual = (n + paneles.length) % paneles.length;
+      paneles.forEach((p, i) => {
+        p.classList.toggle('activa', i === actual);
+        p.inert = i !== actual;
+      });
+      puntos.forEach((b, i) => b.setAttribute('aria-current', String(i === actual)));
+    };
+    const programar = () => {
+      clearInterval(temporizador);
+      if (!pausadoPorUsuario && !encima && !document.hidden) temporizador = setInterval(() => mostrar(actual + 1), 7000);
+    };
+    const pintarPausa = () => {
+      if (!pausa) return;
+      pausa.setAttribute('aria-pressed', String(pausadoPorUsuario));
+      pausa.querySelector('span').textContent = pausadoPorUsuario ? 'Reanudar' : 'Pausar';
+      pausa.querySelector('path').setAttribute('d', pausadoPorUsuario ? PLAY : PAUSA);
+    };
+
+    puntos.forEach((b, i) => b.addEventListener('click', () => { mostrar(i); programar(); }));
+    pausa?.addEventListener('click', () => { pausadoPorUsuario = !pausadoPorUsuario; pintarPausa(); programar(); });
+    // Solo el mouse pausa al pasar por encima (en pantallas táctiles no hay "salir")
+    raiz.addEventListener('pointerenter', (ev) => { if (ev.pointerType === 'mouse') { encima = true; programar(); } });
+    raiz.addEventListener('pointerleave', (ev) => { if (ev.pointerType === 'mouse') { encima = false; programar(); } });
+    raiz.addEventListener('focusin', () => { encima = true; programar(); });
+    raiz.addEventListener('focusout', (ev) => { if (!raiz.contains(ev.relatedTarget)) { encima = false; programar(); } });
+    document.addEventListener('visibilitychange', programar);
+
+    if (controles) controles.hidden = false;
+    pintarPausa();
+    programar();
+  }
+</script>
+
+<style>
+  .hero { position: relative; }
+  .diapositivas { display: grid; }
+  /* todos los paneles en la misma celda: el alto lo pone el más alto y los demás se centran */
+  .diapositiva { grid-area: 1 / 1; display: grid; align-content: center; visibility: hidden; opacity: 0; }
+  .diapositiva.activa { visibility: visible; opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .diapositiva { transition: opacity .6s var(--curva), visibility 0s linear .6s; }
+    .diapositiva.activa { transition: opacity .6s var(--curva), visibility 0s; }
+  }
+
+  .entrada { display: grid; gap: 28px; padding-block: 28px 76px; }
+  .titulo { margin: 0; font: 700 clamp(2.6rem, 10vw, 4.75rem)/.95 var(--losa); letter-spacing: -.015em; max-width: 11ch; }
+  .entrada p { margin: 14px 0 0; max-width: 36ch; color: var(--papel-suave); }
+  .entrada .boton { margin-top: 22px; }
+  @media (min-width: 900px) { .entrada { grid-template-columns: 1fr minmax(0, 440px); align-items: center; gap: 56px; padding-block: 48px 84px; } }
+
+  /* Uno al centro y seis alrededor, como el sello del logo */
+  .constelacion { position: relative; width: min(100%, 440px); aspect-ratio: 1; justify-self: center; }
+  .constelacion :global(.disco) { position: absolute; width: 23%; border-width: clamp(3px, .9vw, 6px);
+    left: calc(50% + 38% * cos(var(--a)) - 11.5%); top: calc(50% + 38% * sin(var(--a)) - 11.5%); }
+  .constelacion :global(.disco.centro) { width: 46%; left: 27%; top: 27%; border-width: clamp(4px, 1.2vw, 8px); }
+  .constelacion :global(.sello-precio) { right: -12%; top: 50%; translate: 0 -50%; }
+  /* Entrada de los discos: del centro hacia afuera, una vez. Con `backwards` no depende de JavaScript */
+  @media (prefers-reduced-motion: no-preference) {
+    .constelacion :global(.disco) { animation: aparecer .65s var(--rebote) backwards; animation-delay: calc(var(--i) * 70ms + 150ms); }
+  }
+  @keyframes aparecer { from { opacity: 0; transform: scale(.82); } }
+
+  /* Trío de discos de los paneles 2 y 3 */
+  .trio { position: relative; width: min(100%, 440px); aspect-ratio: 1.35; justify-self: center; }
+  .trio :global(.disco) { position: absolute; width: 38%; top: 30%; border-width: clamp(3px, .9vw, 6px); }
+  .trio :global(.disco:nth-child(1)) { left: 0; }
+  .trio :global(.disco:nth-child(2)) { left: 26%; top: 4%; width: 48%; z-index: 1; border-width: clamp(4px, 1.2vw, 8px); }
+  .trio :global(.disco:nth-child(3)) { right: 0; }
+  .trio :global(.sello-precio) { right: -6%; bottom: 4%; }
+
+  /* Controles: puntos y pausa (WCAG 2.2.2) */
+  .controles { position: absolute; left: 0; right: 0; bottom: 38px; display: flex; align-items: center; gap: 14px; }
+  .puntos { display: flex; gap: 8px; }
+  .puntos button { width: 28px; height: 28px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+  .puntos button::before { content: ''; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--papel); }
+  .puntos button[aria-current='true']::before { background: var(--papel); width: 26px; border-radius: 6px; }
+  .pausa { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 1.5px solid var(--papel-suave); border-radius: 999px; background: transparent; color: var(--papel); font-size: .875rem; cursor: pointer; }
+  .pausa svg { width: 14px; height: 14px; }
+</style>
