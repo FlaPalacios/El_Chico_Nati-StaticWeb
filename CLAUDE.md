@@ -20,9 +20,9 @@ Antes de cualquier tarea, lee `PLAN-v2.md` y trabaja solo en la fase activa (ver
 - Fuentes e imágenes locales, salvo las fotos de productos en Cloudinary (URL con `f_auto,q_auto`).
 - Precios en formato `S/ 46.00`. El total se calcula en el navegador.
 - Si algo falla en el checkout, igual se debe abrir WhatsApp con el pedido.
-- Todo texto que viene de la hoja o del cliente se inserta escapado: en Astro `{expr}`, en Alpine `x-text` y `:attr`. Prohibido `set:html`, `x-html` e `innerHTML` con esos datos; lo que se arme en el navegador usa `<template>` + `textContent`.
+- Todo texto que viene de la hoja o del cliente se inserta escapado: en Astro `{expr}`. Prohibido `set:html`, `x-html` e `innerHTML` con esos datos; lo que se arme en el navegador usa `<template>` + `textContent`.
 - Fuentes: solo con licencia OFL u otra que permita redistribuir, con su archivo de licencia al lado.
-- Alpine.js en su build CSP: lógica en `Alpine.data(...)`/`Alpine.store(...)`, nada de expresiones complejas en atributos.
+- Interactividad con scripts de módulo pequeños y delegación de eventos (sin framework). Alpine se retiró en la Fase 6 porque no se usaba. Nada de `eval`, `new Function` ni manejadores en atributos (`onclick=`): la CSP los bloquea.
 - Movimiento solo con `transform` y `opacity`, siempre con alternativa para `prefers-reduced-motion`.
 
 ## Diseño
@@ -42,7 +42,7 @@ Antes de cualquier tarea, lee `PLAN-v2.md` y trabaja solo en la fase activa (ver
 | `npm run build` | Compila el sitio estático en `dist/` |
 | `npm run preview` | Sirve `dist/` en local para el agente QA |
 
-(`sync` se agrega en la Fase 3; el resto existe desde la Fase 1. Entorno: Windows, Node ≥ 22.12, npm. Astro 7.3.5 y `@alpinejs/csp` 3.17.4 fijados en versión exacta.)
+(`sync` se agrega en la Fase 3; el resto existe desde la Fase 1. Entorno: Windows, Node ≥ 22.12, npm. Astro 7.3.5 fijado en versión exacta; la CSP la genera Astro (`security.csp` en `astro.config.mjs`).)
 
 ## Carpetas
 

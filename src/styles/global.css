@@ -23,7 +23,7 @@
 
   /* Derivados */
   --papel-suave: color-mix(in srgb, var(--papel) 86%, var(--salvia));
-  --monte-suave: color-mix(in srgb, var(--monte) 72%, var(--niebla));
+  --monte-suave: color-mix(in srgb, var(--monte) 78%, var(--niebla)); /* ≥ 4.5:1 también sobre liquen */
   --filete: color-mix(in srgb, var(--jade) 50%, var(--papel));
   --filete-salvia: color-mix(in srgb, var(--papel) 22%, var(--salvia));
   --jade-claro: color-mix(in srgb, var(--jade) 45%, var(--papel)); /* ≈ 4.8:1 sobre salvia */
@@ -102,3 +102,6 @@ html:has(dialog[open]) { overflow: hidden; } /* con el panel abierto, la página
 .boton:hover { background: var(--salvia-hundido); }
 .boton.claro { background: var(--papel); color: var(--salvia); }
 .boton.claro:hover { background: var(--liquen); }
+
+/* Acción secundaria con aspecto de enlace (botón o enlace) */
+.enlace-accion { padding: 0; border: 0; background: none; font-weight: 600; color: var(--monte); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }

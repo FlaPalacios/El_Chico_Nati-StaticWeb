@@ -1,0 +1,3 @@
+# Mientras no sea v1.0, el sitio no se indexa (PLAN-v2.md, tarea 6.6).
+User-agent: *
+Disallow: /

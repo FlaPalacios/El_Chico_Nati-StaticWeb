@@ -10,6 +10,16 @@ import path from 'node:path';
 import { leerTabla } from './lib/csv.mjs';
 import { procesarCatalogo } from './lib/catalogo.mjs';
 
+// En Windows, el antivirus o el servidor de desarrollo pueden tener el archivo abierto un instante (EPERM/EBUSY)
+async function renombrarConReintento(desde, hacia, intentos = 8) {
+  for (let i = 1; ; i++) {
+    try { return await rename(desde, hacia); } catch (e) {
+      if (i >= intentos || !['EPERM', 'EBUSY', 'EACCES'].includes(e.code)) throw e;
+      await new Promise((r) => setTimeout(r, 150 * i));
+    }
+  }
+}
+
 const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const salida = path.join(raiz, 'src', 'data');
 
@@ -58,7 +68,7 @@ async function main() {
     await writeFile(path.join(salida, `${nombre}.tmp`), JSON.stringify(datos, null, 2) + '\n', 'utf8');
   }
   for (const nombre of Object.keys(archivos)) {
-    await rename(path.join(salida, `${nombre}.tmp`), path.join(salida, nombre));
+    await renombrarConReintento(path.join(salida, `${nombre}.tmp`), path.join(salida, nombre));
   }
 
   const subs = categorias.reduce((n, c) => n + c.subcategorias.length, 0);

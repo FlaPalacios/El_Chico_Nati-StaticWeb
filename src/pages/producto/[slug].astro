@@ -20,7 +20,7 @@ const consulta = enlaceWhatsapp(`Hola, tengo una consulta sobre ${p.nombre} (${p
 const fotos = p.imagenes;
 const hayDetalle = Boolean(p.descripcionLarga || p.beneficios.length || p.modoUso);
 ---
-<Base titulo={`${p.nombre} ${p.presentacion}`} descripcion={p.descripcionCorta || `${p.nombre}, ${p.presentacion}. ${soles(p.precio)}.`} mensajeWhatsapp={`Hola, tengo una consulta sobre ${p.nombre}.`}>
+<Base titulo={`${p.nombre} ${p.presentacion}`} flotante="escritorio" imagen={fotos[0] ? fotoCuadro(fotos[0], 1200).replace('/f_auto,', '/f_jpg,') : undefined} descripcion={p.descripcionCorta || `${p.nombre}, ${p.presentacion}. ${soles(p.precio)}.`} mensajeWhatsapp={`Hola, tengo una consulta sobre ${p.nombre}.`}>
   <main class="contenedor">
     <div class="zona">
       <nav class="ruta" aria-label="Ruta">

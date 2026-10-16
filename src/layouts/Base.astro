@@ -13,13 +13,21 @@ interface Props {
   titulo: string;
   descripcion?: string;
   mensajeWhatsapp?: string;
+  /** En celular el botón flotante tapa campos y botones: en ficha, carrito y checkout solo se muestra en escritorio (ahí ya hay un WhatsApp a mano) */
+  flotante?: 'siempre' | 'escritorio';
+  /** Imagen al compartir el enlace (Open Graph). Por defecto, el logo. */
+  imagen?: string;
 }
 
 const {
   titulo,
   descripcion = `${tienda.lema}. Pide por WhatsApp; delivery el mismo día en Lima y envíos a todo el país.`,
   mensajeWhatsapp,
+  flotante = 'siempre',
+  imagen,
 } = Astro.props;
+const imagenCompartir = imagen ?? new URL('/img/logo-512.png', Astro.site).href;
+const urlCanonica = new URL(Astro.url.pathname, Astro.site).href;
 // Catálogo vigente para el carrito: solo lo público que hace falta para pintar líneas y sumar.
 // Va en un atributo (Astro lo escapa); el navegador lo lee con JSON.parse.
 const catalogoCarrito = JSON.stringify(Object.fromEntries(productos.map((p) => [p.codigo, {
@@ -39,6 +47,14 @@ const tituloCompleto = titulo === tienda.nombre ? titulo : `${titulo} · ${tiend
     <meta name="theme-color" content="#FFFFFF" />
     <title>{tituloCompleto}</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
+    <!-- Vista previa al compartir por WhatsApp o redes -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:site_name" content={tienda.nombre} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={urlCanonica} />
+    <meta property="og:image" content={imagenCompartir} />
     <link rel="preload" href="/fonts/zilla-slab-700.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/hind-400.woff2" as="font" type="font/woff2" crossorigin />
   </head>
@@ -46,14 +62,13 @@ const tituloCompleto = titulo === tienda.nombre ? titulo : `${titulo} · ${tiend
     <Cabecera />
     <div class="contenido"><slot /></div>
     <Pie />
-    <BotonWhatsapp mensaje={mensajeWhatsapp} />
+    <BotonWhatsapp mensaje={mensajeWhatsapp} soloEscritorio={flotante === 'escritorio'} />
     <PanelCarrito />
     <div class="aviso" data-aviso role="status" aria-live="polite"></div>
     <div hidden data-catalogo-carrito={catalogoCarrito}></div>
     <script>
       import '../scripts/tienda.js';
       import '../scripts/carrito.js';
-      import '../scripts/alpine.js';
     </script>
   </body>
 </html>

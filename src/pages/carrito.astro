@@ -3,7 +3,7 @@
 import Base from '../layouts/Base.astro';
 import VistaCarrito from '../components/VistaCarrito.astro';
 ---
-<Base titulo="Tu carrito" mensajeWhatsapp="Hola, tengo una consulta sobre mi carrito.">
+<Base titulo="Tu carrito" flotante="escritorio" mensajeWhatsapp="Hola, tengo una consulta sobre mi carrito.">
   <main class="contenedor carrito-pagina">
     <h1>Tu carrito</h1>
     <div class="caja">
@@ -13,7 +13,8 @@ import VistaCarrito from '../components/VistaCarrito.astro';
 </Base>
 
 <style>
-  .carrito-pagina { max-width: 760px; padding-top: 24px; }
+  /* El contenido lo arma JS al cargar: con el alto reservado el pie no salta (CLS) */
+  .carrito-pagina { max-width: 760px; padding-top: 24px; min-height: calc(100dvh - var(--alto-cabecera)); }
   h1 { margin: 0 0 18px; font: 700 clamp(1.9rem, 5vw, 2.5rem)/1 var(--losa); }
   .caja { padding: 20px; background: var(--papel); border: 1px solid var(--filete); border-radius: var(--radio-lamina); }
   @media (min-width: 700px) { .caja { padding: 28px 32px; } }

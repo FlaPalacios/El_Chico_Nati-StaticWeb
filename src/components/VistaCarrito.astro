@@ -13,7 +13,7 @@ const { modo } = Astro.props;
   <div class="vc-vacio" data-vc-vacio hidden>
     <p>Tu carrito está vacío.</p>
     <a class="boton" href="/#catalogo" data-vc-catalogo>Ver el catálogo</a>
-    <button class="vc-enlace" type="button" data-recuperar hidden>Recuperar mi último pedido</button>
+    <button class="enlace-accion" type="button" data-recuperar hidden>Recuperar mi último pedido</button>
   </div>
 
   <div class="vc-lleno" data-vc-lleno hidden>
@@ -28,7 +28,7 @@ const { modo } = Astro.props;
       <p class="vc-nota">El envío se calcula al elegir tu distrito.</p>
       <div class="vc-acciones">
         <a class="boton" href="/checkout">Finalizar pedido</a>
-        {modo === 'panel' ? <a class="vc-enlace" href="/carrito">Ver carrito completo</a> : <a class="vc-enlace" href="/#catalogo">Seguir viendo productos</a>}
+        {modo === 'panel' ? <a class="enlace-accion" href="/carrito">Ver carrito completo</a> : <a class="enlace-accion" href="/#catalogo">Seguir viendo productos</a>}
       </div>
     </div>
   </div>
@@ -57,7 +57,6 @@ const { modo } = Astro.props;
   .vc-sin-js { margin: 0; }
   .vc-vacio { display: grid; justify-items: start; gap: 14px; }
   .vc-vacio p { margin: 0; font: 500 1.25rem/1.3 var(--losa); }
-  .vc-enlace { padding: 0; border: 0; background: none; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; color: var(--monte); }
 
   .vc-lineas { list-style: none; margin: 0; padding: 0; }
   .vc-linea { display: grid; grid-template-columns: var(--vc-foto) minmax(0, 1fr) auto; grid-template-areas: 'foto texto total' 'foto cantidad quitar'; gap: 6px 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--filete); }

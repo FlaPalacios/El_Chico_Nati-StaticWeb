@@ -13,10 +13,12 @@ interface Props {
 const { productos, categorias, marcas } = Astro.props;
 ---
 <section class="catalogo banda" id="catalogo" aria-labelledby="t-catalogo" data-catalogo>
+  <!-- Antes de pintar (archivo propio en public/js: la CSP lo permite con 'self', sin hash) -->
+  <script is:inline src="/js/antes-de-pintar.js"></script>
   <div class="contenedor">
     <h2 id="t-catalogo">Catálogo</h2>
 
-    <div class="controles" data-controles-catalogo hidden>
+    <div class="controles" data-controles-catalogo>
       <ul class="filtros" aria-label="Filtrar por categoría">
         <li><button type="button" data-cat="" aria-pressed="true">Todo ({productos.length})</button></li>
         {categorias.map((c) => <li><button type="button" data-cat={c.slug} aria-pressed="false">{c.nombre} ({c.cantidad})</button></li>)}
@@ -172,14 +174,16 @@ const { productos, categorias, marcas } = Astro.props;
       raiz.scrollIntoView({ behavior: reducido() ? 'auto' : 'smooth' });
     });
 
-    raiz.querySelector('[data-controles-catalogo]').hidden = false;
-    aplicar();
+    try { aplicar(); } finally { document.documentElement.classList.remove('filtro-pendiente'); }
     if (estado.q || estado.cat) raiz.scrollIntoView();
   }
 </script>
 
 <style>
   .catalogo { background: var(--liquen); }
+  /* Sin JavaScript los filtros no harían nada: no se muestran */
+  :global(html:not(.con-js)) .controles { display: none; }
+  :global(html.filtro-pendiente) .rejilla { visibility: hidden; }
   .catalogo > .contenedor { padding-block: 32px 40px; }
   @media (min-width: 900px) { .catalogo { margin-top: 24px; } }
   h2 { margin: 0; font: 700 clamp(1.9rem, 5vw, 2.5rem)/1 var(--losa); }

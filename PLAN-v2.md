@@ -62,8 +62,8 @@ Usuarios: el cliente (compra como invitado) y el equipo (Fernando y colaboradore
 | Envío | S/ 10 a la provincia de Lima (43 distritos) y al Callao (7 distritos); S/ 15 al resto del Perú; gratis desde S/ 120. Se puede cambiar después en `envio.json` | Confirmado por Fernando el 15-oct-2026; es la misma regla del sistema anterior |
 | Portada | Composición colectiva con las fotos reales de los productos. No se usa `img-paginaprincipal.png` | Confirmado por Fernando; es temporal y se mejorará |
 | Versionado | Fase N = `ECN-v0.N`. Plan y estructura = `ECN-v0.0`. Lanzamiento = `ECN-v1.0` | Pedido explícito; numeración de fases ajustada para que coincida |
-| Interactividad | Alpine.js en su build CSP (`@alpinejs/csp`) | Permite una política CSP estricta sin `unsafe-eval` desde el inicio |
-| Transiciones entre páginas | View Transitions nativas entre documentos (CSS), sin router en JS | Da la transición foto de tarjeta → ficha sin reinicializar Alpine; en navegadores sin soporte simplemente no anima |
+| Interactividad | Scripts de módulo pequeños con delegación de eventos (Alpine CSP se probó y se retiró en la Fase 6: no se usaba y pesaba ~70 KB) | CSP estricta sin `unsafe-eval` ni `unsafe-inline` en scripts |
+| Transiciones entre páginas | View Transitions nativas entre documentos (CSS), sin router en JS | Da la transición foto de tarjeta → ficha sin reinicializar scripts; en navegadores sin soporte simplemente no anima |
 | Pruebas | `node --test` (incluido en Node 22) para la lógica pura | Sin dependencias extra; cubre validación, envío, mensaje y número de pedido |
 
 ---
@@ -222,7 +222,7 @@ No se copia nada más de `backend/`, ni `.env.example`, ni las páginas de `admi
 Google Sheets (Excel Master)
   pestaña "Catálogo web" --CSV publicado--> scripts/sync-catalogo.mjs --valida--> src/data/*.json
                                                                                      |
-Astro (output: static) + Alpine.js (build CSP) <-------------------------------------+
+Astro (output: static) + scripts de módulo <-------------------------------------+
   portada, catálogo, ficha, carrito, checkout
         +--> fotos: Cloudinary (URL con transformaciones)
         +--> pedido: localStorage + enlace wa.me

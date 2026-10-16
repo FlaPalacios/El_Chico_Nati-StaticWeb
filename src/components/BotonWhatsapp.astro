@@ -4,10 +4,10 @@
 import Icono from './Icono.astro';
 import { enlaceWhatsapp } from '../data/tienda.js';
 
-interface Props { mensaje?: string }
-const { mensaje = 'Hola El Chico Naturista, quiero hacer una consulta.' } = Astro.props;
+interface Props { mensaje?: string; soloEscritorio?: boolean }
+const { mensaje = 'Hola El Chico Naturista, quiero hacer una consulta.', soloEscritorio = false } = Astro.props;
 ---
-<a class="flotante" href={enlaceWhatsapp(mensaje)} target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp">
+<a class:list={['flotante', { 'solo-escritorio': soloEscritorio }]} href={enlaceWhatsapp(mensaje)} target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp">
   <Icono nombre="whatsapp" />
 </a>
 
@@ -16,4 +16,5 @@ const { mensaje = 'Hola El Chico Naturista, quiero hacer una consulta.' } = Astr
   /* Doble anillo: blanco (se ve sobre el pie salvia) y monte (se ve sobre fondos claros) */
   .flotante:focus-visible { outline: 3px solid var(--papel); outline-offset: 2px; box-shadow: 0 0 0 8px var(--monte), 0 6px 18px var(--sombra); }
   .flotante :global(svg) { width: 28px; height: 28px; }
+  @media (max-width: 899px) { .solo-escritorio { display: none; } }
 </style>
