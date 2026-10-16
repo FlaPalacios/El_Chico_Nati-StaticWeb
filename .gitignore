@@ -1,0 +1,23 @@
+# Originales privados: Excel Master (costos, clientes, proveedores), TSV con stock, plan v1
+-recursos/
+*.xlsx
+*.xls
+
+# Referencia del repositorio anterior: revisar antes de subir nada
+referencia/
+
+# Dependencias y builds
+node_modules/
+dist/
+.astro/
+
+# Variables y secretos
+.env
+.env.*
+
+# Configuración local de Claude Code
+.claude/settings.local.json
+
+# Sistema
+.DS_Store
+Thumbs.db
