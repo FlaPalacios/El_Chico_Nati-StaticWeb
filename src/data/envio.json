@@ -1,0 +1,13 @@
+{
+  "nota": "Tarifas confirmadas por Fernando el 15-oct-2026. Se pueden cambiar aquí sin tocar código.",
+  "gratisDesde": 120,
+  "zonas": [
+    {
+      "nombre": "Lima Metropolitana y Callao",
+      "tarifa": 10,
+      "provincias": ["1501"],
+      "departamentos": ["07"]
+    }
+  ],
+  "tarifaResto": 15
+}

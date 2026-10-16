@@ -1,0 +1,98 @@
+/* El Chico Naturista: tokens y base.
+   Único lugar con colores escritos a mano (CLAUDE.md). Los componentes usan solo var(--…).
+   Dirección visual: docs/direccion-visual.md (D, elegida el 15-oct-2026). */
+
+/* Fuentes propias (OFL, licencias en /fonts) */
+@font-face { font-family: 'Zilla Slab'; src: url('/fonts/zilla-slab-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Zilla Slab'; src: url('/fonts/zilla-slab-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('/fonts/hind-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('/fonts/hind-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('/fonts/hind-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+
+:root {
+  /* Marca (fijos, no se cambian) */
+  --salvia: #2F5D50;
+  --jade: #7A9B87;
+  --niebla: #F7F7F7;
+  --cafe: #211E1E;
+
+  /* Apoyo */
+  --papel: #FFFFFF;
+  --monte: #1C3A31;
+  --liquen: #E4ECE7;
+
+  /* Derivados */
+  --papel-suave: color-mix(in srgb, var(--papel) 86%, var(--salvia));
+  --monte-suave: color-mix(in srgb, var(--monte) 72%, var(--niebla));
+  --filete: color-mix(in srgb, var(--jade) 50%, var(--papel));
+  --filete-salvia: color-mix(in srgb, var(--papel) 22%, var(--salvia));
+  --jade-claro: color-mix(in srgb, var(--jade) 45%, var(--papel)); /* ≈ 4.8:1 sobre salvia */
+  --salvia-hundido: color-mix(in srgb, var(--salvia) 85%, var(--monte));
+  --sombra: color-mix(in srgb, var(--monte) 18%, transparent);
+  --sombra-suave: color-mix(in srgb, var(--monte) 7%, transparent);
+
+  /* Tipografía */
+  --losa: 'Zilla Slab', Rockwell, Georgia, serif;
+  --texto: 'Hind', system-ui, sans-serif;
+
+  /* Medida: en 1920 px quedan ~280 px de aire a cada lado */
+  --ancho-max: 1360px;
+  --ancho-ficha: 1080px;
+  --margen: 16px;
+  --alto-cabecera: 68px;
+
+  /* Forma */
+  --radio-lamina: 12px;
+  --radio-foto: 8px;
+  --radio-panel: 20px;
+
+  /* Movimiento */
+  --curva: cubic-bezier(.2, .7, .2, 1);
+  --rebote: cubic-bezier(.3, 1.4, .5, 1);
+  --rapido: .2s;
+  --medio: .45s;
+
+  /* Foco: oscuro sobre fondos claros; .campo lo cambia a blanco */
+  --foco: var(--monte);
+}
+@media (min-width: 900px) { :root { --margen: 40px; } }
+
+/* Base */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--niebla); color: var(--monte); font: 400 1.0625rem/1.6 var(--texto);
+  /* el pie siempre llega al borde inferior, aunque la página sea corta */
+  min-height: 100dvh; display: flex; flex-direction: column; }
+.contenido { flex: 1; }
+a { color: inherit; }
+img, svg { display: block; max-width: 100%; }
+img { height: auto; } /* si el ancho se achica por max-width, el alto lo acompaña: nunca se deforma */
+button, input, select, textarea { font: inherit; color: inherit; }
+h1, h2, h3 { font-family: var(--losa); line-height: 1.1; }
+:focus-visible { outline: 3px solid var(--foco); outline-offset: 3px; }
+[id] { scroll-margin-top: calc(var(--alto-cabecera) + 16px); }
+
+/* Transición entre páginas (la foto tocada se transforma en la de la ficha) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-group(*) { animation-duration: var(--medio); animation-timing-function: var(--curva); }
+}
+
+/* Utilidades */
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.contenedor { width: min(100% - 2 * var(--margen), var(--ancho-max)); margin-inline: auto; }
+.campo { background: var(--salvia); color: var(--papel); --foco: var(--papel); }
+
+/* Banda: de borde a borde en celular; en escritorio, panel redondeado con aire a los lados */
+.banda { display: flow-root; }
+@media (min-width: 900px) {
+  .banda { width: min(100% - 2 * var(--margen), var(--ancho-max)); margin-inline: auto; border-radius: var(--radio-panel); overflow: hidden; }
+  .banda > .contenedor { width: auto; margin-inline: clamp(28px, 4vw, 56px); }
+}
+
+/* Botones */
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 50px; padding: 0 26px; border: 0; border-radius: 999px; background: var(--salvia); color: var(--papel); font: 600 1.0625rem/1 var(--texto); text-decoration: none; cursor: pointer; }
+@media (prefers-reduced-motion: no-preference) { .boton { transition: background-color var(--rapido); } }
+.boton:hover { background: var(--salvia-hundido); }
+.boton.claro { background: var(--papel); color: var(--salvia); }
+.boton.claro:hover { background: var(--liquen); }

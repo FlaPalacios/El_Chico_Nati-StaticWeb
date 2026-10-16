@@ -1,21 +1,28 @@
 // Lectura y escritura de TSV simples: una fila por línea, columnas separadas
 // por tabulador, sin comillas. Es el formato que exporta Google Sheets.
 
+// Número de fila en la hoja (1 = encabezado). Va como símbolo: no aparece en Object.entries
+// ni en los JSON, pero sobrevive al quitar filas vacías y permite dar errores exactos.
+export const FILA = Symbol('fila');
+
 /** Texto TSV → lista de objetos { columna: valor }. Tolera BOM y CRLF. */
 export function leerTsv(texto) {
   const lineas = texto
-    .replace(/^﻿/, '')
+    .replace(/^\uFEFF/, '')
     .split(/\r?\n/)
-    .filter((linea) => linea.trim() !== '');
+    .map((linea, i) => ({ linea, numero: i + 1 }))
+    .filter(({ linea }) => linea.trim() !== '');
   if (lineas.length === 0) return { columnas: [], filas: [] };
 
-  const columnas = lineas[0].split('\t').map((c) => c.trim());
-  const filas = lineas.slice(1).map((linea, i) => {
+  const columnas = lineas[0].linea.split('\t').map((c) => c.trim());
+  const filas = lineas.slice(1).map(({ linea, numero }) => {
     const celdas = linea.split('\t');
     if (celdas.length > columnas.length) {
-      throw new Error(`Fila ${i + 2}: tiene ${celdas.length} columnas y el encabezado ${columnas.length}.`);
+      throw new Error(`Fila ${numero}: tiene ${celdas.length} columnas y el encabezado ${columnas.length}.`);
     }
-    return Object.fromEntries(columnas.map((c, j) => [c, (celdas[j] ?? '').trim()]));
+    const fila = Object.fromEntries(columnas.map((c, j) => [c, (celdas[j] ?? '').trim()]));
+    Object.defineProperty(fila, FILA, { value: numero }); // no enumerable: no cambia comparaciones ni JSON
+    return fila;
   });
   return { columnas, filas };
 }

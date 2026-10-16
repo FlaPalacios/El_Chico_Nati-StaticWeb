@@ -11,6 +11,13 @@
 # Referencia del repositorio anterior: revisar antes de subir nada
 referencia/
 
+# Generados por scripts/sync-catalogo.mjs (se rehacen en cada dev y build)
+src/data/productos.json
+src/data/categorias.json
+src/data/marcas.json
+src/data/sync-info.json
+src/data/*.tmp
+
 # Dependencias y builds
 node_modules/
 dist/

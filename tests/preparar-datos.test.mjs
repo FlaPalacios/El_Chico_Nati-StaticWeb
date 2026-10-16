@@ -14,7 +14,7 @@ const base = {
 };
 
 test('leerTsv quita el BOM y tolera CRLF', () => {
-  const { columnas, filas } = leerTsv('﻿codigo\tnombre\r\nECN-001\tLeche\r\n');
+  const { columnas, filas } = leerTsv('\uFEFFcodigo\tnombre\r\nECN-001\tLeche\r\n');
   assert.deepEqual(columnas, ['codigo', 'nombre']);
   assert.deepEqual(filas, [{ codigo: 'ECN-001', nombre: 'Leche' }]);
 });

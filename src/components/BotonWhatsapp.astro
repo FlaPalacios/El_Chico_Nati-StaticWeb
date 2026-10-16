@@ -1,0 +1,19 @@
+---
+// Botón flotante de WhatsApp con su logo, en blanco sobre salvia.
+// Funciona sin JavaScript: el enlace ya trae el saludo escrito.
+import Icono from './Icono.astro';
+import { enlaceWhatsapp } from '../data/tienda.js';
+
+interface Props { mensaje?: string }
+const { mensaje = 'Hola El Chico Naturista, quiero hacer una consulta.' } = Astro.props;
+---
+<a class="flotante" href={enlaceWhatsapp(mensaje)} target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp">
+  <Icono nombre="whatsapp" />
+</a>
+
+<style>
+  .flotante { position: fixed; right: 16px; bottom: 16px; z-index: 5; width: 56px; height: 56px; border-radius: 50%; background: var(--salvia); color: var(--papel); border: 2px solid var(--papel); display: grid; place-items: center; box-shadow: 0 6px 18px var(--sombra); }
+  /* Doble anillo: blanco (se ve sobre el pie salvia) y monte (se ve sobre fondos claros) */
+  .flotante:focus-visible { outline: 3px solid var(--papel); outline-offset: 2px; box-shadow: 0 0 0 8px var(--monte), 0 6px 18px var(--sombra); }
+  .flotante :global(svg) { width: 28px; height: 28px; }
+</style>

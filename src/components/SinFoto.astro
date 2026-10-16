@@ -1,0 +1,16 @@
+---
+// Reemplazo para productos sin foto: el sello del logo (anillo, montañas y hoja) en trazo jade.
+// Usa currentColor, así toma el color de los tokens donde se ponga.
+interface Props { etiqueta?: string }
+const { etiqueta = 'Foto del producto en preparación' } = Astro.props;
+---
+<svg class="sin-foto" viewBox="0 0 200 200" role="img" aria-label={etiqueta}>
+  <circle cx="100" cy="100" r="78" fill="none" stroke="currentColor" stroke-width="3" />
+  <circle cx="100" cy="100" r="68" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 5" />
+  <path d="M46 136l30-38 18 20 22-30 38 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />
+  <path d="M100 132c0-26 6-46 24-60-2 22-10 38-24 46" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
+
+<style>
+  .sin-foto { width: 100%; aspect-ratio: 1; padding: 18%; color: var(--jade); background: var(--papel); border-radius: var(--radio-foto); }
+</style>

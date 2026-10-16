@@ -193,6 +193,8 @@ Lectura robusta: acepta TSV o CSV, BOM al inicio, decimales con punto o coma, `S
 
 ### 5.3 Salidas (generadas, nunca se editan a mano)
 
+No se versionan (están en `.gitignore`): `npm run dev` y `npm run build` corren el sync antes (`predev`, `prebuild`), así nunca hay dos fuentes de verdad.
+
 - `src/data/productos.json`: solo productos visibles, con `beneficios` como lista y URLs de imagen limpias.
 - `src/data/categorias.json`: árbol categoría → subcategorías visibles, con conteo.
 - `src/data/marcas.json`: marcas visibles, con conteo.
@@ -206,7 +208,7 @@ Todo sale de `referencia/ElChicoNaturista-anterior/` (no se inventa ningún dato
 |---|---|---|
 | `src/data/tienda.js` | `src/data/tienda.js` y `backend/app/tienda.py` | Nombre, lema, WhatsApp, dirección, horario, TikTok, LinkedIn, métodos de pago (texto), avisos del cintillo. Correo: `contacto@elchiconaturista.com` (D20) |
 | `src/data/envio.json` | `backend/app/ubigeo.py` (constantes de costo) y `backend/app/config.py` | Provincia de Lima (`1501`) y Callao (`07`): S/ 10. Resto: S/ 15. Gratis desde S/ 120 |
-| `src/data/ubigeo.json` | `backend/app/datos/ubigeo.csv` (INEI 2022: 25 departamentos, 196 provincias, 1891 distritos) y la tabla de tildes de `backend/app/ubigeo.py` | Departamento, provincia, distrito con código. Se carga solo en `/checkout` |
+| `public/datos/ubigeo.json` (generado con `npm run ubigeo` desde `data/ubigeo-inei-2022.csv`) | `backend/app/datos/ubigeo.csv` (INEI 2022: 25 departamentos, 196 provincias, 1891 distritos) y la tabla de tildes de `backend/app/ubigeo.py` | Departamento, provincia, distrito con código (52 KB). Archivo aparte que solo pide `/checkout` |
 | `public/fonts/` | `public/fonts/*.woff2` | Hind (licencia OFL, permite uso comercial) y Amulya (licencia ITF/Fontshare: revisar antes de publicar) |
 | Referencia de lógica | `src/alpine.js`, `src/lib/cloudinary.js`, `src/pages/catalogo.astro`, `src/pages/checkout.astro` | Se leen como guía; no se copian tal cual porque llamaban a la API |
 
@@ -460,7 +462,7 @@ Listo cuando: hay una dirección elegida con tokens definidos (colores, tipograf
 | 3.1 | `global.css` con todos los tokens de la dirección elegida | `grep` de `#` hexadecimal fuera de `global.css` = 0 resultados en `src/` |
 | 3.2 | Fuentes `.woff2` locales con `font-display: swap` y precarga de la principal | Sin peticiones a dominios de fuentes |
 | 3.3 | Logo limpio (máscara circular, PNG/WebP con transparencia) y favicon | Se ve bien sobre fondo claro y oscuro |
-| 3.4 | Imagen de reemplazo para productos sin foto, en la línea visual elegida | Archivo en `public/` |
+| 3.4 | Imagen de reemplazo para productos sin foto, en la línea visual elegida | Componente `src/components/SinFoto.astro` (SVG con currentColor, toma los tokens) |
 | 3.5 | `scripts/sync-catalogo.mjs` según 5.2 y 5.3 | `npm run sync` genera 23 productos, 3 categorías, 8 subcategorías, 6 marcas |
 | 3.6 | Pruebas de sync: cada error de 5.2 tiene un caso que falla con mensaje legible | `npm test` en verde |
 | 3.7 | `src/lib/cloudinary.js`: URL con `f_auto,q_auto`, ancho, `e_trim`, `c_pad`; `srcset` | Prueba unitaria de la URL |

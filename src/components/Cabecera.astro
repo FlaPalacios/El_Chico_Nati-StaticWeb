@@ -1,0 +1,69 @@
+---
+// Cabecera fija (siempre visible): marca a la izquierda, buscador al centro, carrito a la derecha.
+// El buscador envía ?q= a la portada, que filtra el catálogo (Fase 4).
+import Icono from './Icono.astro';
+import { tienda } from '../data/tienda.js';
+// Sitio estático: ?q= no existe al compilar; la portada lo lee en el navegador (Fase 4).
+---
+<header class="sitio-cabecera" data-cabecera>
+  <div class="contenedor cabecera">
+    <a class="marca" href="/" aria-label={`${tienda.nombre}, inicio`}>
+      <img src="/img/logo-192.webp" alt="" width="44" height="44" />
+      <span>{tienda.nombre}</span>
+    </a>
+    <form class="buscador" role="search" action="/" method="get">
+      <label class="oculto" for="q">Buscar productos</label>
+      <input id="q" name="q" type="search" placeholder="Buscar productos" autocomplete="off" enterkeyhint="search" />
+      <button type="submit" aria-label="Buscar"><Icono nombre="lupa" /></button>
+    </form>
+    <nav class="acciones" aria-label="Principal">
+      <a class="solo-ancho" href="/#catalogo">Catálogo</a>
+      <a class="carrito" href="/carrito" aria-label="Carrito">
+        <Icono nombre="bolsa" />
+        <span class="contador" data-contador hidden>0</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Sombra suave cuando la página ya se desplazó: la cabecera se separa del contenido.
+  const cabecera = document.querySelector('[data-cabecera]');
+  const marcar = () => cabecera?.classList.toggle('despegada', window.scrollY > 4);
+  window.addEventListener('scroll', marcar, { passive: true });
+  marcar();
+</script>
+
+<style>
+  .sitio-cabecera { position: sticky; top: 0; z-index: 10; background: var(--papel); border-bottom: 1px solid var(--filete); }
+  /* La sombra vive en un pseudo-elemento y solo cambia su opacidad (regla de movimiento) */
+  .sitio-cabecera::after { content: ''; position: absolute; inset: auto 0 -1px; height: 100%; box-shadow: 0 6px 18px var(--sombra-suave); opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: no-preference) { .sitio-cabecera::after { transition: opacity var(--rapido); } }
+  .sitio-cabecera:global(.despegada)::after { opacity: 1; }
+  .cabecera { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: var(--alto-cabecera); }
+  @media (min-width: 900px) { .cabecera { grid-template-columns: 1fr minmax(0, 520px) 1fr; gap: 24px; } }
+
+  .marca { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 1.1875rem/1 var(--losa); color: var(--monte); }
+  .marca img { width: 44px; height: 44px; }
+  .marca span { display: none; }
+  @media (min-width: 900px) { .marca span { display: inline; } }
+
+  .buscador { position: relative; }
+  .buscador input { width: 100%; height: 44px; padding: 0 46px 0 18px; border: 1.5px solid var(--filete); border-radius: 999px; background: var(--niebla); color: var(--monte); font: 400 1rem/1 var(--texto); }
+  .buscador input::placeholder { color: var(--monte-suave); }
+  .buscador input:focus-visible { outline-offset: 1px; border-color: var(--salvia); background: var(--papel); }
+  .buscador button { position: absolute; right: 4px; top: 4px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; color: var(--monte); display: grid; place-items: center; cursor: pointer; }
+  .buscador button :global(svg) { width: 20px; height: 20px; }
+
+  .acciones { justify-self: end; display: flex; gap: 20px; align-items: center; font-weight: 600; }
+  .acciones a { text-decoration: none; }
+  .solo-ancho { display: none; }
+  @media (min-width: 900px) { .solo-ancho { display: inline; } }
+  .carrito { position: relative; display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; border: 1.5px solid var(--filete); color: var(--monte); }
+  .carrito :global(svg) { width: 22px; height: 22px; }
+  .contador { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--salvia); color: var(--papel); font: 600 .75rem/20px var(--texto); text-align: center; }
+  @media (prefers-reduced-motion: no-preference) {
+    .contador:global(.salta) { animation: salta var(--medio) var(--curva); }
+  }
+  @keyframes salta { 40% { transform: scale(1.35); } }
+</style>

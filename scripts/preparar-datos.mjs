@@ -8,19 +8,9 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { leerTsv, escribirTsv } from './lib/tsv.mjs';
+import { COLUMNAS_PUBLICAS, COLUMNAS_PROHIBIDAS } from './lib/columnas.mjs';
 
-export const COLUMNAS_PUBLICAS = [
-  'codigo', 'slug', 'activo', 'nombre', 'presentacion', 'precio', 'precio_antes',
-  'categoria', 'categoria_slug', 'subcategoria', 'subcategoria_slug', 'marca', 'marca_slug',
-  'destacado', 'mas_vendido',
-  'descripcion_corta', 'descripcion_larga', 'modo_uso', 'beneficios',
-  'imagen_1', 'imagen_2',
-];
-
-export const COLUMNAS_PROHIBIDAS = [
-  'stock', 'costo', 'costo de lista', 'proveedor', 'margen', 'ganancia',
-  'compras', 'ventas', 'unidades vendidas', 'cliente', 'telefono',
-];
+export { COLUMNAS_PUBLICAS, COLUMNAS_PROHIBIDAS };
 
 const CAMPOS_DESCRIPCION = ['descripcion_corta', 'descripcion_larga', 'modo_uso', 'beneficios'];
 

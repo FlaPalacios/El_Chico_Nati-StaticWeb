@@ -1,0 +1,72 @@
+---
+// Guía de estilos interna para QA: tokens, tipografía, botones y piezas base.
+// No está enlazada desde el sitio. Se decide en la Fase 7 si se publica (con noindex) o se excluye.
+import Base from '../layouts/Base.astro';
+import SinFoto from '../components/SinFoto.astro';
+import { fotoCuadro } from '../lib/cloudinary.js';
+import productos from '../data/productos.json';
+import info from '../data/sync-info.json';
+
+const colores = ['salvia', 'jade', 'niebla', 'cafe', 'papel', 'monte', 'liquen', 'papel-suave', 'monte-suave', 'filete', 'salvia-hundido'];
+const muestra = productos[0];
+---
+<Base titulo="Guía de estilos">
+  <main class="contenedor guia">
+    <h1>Guía de estilos</h1>
+    <p class="nota">Catálogo sincronizado desde {info.origen}: {info.productos} productos, {info.avisos.length} aviso(s).</p>
+
+    <section aria-labelledby="g-color">
+      <h2 id="g-color">Colores</h2>
+      <ul class="colores">
+        {colores.map((c) => <li><span class="muestra" style={`background: var(--${c})`}></span><code>--{c}</code></li>)}
+      </ul>
+    </section>
+
+    <section aria-labelledby="g-tipo">
+      <h2 id="g-tipo">Tipografía</h2>
+      <p class="t1">Productos naturales del Perú</p>
+      <p class="t2">Leche de Almendras</p>
+      <p class="t3">S/ 23.00</p>
+      <p>Texto de lectura en Hind 400: bebida vegetal elaborada con alta concentración de almendras, de fácil digestión y sin azúcar añadida.</p>
+    </section>
+
+    <section aria-labelledby="g-botones">
+      <h2 id="g-botones">Botones</h2>
+      <div class="fila">
+        <button class="boton" type="button">Agregar al carrito</button>
+        <span class="campo caja"><a class="boton claro" href="#g-botones">Ver catálogo</a></span>
+      </div>
+    </section>
+
+    <section aria-labelledby="g-fotos">
+      <h2 id="g-fotos">Fotos</h2>
+      <div class="fila fotos">
+        <figure>
+          {muestra.imagenes[0]
+            ? <img src={fotoCuadro(muestra.imagenes[0], 360)} alt={muestra.nombre} width="180" height="180" />
+            : <SinFoto />}
+          <figcaption>Cloudinary con e_trim y margen</figcaption>
+        </figure>
+        <figure><SinFoto /><figcaption>Reemplazo sin foto</figcaption></figure>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .guia { padding-block: 32px; }
+  h1 { margin: 0; font-size: 2.5rem; }
+  h2 { margin: 36px 0 14px; font-size: 1.5rem; }
+  .nota { color: var(--monte-suave); }
+  .colores { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .colores li { display: grid; gap: 6px; font-size: .875rem; }
+  .muestra { height: 56px; border-radius: var(--radio-foto); border: 1px solid var(--filete); }
+  .t1 { margin: 0; font: 700 3rem/1 var(--losa); }
+  .t2 { margin: 10px 0 0; font: 500 1.25rem/1.2 var(--losa); }
+  .t3 { margin: 6px 0 0; font: 700 1.75rem/1 var(--losa); }
+  .fila { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .fila.fotos { align-items: stretch; }
+  .caja { padding: 16px; border-radius: var(--radio-lamina); }
+  .fotos figure { margin: 0; width: 180px; background: var(--papel); padding: 10px; border-radius: var(--radio-lamina); }
+  figcaption { margin-top: 8px; font-size: .8125rem; color: var(--monte-suave); }
+</style>

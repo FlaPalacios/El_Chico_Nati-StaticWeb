@@ -1,0 +1,75 @@
+---
+// Pie con la estructura del sitio anterior (docs/direccion-visual.md).
+// Sin "Mis pedidos": esta web no tiene cuentas.
+import Icono from './Icono.astro';
+import { tienda, enlaceWhatsapp } from '../data/tienda.js';
+import categorias from '../data/categorias.json';
+
+const anio = new Date().getFullYear();
+---
+<footer class="pie campo">
+  <div class="contenedor cuerpo">
+    <section class="marca" aria-label={tienda.nombre}>
+      <img src="/img/logo-192.webp" alt={tienda.nombre} width="76" height="76" />
+      <p class="lema">{tienda.lemaPie}</p>
+      <div class="redes">
+        <a href={tienda.redes.tiktok} target="_blank" rel="noopener noreferrer"><Icono nombre="tiktok" /><span>TikTok</span></a>
+        <a href={tienda.redes.linkedin} target="_blank" rel="noopener noreferrer"><Icono nombre="linkedin" /><span>LinkedIn</span></a>
+      </div>
+    </section>
+
+    <nav aria-labelledby="pie-catalogo">
+      <h2 id="pie-catalogo">Catálogo</h2>
+      <ul>
+        {categorias.map((c) => <li><a href={`/?cat=${c.slug}#catalogo`}>{c.nombre}</a></li>)}
+        <li><a href="/#catalogo">Ver todo</a></li>
+      </ul>
+    </nav>
+
+    <nav aria-labelledby="pie-pedido">
+      <h2 id="pie-pedido">Tu pedido</h2>
+      <ul>
+        <li><a href="/carrito">Carrito</a></li>
+        <li><a href="/checkout">Finalizar pedido</a></li>
+        <li><a href={enlaceWhatsapp('Hola, tengo una consulta sobre un pedido.')} target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a></li>
+      </ul>
+    </nav>
+
+    <section aria-labelledby="pie-donde">
+      <h2 id="pie-donde">Dónde estamos</h2>
+      <ul class="datos">
+        <li>{tienda.direccion}</li>
+        <li>{tienda.horario}</li>
+        <li><a href={enlaceWhatsapp('Hola, quiero hacer una consulta.')} target="_blank" rel="noopener noreferrer">{tienda.whatsappVisible}</a></li>
+        <li><a href={`mailto:${tienda.correo}`}>{tienda.correo}</a></li>
+      </ul>
+    </section>
+  </div>
+
+  <div class="contenedor legal">
+    <p>© {anio} {tienda.nombre}. Lima, Perú.</p>
+    <p>{tienda.avisoSuplementos}</p>
+  </div>
+</footer>
+
+<style>
+  .pie { margin-top: 72px; }
+  .cuerpo { display: grid; gap: 32px; padding-block: 40px 28px; }
+  @media (min-width: 760px) { .cuerpo { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1100px) { .cuerpo { grid-template-columns: 1.4fr repeat(3, 1fr); gap: 40px; } }
+  .marca img { width: 76px; height: 76px; padding: 5px; border-radius: 50%; background: var(--papel); }
+  .lema { margin: 14px 0; max-width: 30ch; font-size: 1rem; line-height: 1.45; }
+  .redes { display: flex; gap: 20px; }
+  .redes a { display: inline-flex; align-items: center; gap: 8px; font-size: .8125rem; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; padding-bottom: 2px; border-bottom: 1px solid var(--filete-salvia); }
+  .redes a:hover { border-color: currentColor; }
+  .redes :global(svg) { width: 18px; height: 18px; flex: none; }
+  /* Títulos de columna en mayúsculas espaciadas: así está en la referencia elegida por Fernando */
+  h2 { margin: 0 0 12px; font: 600 .8125rem/1.2 var(--texto); letter-spacing: .14em; text-transform: uppercase; color: var(--jade-claro); }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  ul a { text-decoration: none; }
+  ul a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .datos { color: var(--papel-suave); }
+  .legal { display: grid; gap: 8px; padding-block: 18px 96px; border-top: 1px solid var(--filete-salvia); font-size: .875rem; color: var(--papel-suave); }
+  .legal p { margin: 0; }
+  @media (min-width: 900px) { .legal { grid-template-columns: auto 1fr; gap: 40px; padding-bottom: 28px; } .legal p:last-child { justify-self: end; text-align: right; } }
+</style>

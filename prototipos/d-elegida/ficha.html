@@ -17,7 +17,8 @@
 
 /* Producto en lámina (de B), contenido */
 .galeria { background: var(--papel); border-radius: var(--radio-lamina); border: 1px solid var(--filete); padding: 20px; }
-@media (min-width: 900px) { .galeria { position: sticky; top: calc(var(--alto-cabecera) + 24px); padding: 28px; } }
+/* Estática a propósito: la foto no acompaña el desplazamiento (pedido de Fernando, 16-oct-2026) */
+@media (min-width: 900px) { .galeria { padding: 28px; } }
 .galeria .principal { width: 100%; max-width: 300px; margin-inline: auto; aspect-ratio: 1; object-fit: contain; border-radius: var(--radio-foto); }
 @media (min-width: 900px) { .galeria .principal { max-width: none; } }
 .miniaturas { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }

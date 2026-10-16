@@ -1,26 +1,56 @@
 ---
-// Layout mínimo de la Fase 1. El diseño real llega en las Fases 2 y 3.
+// Layout de todas las páginas: cabecera fija, contenido, pie y botón de WhatsApp.
+import '../styles/global.css';
+import Cabecera from '../components/Cabecera.astro';
+import Pie from '../components/Pie.astro';
+import BotonWhatsapp from '../components/BotonWhatsapp.astro';
+import { tienda } from '../data/tienda.js';
+
 interface Props {
   titulo: string;
   descripcion?: string;
+  mensajeWhatsapp?: string;
 }
 
-const { titulo, descripcion = 'Productos naturales del Perú con delivery en Lima y envíos a todo el país.' } = Astro.props;
+const {
+  titulo,
+  descripcion = `${tienda.lema}. Pide por WhatsApp; delivery el mismo día en Lima y envíos a todo el país.`,
+  mensajeWhatsapp,
+} = Astro.props;
+const tituloCompleto = titulo === tienda.nombre ? titulo : `${titulo} · ${tienda.nombre}`;
 ---
-
 <!doctype html>
 <html lang="es-PE">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Mientras no sea v1.0: fuera de buscadores (PLAN-v2.md, Fase 6) -->
     <meta name="robots" content="noindex, nofollow" />
     <meta name="description" content={descripcion} />
-    <title>{titulo}</title>
+    <!-- Única excepción a "colores solo en global.css": meta theme-color no admite var(). Es --papel. -->
+    <meta name="theme-color" content="#FFFFFF" />
+    <title>{tituloCompleto}</title>
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="preload" href="/fonts/zilla-slab-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/hind-400.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
-    <slot />
+    <Cabecera />
+    <div class="contenido"><slot /></div>
+    <Pie />
+    <BotonWhatsapp mensaje={mensajeWhatsapp} />
+    <div class="aviso" data-aviso role="status" aria-live="polite"></div>
     <script>
       import '../scripts/alpine.js';
     </script>
   </body>
 </html>
+
+<style is:global>
+  .aviso { position: fixed; left: 50%; bottom: 88px; z-index: 6; translate: -50% 0; width: max-content; max-width: calc(100vw - 32px); padding: 10px 16px; border-radius: 20px; background: var(--monte); color: var(--papel); text-align: center; opacity: 0; transition: opacity var(--rapido); pointer-events: none; }
+  .aviso.visible { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .aviso { transform: translateY(8px); transition: opacity var(--rapido), transform .3s var(--curva); }
+    .aviso.visible { transform: none; }
+  }
+</style>

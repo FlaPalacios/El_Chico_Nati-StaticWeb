@@ -1,10 +1,24 @@
 ---
+// Portada provisional de la Fase 3: confirma que el layout y los datos funcionan.
+// La portada real (hero de discos y catálogo) llega en la Fase 4.
 import Base from '../layouts/Base.astro';
+import productos from '../data/productos.json';
+import categorias from '../data/categorias.json';
 ---
-
 <Base titulo="El Chico Naturista">
   <main>
-    <h1>El Chico Naturista</h1>
-    <p>Estamos preparando la nueva tienda.</p>
+    <section class="campo provisional" aria-labelledby="titulo">
+      <div class="contenedor">
+        <h1 id="titulo">Productos naturales del Perú</h1>
+        <p>Estamos preparando la nueva tienda: {productos.length} productos en {categorias.length} categorías.</p>
+      </div>
+    </section>
   </main>
 </Base>
+
+<style>
+  /* Hero a todo el ancho, como cabecera y pie (el carrusel de 3 paneles llega en la Fase 4) */
+  .provisional > .contenedor { padding-block: 48px; }
+  h1 { margin: 0; font-size: clamp(2.4rem, 8vw, 4rem); max-width: 12ch; }
+  p { margin: 14px 0 0; color: var(--papel-suave); }
+</style>

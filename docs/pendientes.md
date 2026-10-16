@@ -33,4 +33,7 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 | T14 | Redes del pie: hoy TikTok y LinkedIn (enlaces reales del sitio anterior). Si hay Instagram o Facebook, pasar los enlaces | Antes de v1.0 |
 | T12 | En celular, el botón flotante de WhatsApp puede tapar el "+" de las láminas de la columna derecha mientras se desliza. En el prototipo se ocultó solo en la ficha (tapaba "Agregar al carrito" y ahí ya está "Consultar por WhatsApp"). Decidir la regla final en la Fase 4 | Fase 4 |
 | T13 | Cloudflare Pages debe publicar solo `dist/`, nunca la raíz del repo (`prototipos/` no debe quedar en línea) | Fase 7 |
+| T15 | `/guia` (guía de estilos para QA) existe en el sitio con `noindex` y sin enlaces. Decidir en la Fase 7 si se publica o se excluye del build | Fase 7 |
+| T16 | El plan v1 tenía un cintillo de avisos arriba de la cabecera; la dirección elegida no lo usa (los avisos están en el hero y en la franja de servicio). Si se quiere, se agrega en la Fase 4 | Fase 4, decisión de Fernando |
+| T17 | `public/img/logo-512.png` y `.webp` todavía no se usan: quedan para la imagen al compartir en redes (Open Graph) en la Fase 6 | Fase 6 |
 | T9 | El logo limpio sale de un PNG con el fondo a cuadros pintado. Si existe el archivo original (vectorial o con transparencia real), reemplazarlo | Cuando aparezca |

@@ -206,6 +206,14 @@ Decisión tomada al combinar: una sola familia tipográfica, la de C, también e
 | Redes del pie con logo en blanco | TikTok (Simple Icons, CC0) y LinkedIn (ícono propio: Simple Icons ya no lo incluye) en el color del texto |
 | Quitar "Los productos naturales no reemplazan un tratamiento médico…" | Quitado. Queda solo el aviso de suplementos que exige el plan |
 
+### Cuarta vuelta (16-oct-2026)
+
+| Pedido | Cómo quedó |
+|---|---|
+| Hero a todo el ancho, como la cabecera y el pie | El hero deja de ser panel redondeado: va de borde a borde, con el contenido dentro del contenedor. El catálogo sigue como panel |
+| Dos paneles más que roten como carrusel | 3 paneles con contenido real: (1) "Productos naturales del Perú" con la constelación; (2) "Delivery el mismo día en Lima" con envío gratis desde S/ 120 y S/ 10 en Lima y Callao; (3) "Tu pedido, por WhatsApp" con Yape, Plin o transferencia y botón a WhatsApp. Los paneles 2 y 3 llevan un trío de discos con productos reales. Rotan cada 7 s con fundido; se pausan al pasar el mouse, al entrar con teclado y con el botón "Pausar"; puntos para elegir panel; sin rotación automática con `prefers-reduced-motion`; los paneles ocultos son `inert` |
+| Ficha: que la foto no siga al desplazarse | La lámina del producto en la ficha es estática (se quitó `position: sticky`) |
+
 Los títulos de las columnas del pie van en mayúsculas espaciadas porque así está en la referencia que eligió Fernando; en el resto del sitio no se usan.
 
 ### Tokens finales
