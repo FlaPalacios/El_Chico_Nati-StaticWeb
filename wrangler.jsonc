@@ -1,0 +1,13 @@
+// Cloudflare Workers: el sitio se publica solo como archivos estáticos (dist/), sin código de servidor.
+// Con este archivo, "npx wrangler deploy" no intenta convertir el proyecto en SSR.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "elchiconaturista",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    // /carrito → /carrito/ como lo genera Astro; las rutas que no existen muestran 404.html
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

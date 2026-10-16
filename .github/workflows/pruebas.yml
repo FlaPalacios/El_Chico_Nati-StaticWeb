@@ -1,0 +1,27 @@
+# Pruebas en cada push y pull request (PLAN-v2.md, tarea 7.3).
+# Solo lee el repositorio: no publica ni escribe nada (la publicación la hace Cloudflare Pages).
+name: Pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.15.0
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
