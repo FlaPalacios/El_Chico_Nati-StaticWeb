@@ -1,0 +1,37 @@
+---
+// Panel lateral del carrito. Es un <dialog> modal: atrapa el foco, cierra con Escape
+// y al cerrar el foco vuelve al botón del carrito. Sin JavaScript, el enlace lleva a /carrito.
+import VistaCarrito from './VistaCarrito.astro';
+import Icono from './Icono.astro';
+---
+<dialog class="panel-carrito" data-panel-carrito aria-labelledby="t-panel-carrito">
+  <div class="pc-velo" data-cerrar-panel></div>
+  <div class="pc-hoja">
+    <div class="pc-cabeza">
+      <h2 id="t-panel-carrito" tabindex="-1">Tu carrito</h2>
+      <button type="button" class="pc-cerrar" data-cerrar-panel aria-label="Cerrar el carrito"><Icono nombre="cerrar" /></button>
+    </div>
+    <div class="pc-cuerpo">
+      <VistaCarrito modo="panel" />
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .panel-carrito { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--monte); overflow: hidden; }
+  .panel-carrito::backdrop { background: transparent; }
+  .pc-velo { position: absolute; inset: 0; background: var(--velo); opacity: 0; }
+  .pc-hoja { position: absolute; top: 0; right: 0; bottom: 0; width: min(420px, 100% - 32px); display: flex; flex-direction: column; background: var(--niebla); box-shadow: -10px 0 30px var(--sombra); transform: translateX(100%); }
+  .panel-carrito:global(.abierto) .pc-velo { opacity: 1; }
+  .panel-carrito:global(.abierto) .pc-hoja { transform: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .pc-velo { transition: opacity .3s var(--curva); }
+    .pc-hoja { transition: transform .38s var(--curva); }
+  }
+  .pc-cabeza { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 16px 14px 20px; background: var(--papel); border-bottom: 1px solid var(--filete); }
+  h2 { margin: 0; font: 700 1.5rem/1 var(--losa); }
+  h2:focus { outline: none; }
+  .pc-cerrar { width: 44px; height: 44px; display: grid; place-items: center; border: 1.5px solid var(--filete); border-radius: 50%; background: var(--papel); color: var(--monte); cursor: pointer; }
+  .pc-cerrar :global(svg) { width: 20px; height: 20px; }
+  .pc-cuerpo { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 18px 20px 24px; }
+</style>

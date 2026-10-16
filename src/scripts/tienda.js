@@ -1,21 +1,8 @@
 // Comportamiento común de todas las páginas (sin Alpine: funciones pequeñas con delegación de eventos).
-// - Carrito mínimo: botones "Agregar" y "+", selector de cantidad, contador y aviso.
+// - Agregar: botones "Agregar al carrito" y "+", selector de cantidad, contador y aviso.
 // - Transición foto → ficha: el nombre se pone solo en la foto que se tocó.
-import { CLAVE, leerCarrito, agregar, unidades, MAX_CANTIDAD } from '../lib/carrito.js';
-
-const reducido = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// Si el navegador no deja guardar (modo privado estricto), el carrito vive en memoria mientras dure la página
-let enMemoria = [];
-let sinGuardar = false; // true si la última escritura falló: manda lo que está en memoria
-function leer() {
-  if (sinGuardar) return enMemoria;
-  try { return leerCarrito(localStorage.getItem(CLAVE)); } catch { return enMemoria; }
-}
-function guardar(items) {
-  enMemoria = items;
-  try { localStorage.setItem(CLAVE, JSON.stringify(items)); sinGuardar = false; } catch { sinGuardar = true; }
-}
+import { agregar, unidades, MAX_CANTIDAD } from '../lib/carrito.js';
+import { leer, guardar, avisar, reducido } from './almacen.js';
 
 function pintarContador(saltar = false) {
   const n = unidades(leer());
@@ -33,21 +20,11 @@ function pintarContador(saltar = false) {
   });
 }
 
-let temporizador;
-function avisar(texto) {
-  const aviso = document.querySelector('[data-aviso]');
-  if (!aviso) return;
-  aviso.textContent = texto;
-  aviso.classList.add('visible');
-  clearTimeout(temporizador);
-  temporizador = setTimeout(() => aviso.classList.remove('visible'), 2600);
-}
-
 document.addEventListener('click', (ev) => {
   const objetivo = ev.target instanceof Element ? ev.target : null;
   if (!objetivo) return;
 
-  // Selector de cantidad (−/+)
+  // Selector de cantidad de la ficha (−/+)
   const paso = objetivo.closest('[data-paso]');
   if (paso) {
     const salida = paso.closest('[data-cantidad]')?.querySelector('output');
@@ -95,7 +72,7 @@ window.addEventListener('pageshow', () => {
   pintarContador();
 });
 
-// Otra pestaña cambió el carrito
-window.addEventListener('storage', (ev) => { if (ev.key === CLAVE) pintarContador(); });
+// Cualquier cambio del carrito (panel, /carrito, checkout u otra pestaña)
+document.addEventListener('ecn:carrito', () => pintarContador());
 
 pintarContador();

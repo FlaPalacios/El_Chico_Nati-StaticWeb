@@ -37,4 +37,8 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 | T18 | Los paneles 2 y 3 del carrusel no repiten productos que ya están en la constelación del panel 1: por eso el panel 2 muestra Té Matcha, Algarrobina y Miel con Propóleo en lugar de Nibs y Kéfir (que ya están en el panel 1). Se cambia en `src/data/portada.json` | Cuando Fernando quiera |
 | T16 | El plan v1 tenía un cintillo de avisos arriba de la cabecera; la dirección elegida no lo usa (los avisos están en el hero y en la franja de servicio). Si se quiere, se agrega en la Fase 4 | Fase 4, decisión de Fernando |
 | T17 | `public/img/logo-512.png` y `.webp` todavía no se usan: quedan para la imagen al compartir en redes (Open Graph) en la Fase 6 | Fase 6 |
+| T19 | Checkout en celular: el botón flotante de WhatsApp queda encima del lado derecho de los campos mientras se desliza (no tapa el botón de enviar). Ver junto con T12 | Fase 6 |
+| T20 | Revisión v0.5 (menores): `.ck-enlace` y `.vc-enlace` repiten el mismo estilo (unificar en `global.css`); los datos recordados se cargan con tope 160 en vez del `maxlength` de cada campo (no es riesgo: `validarCliente` recorta igual) | Fase 6 |
+| T21 | Si el cliente pulsa enviar antes de que cargue la lista de distritos (51 KB), ve "Elige tu distrito" mientras los selectores dicen "Cargando…". Con red normal no pasa | Fase 6 |
+| T22 | El registro del pedido en el Master es manual: el equipo copia el código `ECN-AAMMDD-NNNN` del chat a "Importar pedidos" (P9). La Fase 9 (Apps Script, opcional) lo automatizaría | Fase 9 |
 | T9 | El logo limpio sale de un PNG con el fondo a cuadros pintado. Si existe el archivo original (vectorial o con transparencia real), reemplazarlo | Cuando aparezca |

@@ -30,6 +30,10 @@
   --salvia-hundido: color-mix(in srgb, var(--salvia) 85%, var(--monte));
   --sombra: color-mix(in srgb, var(--monte) 18%, transparent);
   --sombra-suave: color-mix(in srgb, var(--monte) 7%, transparent);
+  --velo: color-mix(in srgb, var(--monte) 45%, transparent); /* fondo detrás del panel del carrito */
+
+  /* Funcional: solo para mensajes de error de formularios (≈ 6.6:1 sobre blanco) */
+  --alerta: #A3372A;
 
   /* Tipografía */
   --losa: 'Zilla Slab', Rockwell, Georgia, serif;
@@ -80,6 +84,7 @@ h1, h2, h3 { font-family: var(--losa); line-height: 1.1; }
 
 /* Utilidades */
 [hidden] { display: none !important; } /* "hidden" gana aunque el componente tenga display propio */
+html:has(dialog[open]) { overflow: hidden; } /* con el panel abierto, la página de atrás no se desplaza */
 .oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .contenedor { width: min(100% - 2 * var(--margen), var(--ancho-max)); margin-inline: auto; }
 .campo { background: var(--salvia); color: var(--papel); --foco: var(--papel); }

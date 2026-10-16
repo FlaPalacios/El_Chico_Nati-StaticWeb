@@ -1,0 +1,393 @@
+---
+// /checkout: datos de entrega, envío por distrito y envío del pedido por WhatsApp (PLAN-v2.md, sección 8).
+// El ubigeo (51 KB) se carga solo en esta página. Si algo falla, igual se abre WhatsApp con el pedido.
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import { LARGOS } from '../lib/pedido.js';
+---
+<Base titulo="Finalizar pedido" mensajeWhatsapp="Hola, tengo una consulta antes de hacer mi pedido.">
+  <main class="contenedor checkout" data-checkout>
+    <h1 data-ck-titulo>Finalizar pedido</h1>
+    <noscript><p>Para finalizar el pedido aquí hace falta activar JavaScript. También puedes escribirnos por WhatsApp con el botón de la esquina.</p></noscript>
+
+    <div class="ck-vacio" data-ck-vacio hidden>
+      <p>Tu carrito está vacío. Agrega productos para hacer tu pedido.</p>
+      <a class="boton" href="/#catalogo" data-ck-catalogo>Ver el catálogo</a>
+      <button class="ck-enlace" type="button" data-ck-recuperar hidden>Recuperar mi último pedido</button>
+    </div>
+
+    <form class="ck-form" data-ck-form novalidate hidden>
+      <div class="ck-datos">
+        <fieldset>
+          <legend>Tus datos</legend>
+          <div class="ck-campo">
+            <label for="ck-nombre">Nombre y apellido</label>
+            <input id="ck-nombre" name="nombre" autocomplete="name" maxlength={LARGOS.nombre} aria-describedby="e-nombre" />
+            <p class="ck-error" id="e-nombre" data-error="nombre" hidden></p>
+          </div>
+          <div class="ck-campo">
+            <label for="ck-telefono">Celular</label>
+            <input id="ck-telefono" name="telefono" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="18" aria-describedby="a-telefono e-telefono" />
+            <p class="ck-ayuda" id="a-telefono">Te escribimos a este número para confirmar el pedido.</p>
+            <p class="ck-error" id="e-telefono" data-error="telefono" hidden></p>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Entrega</legend>
+          <div class="ck-lugar" data-ck-lugar>
+            <div class="ck-campo">
+              <label for="ck-dep">Departamento</label>
+              <select id="ck-dep" name="departamento" disabled><option value="">Cargando…</option></select>
+            </div>
+            <div class="ck-campo">
+              <label for="ck-prov">Provincia</label>
+              <select id="ck-prov" name="provincia" disabled><option value="">Elige el departamento</option></select>
+            </div>
+            <div class="ck-campo ck-ancho">
+              <label for="ck-dist">Distrito</label>
+              <select id="ck-dist" name="ubigeo" disabled aria-describedby="e-lugar"><option value="">Elige la provincia</option></select>
+            </div>
+          </div>
+          <div class="ck-campo" data-ck-manual hidden>
+            <label for="ck-lugar">Distrito, provincia y departamento</label>
+            <input id="ck-lugar" name="lugar" autocomplete="address-level3" maxlength={LARGOS.lugar} aria-describedby="e-lugar" />
+          </div>
+          <p class="ck-error" id="e-lugar" data-error="lugar" hidden></p>
+
+          <div class="ck-campo">
+            <label for="ck-direccion">Dirección</label>
+            <input id="ck-direccion" name="direccion" autocomplete="street-address" maxlength={LARGOS.direccion} aria-describedby="e-direccion" />
+            <p class="ck-error" id="e-direccion" data-error="direccion" hidden></p>
+          </div>
+          <div class="ck-campo">
+            <label for="ck-referencia">Referencia <span>(opcional)</span></label>
+            <input id="ck-referencia" name="referencia" maxlength={LARGOS.referencia} placeholder="Por ejemplo: frente al parque, portón verde" />
+          </div>
+          <div class="ck-campo">
+            <label for="ck-nota">Nota para la tienda <span>(opcional)</span></label>
+            <textarea id="ck-nota" name="nota" rows="3" maxlength={LARGOS.nota}></textarea>
+          </div>
+        </fieldset>
+
+        <label class="ck-recordar">
+          <input type="checkbox" name="recordar" data-ck-recordar />
+          <span>Recordar mis datos en este celular</span>
+        </label>
+        <p class="ck-privacidad">Usamos tus datos solo para preparar y entregar este pedido. Viajan en el mensaje de WhatsApp que tú envías; esta web no los guarda en ningún servidor. Si marcas «Recordar mis datos», quedan guardados solo en este navegador y los puedes borrar desmarcando la casilla en tu próximo pedido.</p>
+      </div>
+
+      <aside class="ck-resumen" aria-labelledby="t-resumen">
+        <h2 id="t-resumen">Tu pedido</h2>
+        <ul class="ck-lineas" data-ck-lineas></ul>
+        <a class="ck-cambiar" href="/carrito">Cambiar productos</a>
+        <dl class="ck-montos">
+          <div><dt>Subtotal</dt><dd data-ck-subtotal></dd></div>
+          <div><dt>Envío</dt><dd data-ck-envio></dd></div>
+          <div class="ck-total"><dt>Total</dt><dd data-ck-total></dd></div>
+        </dl>
+        <p class="ck-gratis" data-ck-gratis></p>
+        <button class="boton ck-enviar" type="submit"><Icono nombre="whatsapp" /> Enviar pedido por WhatsApp</button>
+        <p class="ck-confirmaremos">Confirmaremos disponibilidad y tiempo de entrega por WhatsApp.</p>
+      </aside>
+
+      <template data-ck-plantilla>
+        <li><span class="ck-ln" data-n></span><span class="ck-lt" data-t></span></li>
+      </template>
+    </form>
+
+    <section class="ck-listo" data-ck-listo hidden aria-labelledby="t-listo">
+      <div class="ck-sello" aria-hidden="true"><Icono nombre="check" /></div>
+      <h1 id="t-listo" tabindex="-1">Pedido listo para enviar</h1>
+      <p class="ck-numero">Tu número de pedido es <strong data-ck-numero></strong></p>
+      <p>Abrimos WhatsApp con tu pedido escrito. Solo falta que pulses enviar en el chat.</p>
+      <p class="ck-bloqueado" data-ck-bloqueado hidden>Tu navegador no abrió WhatsApp. Pulsa el botón para abrirlo.</p>
+      <a class="boton" data-ck-abrir href="/" target="_blank" rel="noopener noreferrer"><Icono nombre="whatsapp" /> Abrir WhatsApp</a>
+      <p class="ck-confirmaremos">Confirmaremos disponibilidad y tiempo de entrega por WhatsApp.</p>
+      <div class="ck-despues">
+        <button class="ck-enlace" type="button" data-ck-recuperar-listo>Recuperar mi carrito</button>
+        <a href="/#catalogo">Seguir viendo productos</a>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script>
+  import { centimos, agregar } from '../lib/carrito.js';
+  import { costoEnvio } from '../lib/envio.js';
+  import { numeroPedido, fechaPedido, validarCliente, mensajePedido } from '../lib/pedido.js';
+  import { lugarDe } from '../lib/ubigeo.js';
+  import { soles } from '../lib/formato.js';
+  import reglas from '../data/envio.json';
+  import { enlaceWhatsapp } from '../data/tienda.js';
+  import { leer, guardar, leerJson, guardarJson, borrar, catalogo, reducido, CLAVE_PEDIDOS, CLAVE_CLIENTE } from '../scripts/almacen.js';
+  import { carritoVigente, ultimoPedido, recuperar } from '../scripts/carrito.js';
+
+  const raiz = document.querySelector('[data-checkout]');
+  const form = raiz?.querySelector('[data-ck-form]');
+  if (raiz && form instanceof HTMLFormElement) {
+    const $ = (sel) => raiz.querySelector(sel);
+    const campo = (nombre) => form.elements.namedItem(nombre);
+    const dep = campo('departamento');
+    const prov = campo('provincia');
+    const dist = campo('ubigeo');
+    const manual = campo('lugar');
+    const recordar = $('[data-ck-recordar]');
+    let arbol = null;
+    let enviado = false;
+
+    // ---- Resumen y envío ----
+    const ubigeoElegido = () => (arbol && dist.value) || '';
+    function pintarResumen() {
+      if (enviado) return;
+      const r = carritoVigente();
+      const vacio = r.lineas.length === 0;
+      $('[data-ck-vacio]').hidden = !vacio;
+      form.hidden = vacio;
+      $('[data-ck-recuperar]').hidden = !vacio || ultimoPedido().length === 0;
+      if (vacio) return;
+
+      const plantilla = $('[data-ck-plantilla]');
+      $('[data-ck-lineas]').replaceChildren(...r.lineas.map((l) => {
+        const li = plantilla.content.firstElementChild.cloneNode(true);
+        li.querySelector('[data-n]').textContent = `${l.cantidad} × ${l.nombre}${l.presentacion ? ` (${l.presentacion})` : ''}`;
+        li.querySelector('[data-t]').textContent = soles(l.total / 100);
+        return li;
+      }));
+
+      const costo = costoEnvio(ubigeoElegido(), r.subtotal / 100, reglas);
+      $('[data-ck-subtotal]').textContent = soles(r.subtotal / 100);
+      const envio = $('[data-ck-envio]');
+      envio.classList.toggle('pendiente', costo === null);
+      envio.textContent = costo === null ? (arbol ? 'Elige tu distrito' : 'Por confirmar') : costo === 0 ? 'Gratis' : soles(costo);
+      $('[data-ck-total]').textContent = costo === null ? `${soles(r.subtotal / 100)} más envío` : soles((r.subtotal + centimos(costo)) / 100);
+      const falta = Math.max(0, centimos(reglas.gratisDesde) - r.subtotal);
+      $('[data-ck-gratis]').textContent = falta > 0 ? `Te faltan ${soles(falta / 100)} para el envío gratis.` : 'Tu pedido tiene envío gratis.';
+    }
+
+    // ---- Ubigeo en cascada ----
+    const llenar = (select, opciones, primera) => {
+      select.replaceChildren(new Option(primera, ''), ...opciones.map(([valor, texto]) => new Option(texto, valor)));
+      select.disabled = opciones.length === 0;
+    };
+    const provinciasDe = (c) => arbol.find((d) => d.c === c)?.p ?? [];
+    const distritosDe = (c) => provinciasDe(c.slice(0, 2)).find((p) => p.c === c)?.d ?? [];
+    function elegirDep(c) {
+      dep.value = c;
+      llenar(prov, provinciasDe(c).map((p) => [p.c, p.n]), c ? 'Elige la provincia' : 'Elige el departamento');
+      llenar(dist, [], 'Elige la provincia');
+    }
+    function elegirProv(c) {
+      prov.value = c;
+      llenar(dist, c ? distritosDe(c) : [], c ? 'Elige tu distrito' : 'Elige la provincia');
+    }
+    dep.addEventListener('change', () => { elegirDep(dep.value); pintarResumen(); });
+    prov.addEventListener('change', () => { elegirProv(prov.value); pintarResumen(); });
+    dist.addEventListener('change', () => { limpiarError('lugar'); pintarResumen(); });
+
+    const guardado = leerJson(CLAVE_CLIENTE);
+    fetch('/datos/ubigeo.json')
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(String(res.status)))))
+      .then((datos) => {
+        if (!Array.isArray(datos)) throw new Error('ubigeo');
+        arbol = datos;
+        llenar(dep, arbol.map((d) => [d.c, d.n]), 'Elige el departamento');
+        // Por defecto Lima / Lima (la mayoría de pedidos); si recordó sus datos, su distrito
+        const ubigeo = typeof guardado?.ubigeo === 'string' && lugarDe(arbol, guardado.ubigeo) ? guardado.ubigeo : '';
+        elegirDep(ubigeo ? ubigeo.slice(0, 2) : '15');
+        elegirProv(ubigeo ? ubigeo.slice(0, 4) : '1501');
+        if (ubigeo) dist.value = ubigeo;
+        pintarResumen();
+      })
+      .catch(() => {
+        // Sin la lista de distritos se puede pedir igual: se escribe el distrito y el envío se confirma por WhatsApp
+        $('[data-ck-lugar]').hidden = true;
+        $('[data-ck-manual]').hidden = false;
+        pintarResumen();
+      });
+
+    // ---- Datos recordados ----
+    if (guardado && typeof guardado === 'object') {
+      for (const k of ['nombre', 'telefono', 'direccion', 'referencia']) {
+        if (typeof guardado[k] === 'string') campo(k).value = guardado[k].slice(0, 160);
+      }
+      recordar.checked = true;
+    }
+
+    // ---- Errores junto a cada campo ----
+    // Si la lista de distritos aún no carga, el foco va al primer selector (el campo manual sigue oculto)
+    const controlDe = (k) => (k === 'lugar' ? (arbol ? [dep, prov, dist].find((s) => !s.value) ?? dist : $('[data-ck-manual]').hidden ? dep : manual) : campo(k));
+    function limpiarError(k) {
+      const p = $(`[data-error="${k}"]`);
+      if (p) p.hidden = true;
+      (k === 'lugar' ? [dist, manual] : [campo(k)]).forEach((c) => c?.removeAttribute('aria-invalid'));
+    }
+    function pintarErrores(errores) {
+      for (const k of ['nombre', 'telefono', 'lugar', 'direccion']) {
+        const p = $(`[data-error="${k}"]`);
+        if (errores[k]) {
+          p.textContent = errores[k];
+          p.hidden = false;
+          (k === 'lugar' ? (arbol ? dist : manual) : campo(k)).setAttribute('aria-invalid', 'true');
+        } else limpiarError(k);
+      }
+    }
+    for (const k of ['nombre', 'telefono', 'direccion']) campo(k).addEventListener('input', () => limpiarError(k));
+    manual.addEventListener('input', () => { limpiarError('lugar'); });
+
+    // ---- Envío del pedido ----
+    function respaldo() {
+      // Mensaje mínimo si algo falló al armar el normal: el pedido igual llega
+      try {
+        const cat = catalogo();
+        const lineas = leer().map((i) => `• ${i.cantidad} × ${cat[i.codigo]?.nombre ?? i.codigo}`);
+        return ['Hola El Chico Naturista, quiero hacer un pedido.', '', ...lineas].join('\n');
+      } catch { return 'Hola El Chico Naturista, quiero hacer un pedido.'; }
+    }
+
+    let enviados = [];
+    form.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      let url;
+      let numero = '';
+      let pedido = null;
+      try {
+        const r = carritoVigente();
+        if (!r.lineas.length) { pintarResumen(); return; }
+        const ubigeo = ubigeoElegido();
+        const v = validarCliente({
+          nombre: campo('nombre').value, telefono: campo('telefono').value, direccion: campo('direccion').value,
+          referencia: campo('referencia').value, nota: campo('nota').value,
+          ubigeo, lugar: arbol ? lugarDe(arbol, ubigeo) : manual.value,
+        });
+        pintarErrores(v.errores);
+        const orden = ['nombre', 'telefono', 'lugar', 'direccion'].filter((k) => v.errores[k]);
+        if (orden.length) { controlDe(orden[0])?.focus(); return; }
+
+        const costo = costoEnvio(v.datos.ubigeo, r.subtotal / 100, reglas);
+        const envio = costo === null ? null : centimos(costo);
+        numero = numeroPedido(new Date(), crypto.getRandomValues(new Uint16Array(1))[0]);
+        url = enlaceWhatsapp(mensajePedido({ numero, lineas: r.lineas, subtotal: r.subtotal, envio, cliente: v.datos }));
+        pedido = { numero, fecha: fechaPedido(new Date()), items: r.lineas.map((l) => ({ codigo: l.codigo, cantidad: l.cantidad })), subtotal: r.subtotal, envio, total: r.subtotal + (envio ?? 0) };
+        const { nombre, telefono, direccion, referencia } = v.datos;
+        if (recordar.checked) guardarJson(CLAVE_CLIENTE, { nombre, telefono, direccion, referencia, ubigeo: v.datos.ubigeo });
+        else borrar(CLAVE_CLIENTE);
+      } catch {
+        url = enlaceWhatsapp(respaldo());
+      }
+
+      // Se abre dentro del clic para que el navegador no lo bloquee
+      const ventana = window.open(url, '_blank');
+      if (ventana) ventana.opener = null;
+
+      enviados = pedido?.items ?? leer();
+      enviado = true;
+      if (pedido) guardarJson(CLAVE_PEDIDOS, pedido); // último pedido: sin nombre ni dirección
+      guardar([]);
+      mostrarListo(numero, url, !ventana);
+    });
+
+    function mostrarListo(numero, url, bloqueado) {
+      form.hidden = true;
+      $('[data-ck-titulo]').hidden = true;
+      $('[data-ck-vacio]').hidden = true;
+      const listo = $('[data-ck-listo]');
+      $('[data-ck-numero]').textContent = numero;
+      $('[data-ck-numero]').parentElement.hidden = !numero;
+      $('[data-ck-abrir]').href = url;
+      $('[data-ck-bloqueado]').hidden = !bloqueado;
+      listo.hidden = false;
+      window.scrollTo({ top: 0, behavior: reducido() ? 'auto' : 'smooth' });
+      listo.querySelector('h1')?.focus({ preventScroll: true });
+    }
+
+    // Vuelve a poner en el carrito lo que se acaba de enviar
+    $('[data-ck-recuperar-listo]').addEventListener('click', () => {
+      let items = leer();
+      for (const i of enviados) items = agregar(items, i.codigo, i.cantidad);
+      guardar(items);
+      location.href = '/carrito';
+    });
+    $('[data-ck-recuperar]').addEventListener('click', () => {
+      recuperar();
+      pintarResumen();
+      campo('nombre')?.focus();
+    });
+
+    document.addEventListener('ecn:carrito', pintarResumen);
+    pintarResumen();
+  }
+</script>
+
+<style>
+  .checkout { max-width: 1100px; padding-top: 24px; }
+  h1 { margin: 0 0 20px; font: 700 clamp(1.9rem, 5vw, 2.5rem)/1 var(--losa); }
+  .ck-vacio { display: grid; justify-items: start; gap: 14px; max-width: 520px; }
+  .ck-vacio p { margin: 0; font: 500 1.25rem/1.3 var(--losa); }
+  .ck-enlace { padding: 0; border: 0; background: none; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; color: var(--monte); }
+
+  .ck-form { display: grid; gap: 24px; align-items: start; }
+  @media (min-width: 960px) { .ck-form { grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; } }
+  @media (min-width: 1200px) { .ck-form { grid-template-columns: minmax(0, 1fr) 400px; gap: 56px; } }
+
+  .ck-datos { display: grid; gap: 20px; }
+  fieldset { margin: 0; padding: 20px; border: 1px solid var(--filete); border-radius: var(--radio-lamina); background: var(--papel); display: grid; gap: 16px; min-width: 0; }
+  @media (min-width: 700px) { fieldset { padding: 24px 28px; } }
+  legend { float: left; width: 100%; padding: 0; margin-bottom: 2px; font: 700 1.3125rem/1.2 var(--losa); }
+  legend + * { clear: both; }
+  .ck-campo { display: grid; gap: 6px; }
+  .ck-campo label { font-weight: 600; font-size: .9375rem; }
+  .ck-campo label span { font-weight: 400; color: var(--monte-suave); }
+  input:not([type='checkbox']), select, textarea { width: 100%; min-height: 48px; padding: 10px 14px; border: 1.5px solid var(--filete); border-radius: 10px; background: var(--papel); color: var(--monte); font-size: 1rem; }
+  textarea { resize: vertical; line-height: 1.45; }
+  select:disabled { background: var(--niebla); color: var(--monte-suave); }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { outline-offset: 1px; border-color: var(--salvia); }
+  input::placeholder { color: var(--monte-suave); }
+  [aria-invalid='true'] { border-color: var(--alerta); }
+  .ck-ayuda { margin: 0; font-size: .875rem; color: var(--monte-suave); }
+  .ck-error { margin: 0; font-size: .9375rem; font-weight: 500; color: var(--alerta); }
+  .ck-lugar { display: grid; gap: 16px; }
+  @media (min-width: 560px) { .ck-lugar { grid-template-columns: 1fr 1fr; } .ck-ancho { grid-column: 1 / -1; } }
+
+  .ck-recordar { display: flex; gap: 12px; align-items: center; font-weight: 600; cursor: pointer; }
+  .ck-recordar input { width: 22px; height: 22px; accent-color: var(--salvia); flex: none; }
+  .ck-privacidad { margin: -8px 0 0; font-size: .875rem; line-height: 1.5; color: var(--monte-suave); max-width: 62ch; }
+
+  .ck-resumen { padding: 20px; border-radius: var(--radio-lamina); background: var(--papel); border: 1px solid var(--filete); display: grid; gap: 14px; }
+  @media (min-width: 960px) { .ck-resumen { position: sticky; top: calc(var(--alto-cabecera) + 20px); padding: 24px 26px; } }
+  .ck-resumen h2 { margin: 0; font: 700 1.3125rem/1.2 var(--losa); }
+  .ck-lineas { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .ck-lineas li { display: flex; justify-content: space-between; gap: 14px; font-size: .9375rem; }
+  .ck-lt { font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .ck-cambiar { justify-self: start; font-size: .9375rem; font-weight: 600; }
+  .ck-montos { margin: 0; padding-top: 14px; border-top: 1px solid var(--filete); display: grid; gap: 8px; }
+  .ck-montos div { display: flex; justify-content: space-between; gap: 12px; }
+  .ck-montos dt, .ck-montos dd { margin: 0; }
+  .ck-montos dd { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .ck-montos dd.pendiente { font-weight: 400; color: var(--monte-suave); }
+  .ck-total { padding-top: 8px; border-top: 1px solid var(--filete); align-items: baseline; }
+  .ck-total dt { font-weight: 600; }
+  .ck-total dd { font: 700 1.625rem/1 var(--losa); }
+  .ck-gratis { margin: 0; font-size: .9375rem; color: var(--monte-suave); }
+  .ck-enviar { width: 100%; height: 54px; }
+  .ck-enviar :global(svg), .ck-listo .boton :global(svg) { width: 22px; height: 22px; }
+  .ck-confirmaremos { margin: 0; font-size: .9375rem; text-align: center; color: var(--monte-suave); }
+
+  /* Confirmación: el sello aparece con un pequeño rebote (responde a la acción de enviar) */
+  .ck-listo { max-width: 560px; margin: 8px auto 0; padding: 32px 22px; text-align: center; background: var(--papel); border: 1px solid var(--filete); border-radius: var(--radio-panel); display: grid; justify-items: center; gap: 12px; }
+  .ck-listo h1 { margin: 6px 0 0; }
+  .ck-listo h1:focus { outline: none; }
+  .ck-listo p { margin: 0; max-width: 42ch; }
+  .ck-sello { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: var(--salvia); color: var(--papel); box-shadow: 0 0 0 6px var(--liquen); }
+  .ck-sello :global(svg) { width: 38px; height: 38px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ck-listo:not([hidden]) .ck-sello { animation: ck-sello .6s var(--rebote) both; }
+    .ck-listo:not([hidden]) > :not(.ck-sello) { animation: ck-aparece .5s var(--curva) .12s both; }
+  }
+  @keyframes ck-sello { from { transform: scale(.4); opacity: 0; } }
+  @keyframes ck-aparece { from { opacity: 0; transform: translateY(6px); } }
+  .ck-numero strong { display: block; margin-top: 4px; font: 700 1.75rem/1.1 var(--losa); letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+  .ck-bloqueado { padding: 10px 14px; border-radius: 10px; background: var(--liquen); font-weight: 600; }
+  .ck-listo .boton { margin-top: 6px; }
+  .ck-despues { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; margin-top: 8px; font-weight: 600; }
+</style>

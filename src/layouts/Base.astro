@@ -4,6 +4,9 @@ import '../styles/global.css';
 import Cabecera from '../components/Cabecera.astro';
 import Pie from '../components/Pie.astro';
 import BotonWhatsapp from '../components/BotonWhatsapp.astro';
+import PanelCarrito from '../components/PanelCarrito.astro';
+import productos from '../data/productos.json';
+import { fotoCuadro } from '../lib/cloudinary.js';
 import { tienda } from '../data/tienda.js';
 
 interface Props {
@@ -17,6 +20,11 @@ const {
   descripcion = `${tienda.lema}. Pide por WhatsApp; delivery el mismo día en Lima y envíos a todo el país.`,
   mensajeWhatsapp,
 } = Astro.props;
+// Catálogo vigente para el carrito: solo lo público que hace falta para pintar líneas y sumar.
+// Va en un atributo (Astro lo escapa); el navegador lo lee con JSON.parse.
+const catalogoCarrito = JSON.stringify(Object.fromEntries(productos.map((p) => [p.codigo, {
+  nombre: p.nombre, presentacion: p.presentacion, precio: p.precio, slug: p.slug, foto: p.imagenes[0] ? fotoCuadro(p.imagenes[0], 176) : '',
+}])));
 const tituloCompleto = titulo === tienda.nombre ? titulo : `${titulo} · ${tienda.nombre}`;
 ---
 <!doctype html>
@@ -39,9 +47,12 @@ const tituloCompleto = titulo === tienda.nombre ? titulo : `${titulo} · ${tiend
     <div class="contenido"><slot /></div>
     <Pie />
     <BotonWhatsapp mensaje={mensajeWhatsapp} />
+    <PanelCarrito />
     <div class="aviso" data-aviso role="status" aria-live="polite"></div>
+    <div hidden data-catalogo-carrito={catalogoCarrito}></div>
     <script>
       import '../scripts/tienda.js';
+      import '../scripts/carrito.js';
       import '../scripts/alpine.js';
     </script>
   </body>

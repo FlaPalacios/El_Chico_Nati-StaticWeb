@@ -1,0 +1,95 @@
+---
+// Lista del carrito con cantidades, quitar, subtotal y cuánto falta para el envío gratis.
+// Se usa en el panel lateral y en /carrito. Las líneas las arma src/scripts/carrito.js
+// clonando la plantilla y llenando con textContent (nunca HTML con datos).
+import envio from '../data/envio.json';
+
+interface Props { modo: 'panel' | 'pagina' }
+const { modo } = Astro.props;
+---
+<div class={`vista-carrito ${modo}`} data-vista-carrito data-gratis-desde={String(envio.gratisDesde)}>
+  <noscript><p class="vc-sin-js">Para usar el carrito hace falta activar JavaScript. También puedes pedir directo por WhatsApp desde la ficha de cada producto.</p></noscript>
+
+  <div class="vc-vacio" data-vc-vacio hidden>
+    <p>Tu carrito está vacío.</p>
+    <a class="boton" href="/#catalogo" data-vc-catalogo>Ver el catálogo</a>
+    <button class="vc-enlace" type="button" data-recuperar hidden>Recuperar mi último pedido</button>
+  </div>
+
+  <div class="vc-lleno" data-vc-lleno hidden>
+    <ul class="vc-lineas" data-vc-lineas aria-label="Productos en tu carrito"></ul>
+
+    <div class="vc-resumen">
+      <p class="vc-subtotal"><span>Subtotal</span><strong data-vc-subtotal></strong></p>
+      <div class="vc-gratis">
+        <p data-vc-gratis></p>
+        <span class="vc-barra" aria-hidden="true"><span data-vc-barra></span></span>
+      </div>
+      <p class="vc-nota">El envío se calcula al elegir tu distrito.</p>
+      <div class="vc-acciones">
+        <a class="boton" href="/checkout">Finalizar pedido</a>
+        {modo === 'panel' ? <a class="vc-enlace" href="/carrito">Ver carrito completo</a> : <a class="vc-enlace" href="/#catalogo">Seguir viendo productos</a>}
+      </div>
+    </div>
+  </div>
+
+  <template data-vc-plantilla>
+    <li class="vc-linea">
+      <a class="vc-foto" data-l-enlace tabindex="-1" aria-hidden="true"><img data-l-img alt="" width="72" height="72" loading="lazy" /></a>
+      <div class="vc-texto">
+        <a class="vc-nombre" data-l-enlace data-l-nombre></a>
+        <span class="vc-presentacion" data-l-presentacion></span>
+      </div>
+      <div class="vc-cantidad" role="group" data-l-grupo>
+        <button type="button" data-l-paso="-1">−</button>
+        <output data-l-cantidad></output>
+        <button type="button" data-l-paso="1">+</button>
+      </div>
+      <span class="vc-total" data-l-total></span>
+      <button class="vc-quitar" type="button" data-l-quitar>Quitar</button>
+    </li>
+  </template>
+</div>
+
+<style is:global>
+  .vista-carrito { --vc-foto: 64px; }
+  .vista-carrito.pagina { --vc-foto: 88px; }
+  .vc-sin-js { margin: 0; }
+  .vc-vacio { display: grid; justify-items: start; gap: 14px; }
+  .vc-vacio p { margin: 0; font: 500 1.25rem/1.3 var(--losa); }
+  .vc-enlace { padding: 0; border: 0; background: none; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; color: var(--monte); }
+
+  .vc-lineas { list-style: none; margin: 0; padding: 0; }
+  .vc-linea { display: grid; grid-template-columns: var(--vc-foto) minmax(0, 1fr) auto; grid-template-areas: 'foto texto total' 'foto cantidad quitar'; gap: 6px 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--filete); }
+  .vc-linea:first-child { padding-top: 0; }
+  .vc-foto { grid-area: foto; align-self: start; display: block; background: var(--papel); border: 1px solid var(--filete); border-radius: var(--radio-foto); padding: 4px; }
+  .vc-foto img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+  .vc-texto { grid-area: texto; display: grid; min-width: 0; }
+  .vc-nombre { font: 700 1.0625rem/1.2 var(--losa); text-decoration: none; }
+  .vc-nombre:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .vc-presentacion { font-size: .9375rem; color: var(--monte-suave); }
+  .vc-total { grid-area: total; align-self: start; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .vc-cantidad { grid-area: cantidad; justify-self: start; display: inline-flex; align-items: center; border: 1.5px solid var(--filete); border-radius: 999px; background: var(--papel); }
+  .vc-cantidad button { width: 38px; height: 36px; border: 0; background: none; border-radius: 999px; font-size: 1.125rem; font-weight: 600; color: var(--monte); cursor: pointer; }
+  .vc-cantidad button[aria-disabled='true'] { color: var(--filete); cursor: default; }
+  .vc-cantidad output { min-width: 2ch; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .vc-quitar { grid-area: quitar; justify-self: end; padding: 6px 0; border: 0; background: none; font-size: .9375rem; color: var(--monte-suave); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .vc-quitar:hover { color: var(--monte); }
+  @media (prefers-reduced-motion: no-preference) {
+    .vc-linea.entra { animation: vc-entra var(--medio) var(--curva); }
+  }
+  @keyframes vc-entra { from { opacity: 0; transform: translateY(6px); } }
+
+  .vc-resumen { display: grid; gap: 12px; padding-top: 16px; }
+  .vc-subtotal { display: flex; justify-content: space-between; align-items: baseline; margin: 0; font-size: 1.0625rem; }
+  .vc-subtotal strong { font: 700 1.5rem/1 var(--losa); font-variant-numeric: tabular-nums; }
+  .vc-gratis p { margin: 0 0 6px; font-size: .9375rem; }
+  /* Avance hacia el envío gratis: se mueve con scaleX al cambiar cantidades */
+  .vc-barra { display: block; height: 6px; border-radius: 3px; background: var(--liquen); overflow: hidden; }
+  .vc-barra span { display: block; height: 100%; background: var(--jade); transform-origin: left; transform: scaleX(0); }
+  @media (prefers-reduced-motion: no-preference) { .vc-barra span { transition: transform var(--medio) var(--curva); } }
+  .vc-nota { margin: 0; font-size: .875rem; color: var(--monte-suave); }
+  .vc-acciones { display: grid; gap: 12px; justify-items: center; margin-top: 4px; }
+  .vc-acciones .boton { width: 100%; }
+  .pagina .vc-acciones { justify-items: stretch; text-align: center; }
+</style>
