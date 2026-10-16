@@ -53,7 +53,8 @@ Usuarios: el cliente (compra como invitado) y el equipo (Fernando y colaboradore
 | Tema | Decisión v2 | Por qué |
 |---|---|---|
 | Precedencia de datos | El Master manda sobre el TSV y las descripciones (sección 3) | Pedido explícito; el Master es el registro operativo |
-| Hosting | Local hasta la Fase 7. Ahí se elige el hosting (sección 10, Fase 7). El sitio no depende de ninguno: es una carpeta `dist/` | Tu preferencia es Vercel, pero su plan gratuito (Hobby) es solo para uso personal no comercial y una tienda es uso comercial: haría falta el plan Pro. Se decide con esa información en la Fase 7 |
+| Hosting | Cloudflare Pages (plan gratuito). Local hasta la Fase 7 | Decidido por Fernando el 15-oct-2026: Vercel gratis no permite uso comercial, y el dominio ya está comprado en Cloudflare, así que DNS y hosting quedan en la misma cuenta |
+| Correo de contacto | `contacto@elchiconaturista.com` | Decidido por Fernando el 15-oct-2026 (reemplaza al `.pe` del sitio anterior) |
 | Actualización desde la hoja | Un flujo de GitHub Actions baja el CSV publicado cada hora y, solo si cambió, hace commit de `data/catalogo-inicial.tsv`. El hosting compila con cada push | Sirve con cualquier hosting, no gasta compilaciones si no hay cambios y deja historial de cada cambio de datos |
 | Datos en el repo | Solo un TSV limpio con columnas públicas (`data/catalogo-inicial.tsv`), generado por script | El TSV original trae la columna `stock`; subirlo a un repo público rompería la regla de stock |
 | Productos visibles hoy | 23 (no 26) | Ver sección 4 |
@@ -118,7 +119,7 @@ Cruce hecho entre el Master (10 pestañas), los dos TSV y las 30 fotos de Cloudi
 | D17 | `logo-ECN.png` no tiene transparencia real: el fondo a cuadros está pintado en la imagen (RGB, sin canal alfa) | Fase 3: generar versión limpia con máscara circular (el logo es un círculo). Si existe el archivo original o vectorial, mejor |
 | D18 | `img-paginaprincipal.png` es una imagen generada por IA que muestra productos que la tienda no vende (atomizadores, peines, goteros) | Confirmado: no se usa. La portada es una composición colectiva con las fotos reales de producto (Fase 2) |
 | D19 | El plan v1 dependía de un repositorio anterior que no estaba en esta carpeta | Resuelto: clonado en `referencia/ElChicoNaturista-anterior/` (sección 5.4) |
-| D20 | El correo del sistema anterior es `hola@elchiconaturista.pe`, pero el dominio comprado es `elchiconaturista.com` | Pregunta abierta 2 (sección 13). Mientras tanto el correo no se muestra en la web |
+| D20 | El correo del sistema anterior es `hola@elchiconaturista.pe`, pero el dominio comprado es `elchiconaturista.com` | Resuelto: `contacto@elchiconaturista.com`. Verificar que el buzón reciba correo antes de v1.0 |
 | D21 | La zona de S/ 10 es la **provincia** de Lima. Lugares del departamento de Lima fuera de ella (por ejemplo Huaral, de donde ya hubo un cliente) pagan S/ 15 | Es la regla confirmada. Se anota para que no sorprenda al registrar pedidos |
 
 ### 4.3 Resultado esperado de la primera sincronización
@@ -202,7 +203,7 @@ Todo sale de `referencia/ElChicoNaturista-anterior/` (no se inventa ningún dato
 
 | Archivo nuevo | Origen en el repositorio anterior | Contenido |
 |---|---|---|
-| `src/data/tienda.js` | `src/data/tienda.js` y `backend/app/tienda.py` | Nombre, lema, WhatsApp, dirección, horario, TikTok, LinkedIn, métodos de pago (texto), avisos del cintillo. El correo queda fuera hasta resolver D20 |
+| `src/data/tienda.js` | `src/data/tienda.js` y `backend/app/tienda.py` | Nombre, lema, WhatsApp, dirección, horario, TikTok, LinkedIn, métodos de pago (texto), avisos del cintillo. Correo: `contacto@elchiconaturista.com` (D20) |
 | `src/data/envio.json` | `backend/app/ubigeo.py` (constantes de costo) y `backend/app/config.py` | Provincia de Lima (`1501`) y Callao (`07`): S/ 10. Resto: S/ 15. Gratis desde S/ 120 |
 | `src/data/ubigeo.json` | `backend/app/datos/ubigeo.csv` (INEI 2022: 25 departamentos, 196 provincias, 1891 distritos) y la tabla de tildes de `backend/app/ubigeo.py` | Departamento, provincia, distrito con código. Se carga solo en `/checkout` |
 | `public/fonts/` | `public/fonts/*.woff2` | Hind (licencia OFL, permite uso comercial) y Amulya (licencia ITF/Fontshare: revisar antes de publicar) |
@@ -224,7 +225,7 @@ Astro (output: static) + Alpine.js (build CSP) <--------------------------------
         +--> pedido: localStorage + enlace wa.me
         +--> (Fase 9, opcional) Apps Script: fila en hoja de pedidos + correo
 GitHub Actions: pruebas en cada push (Fase 7) y, cada hora, baja el CSV y hace commit si cambió (Fase 8)
-Hosting (se elige en la Fase 7): compila con cada push a main y publica en elchiconaturista.com
+Cloudflare Pages (Fase 7): compila con cada push a main y publica en elchiconaturista.com
 ```
 
 Principios:
@@ -433,7 +434,7 @@ Cada tarea tiene ID, qué se hace y cómo se verifica. "Listo cuando" es la cond
 | 1.3 | Crear Astro (`output: 'static'`), Alpine.js build CSP, TypeScript no estricto | `npm run dev` y `npm run build` sin errores |
 | 1.4 | `scripts/preparar-datos.mjs`: une `-recursos/catalogo-ECN-productos.tsv` y `descripciones-faltantes.tsv` (solo celdas vacías) y escribe `data/catalogo-inicial.tsv` con las columnas de 5.1, aplicando D4, D6 y `activo = no` a ECN-014/015/016 (ECN-022 queda activo, D2) | El TSV de salida no tiene `stock`; tiene 29 filas; 23 visibles; ECN-004 tiene el frente en `imagen_1` |
 | 1.5 | Marcar las descripciones que vienen del borrador con una lista en `data/descripciones-pendientes.txt` (códigos) | 11 códigos listados |
-| 1.6 | Scripts npm: `dev`, `build`, `preview`, `sync`, `test`, `preparar-datos` | Todos corren |
+| 1.6 | Scripts npm: `dev`, `build`, `preview`, `test`, `preparar-datos` (`sync` se agrega en la Fase 3, junto con su script) | Todos corren |
 | 1.7 | Repositorio anterior clonado en `referencia/ElChicoNaturista-anterior/` (hecho en v0.0). Copiar a `public/fonts/` los `.woff2` de Hind y Amulya | `git check-ignore referencia` lo confirma; fuentes presentes |
 
 Listo cuando: build vacío funciona y el revisor de seguridad confirma que nada privado entra al repo.
@@ -511,22 +512,15 @@ Listo cuando: un pedido de prueba completo abre WhatsApp con el mensaje correcto
 
 | ID | Tarea | Verificación |
 |---|---|---|
-| 7.1 | Elegir hosting con esta información (ver nota). Tú creas la cuenta y conectas el repo; no se pega ninguna clave en la conversación | Hosting elegido y anotado en la sección 2.1 |
-| 7.2 | Configurar en el hosting: comando `npm run sync && npm run build`, carpeta `dist`, Node 22 | Push a `main` publica el sitio |
+| 7.1 | En Cloudflare, crear el proyecto de Pages y conectarlo al repo de GitHub. Lo haces tú desde el panel; no se pega ninguna clave en la conversación | El proyecto aparece en Cloudflare |
+| 7.2 | Configurar en Pages: comando `npm run sync && npm run build`, carpeta `dist`, variable `NODE_VERSION = 22` | Push a `main` publica en `*.pages.dev` |
 | 7.3 | Workflow `pruebas.yml`: `npm ci` y `npm test` en cada push, permisos `contents: read` | Un test roto se ve en rojo en GitHub |
-| 7.4 | Vincular `elchiconaturista.com` (DNS en el registrador del dominio) con HTTPS; `www` redirige al dominio principal | El sitio abre en el dominio con candado |
+| 7.4 | Vincular `elchiconaturista.com` como dominio personalizado (ya está en Cloudflare, así que el DNS se configura solo) con HTTPS; `www` redirige al dominio principal | El sitio abre en el dominio con candado |
+| 7.5b | Encabezados de seguridad en `public/_headers` (CSP, `X-Content-Type-Options`, `Referrer-Policy`), que Cloudflare Pages aplica | Los encabezados aparecen en la respuesta |
 | 7.5 | Flujo manual: editar la hoja, descargar la pestaña como TSV a `data/catalogo-inicial.tsv`, `npm run sync`, commit | Un cambio de precio de prueba se ve publicado |
 | 7.6 | `docs/guia-equipo.md`, primera parte: cómo editar la pestaña y qué columnas no tocar | Revisada por ti |
 
-Nota para elegir hosting (7.1):
-
-| Opción | Costo para una tienda | Comentario |
-|---|---|---|
-| Vercel | Plan Pro (pago). El plan gratuito Hobby es solo para uso personal no comercial, y vender productos cuenta como comercial | Tu preferencia actual. Funciona perfecto con Astro |
-| Cloudflare Pages | Plan gratuito (500 compilaciones al mes, dominios propios incluidos) | Confirmar en sus términos que el uso comercial está permitido en el plan gratuito |
-| Netlify | Plan gratuito con límites de compilación y tráfico | Confirmar condiciones vigentes |
-
-Revisar las condiciones el día que se elija: cambian con el tiempo.
+Límite a tener en cuenta: el plan gratuito de Cloudflare Pages permite 500 compilaciones al mes. Por eso la Fase 8 solo hace commit (y por tanto compila) cuando la hoja cambió.
 
 ### Fase 8 (v0.8). Actualización automática desde la hoja
 
@@ -582,8 +576,8 @@ Dominio `elchiconaturista.com` activo, `robots.txt` abierto, `sitemap.xml`, quit
 - **Colisión de números de pedido.** Fecha más 4 dígitos al azar: improbable pero posible. Revisar al registrar.
 - **Retraso de la hoja publicada.** Google puede tardar unos minutos en reflejar cambios en el CSV publicado.
 - **Flujo programado desactivado** a los 60 días sin actividad (Fase 8).
-- **Costo del hosting.** El plan gratuito de Vercel no permite uso comercial. Se decide en la Fase 7 (Vercel Pro o una opción gratuita que lo permita).
-- **Repositorio anterior público.** `ElCHichoNaturista` es público y tiene backend, panel de administración y datos de catálogo. Conviene revisar que no tenga claves en su historial y, si ya no se usa, archivarlo o volverlo privado.
+- **Límite de compilaciones.** Cloudflare Pages gratis: 500 al mes. La Fase 8 solo compila cuando la hoja cambió; con uso normal queda muy por debajo.
+- **Repositorio anterior.** Fernando lo hizo público temporalmente para esta revisión y lo vuelve a poner privado. La copia local en `referencia/` sigue sirviendo.
 - **Navegadores sin View Transitions.** La navegación funciona igual, sin la animación.
 - **Requisitos legales de venta en línea en Perú** (por ejemplo, libro de reclamaciones virtual y política de datos personales). Confirmar con quien lleve la parte legal o contable antes de v1.0.
 - **Pruebas.** En el proyecto anterior se verificó mucho por API y poco con clics. Aquí el agente QA prueba en navegador desde la Fase 1.
@@ -602,9 +596,9 @@ Dominio `elchiconaturista.com` activo, `robots.txt` abierto, `sitemap.xml`, quit
 | 4 | Dominio | elchiconaturista.com, ya comprado. Hosting probable: Vercel. Por ahora local |
 | 5 | Portada | Composición colectiva con los productos reales, sin apariencia de IA. Temporal |
 
+| 6 | Hosting | Cloudflare Pages (el dominio ya está en Cloudflare) |
+| 7 | Correo | `contacto@elchiconaturista.com` |
+
 ### 13.2 Abiertas
 
-| # | Pregunta | Bloquea |
-|---|---|---|
-| 1 | Hosting: sabiendo que Vercel gratis no permite uso comercial, ¿Vercel Pro (pago) u otra opción gratuita? | Fase 7 |
-| 2 | Correo: el sitio anterior usaba `hola@elchiconaturista.pe`, pero el dominio es `.com`. ¿Cuál se muestra, o ninguno por ahora? | Fase 3 (si no hay respuesta, no se muestra) |
+Ninguna por ahora.

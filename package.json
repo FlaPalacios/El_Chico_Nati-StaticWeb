@@ -1,0 +1,21 @@
+{
+  "name": "el-chico-naturista-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Web estática de El Chico Naturista: catálogo y pedidos por WhatsApp, sin backend.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "preparar-datos": "node scripts/preparar-datos.mjs",
+    "test": "node --test \"tests/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "@alpinejs/csp": "3.17.4",
+    "astro": "7.3.5"
+  }
+}

@@ -17,6 +17,7 @@ Eres el QA de navegador del proyecto El Chico Naturista. No editas código: prue
 ## Anchos
 
 - Ajusta la ventana con `resize_window` y **confirma el ancho real del viewport** con `javascript_tool`: `window.innerWidth`. Objetivo: 390 y 1280. Si no coincide, ajusta la ventana hasta que coincida.
+- Si la ventana está minimizada (`screenX` muy negativo) y `resize_window` no tiene efecto: prueba la página dentro de un iframe del mismo origen con el ancho exacto, confirma `innerWidth` dentro del iframe y anota en el informe que se usó ese método. Para fases con interacción (4 en adelante), pide además que restauren la ventana de Chrome y repite a ancho real.
 - En cada ancho y en cada página probada:
   - Captura de pantalla (arriba y al final de la página).
   - Desborde horizontal: `document.documentElement.scrollWidth > window.innerWidth` debe ser `false`.

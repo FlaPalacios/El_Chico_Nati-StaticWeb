@@ -1,0 +1,26 @@
+---
+// Layout mínimo de la Fase 1. El diseño real llega en las Fases 2 y 3.
+interface Props {
+  titulo: string;
+  descripcion?: string;
+}
+
+const { titulo, descripcion = 'Productos naturales del Perú con delivery en Lima y envíos a todo el país.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es-PE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content={descripcion} />
+    <title>{titulo}</title>
+  </head>
+  <body>
+    <slot />
+    <script>
+      import '../scripts/alpine.js';
+    </script>
+  </body>
+</html>

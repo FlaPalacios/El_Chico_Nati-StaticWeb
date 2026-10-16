@@ -1,0 +1,12 @@
+# Códigos cuya descripción viene de un borrador. Verificar contra la etiqueta (PLAN-v2.md, S4).
+ECN-025
+ECN-014
+ECN-015
+ECN-016
+ECN-023
+ECN-024
+ECN-026
+ECN-027
+ECN-028
+ECN-029
+ECN-022

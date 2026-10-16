@@ -2,6 +2,11 @@
 -recursos/
 *.xlsx
 *.xls
+*.xlsm
+*.ods
+# Descargas de la hoja en la raíz (el TSV válido vive en data/)
+/*.csv
+/*.tsv
 
 # Referencia del repositorio anterior: revisar antes de subir nada
 referencia/
@@ -10,6 +15,7 @@ referencia/
 node_modules/
 dist/
 .astro/
+npm-debug.log*
 
 # Variables y secretos
 .env

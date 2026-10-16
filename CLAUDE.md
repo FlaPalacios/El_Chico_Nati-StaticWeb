@@ -11,7 +11,7 @@ Antes de cualquier tarea, lee `PLAN-v2.md` y trabaja solo en la fase activa (ver
 - Ninguna clave secreta en el código, en el repositorio ni en la conversación. Si hace falta una, se guarda como secreto o variable de GitHub y se pide a Fernando que la pegue él.
 - El repositorio es público. `-recursos/` (Excel Master con costos, clientes y proveedores; TSV con stock) y `referencia/` (clon del repositorio anterior con backend) nunca se suben. Antes de cada `git add`, revisar `git status`.
 - Datos de la tienda (WhatsApp, dirección, horario, redes, avisos), tarifas de envío, ubigeo y fuentes salen de `referencia/ElChicoNaturista-anterior/` según `PLAN-v2.md` sección 5.4. De ese repo no se copia nada del backend ni del panel.
-- Por ahora el sitio corre solo en local. El hosting se elige en la Fase 7; el dominio es `elchiconaturista.com`.
+- Por ahora el sitio corre solo en local. Hosting: Cloudflare Pages (Fase 7). Dominio: `elchiconaturista.com` (en Cloudflare). Correo: `contacto@elchiconaturista.com`.
 - Precedencia de datos: el Excel Master manda sobre `catalogo-ECN-productos.tsv`, y este sobre `descripciones-faltantes.tsv`. No inventar datos: si falta uno, se deja vacío y se pregunta.
 - Nunca mostrar stock ni "agotado". Un producto con `activo = si` y precio > 0 se puede comprar siempre.
 - Prohibido en el repo y en `src/data/`: stock, costo, proveedor, margen, compras, ventas, nombres de clientes.
@@ -40,7 +40,7 @@ Antes de cualquier tarea, lee `PLAN-v2.md` y trabaja solo en la fase activa (ver
 | `npm run build` | Compila el sitio estático en `dist/` |
 | `npm run preview` | Sirve `dist/` en local para el agente QA |
 
-(Se crean en la Fase 1. Entorno: Windows, Node 22, npm.)
+(`sync` se agrega en la Fase 3; el resto existe desde la Fase 1. Entorno: Windows, Node ≥ 22.12, npm. Astro 7.3.5 y `@alpinejs/csp` 3.17.4 fijados en versión exacta.)
 
 ## Carpetas
 
