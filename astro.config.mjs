@@ -14,13 +14,16 @@ export default defineConfig({
         "default-src 'self'",
         "img-src 'self' https://res.cloudinary.com",
         "font-src 'self'",
-        "connect-src 'self'",
+        // Cloudflare Web Analytics (visitas sin cookies): el panel envía los datos a cloudflareinsights.com
+        "connect-src 'self' https://cloudflareinsights.com",
         "base-uri 'self'",
         "form-action 'self'",
         "object-src 'none'",
       ],
       // Solo atributos style="" (variables de posición de los discos y el nombre de la
       // transición en la ficha): no ejecutan código. Los elementos <style> van por hash.
+      // Script de estadísticas que Cloudflare inserta en cada página (Web Analytics)
+      scriptDirective: { resources: ["'self'", 'https://static.cloudflareinsights.com'] },
       styleDirective: { resources: [{ resource: "'unsafe-inline'", kind: 'attribute' }] },
     },
   },
