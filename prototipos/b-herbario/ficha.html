@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>B · Ficha · El Chico Naturista</title>
+<style>
+@font-face { font-family: 'Young Serif'; src: url('../fuentes/young-serif-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Amulya'; src: url('../fuentes/amulya-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Amulya'; src: url('../fuentes/amulya-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Amulya'; src: url('../fuentes/amulya-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+:root {
+  --niebla: #F7F7F7; --liquen: #E4ECE7; --papel: #FFFFFF; --tinta: #22312B; --salvia: #2F5D50; --jade: #7A9B87;
+  --tinta-suave: color-mix(in srgb, var(--tinta) 70%, var(--papel));
+  --filete: color-mix(in srgb, var(--jade) 55%, var(--papel));
+  --sombra: color-mix(in srgb, var(--tinta) 10%, transparent);
+  --salvia-hundido: color-mix(in srgb, var(--salvia) 85%, var(--tinta));
+  --serif: 'Young Serif', Georgia, serif; --texto: 'Amulya', system-ui, sans-serif;
+  --curva: cubic-bezier(.2, .7, .2, 1); --margen: 16px;
+}
+@media (min-width: 900px) { :root { --margen: 48px; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--niebla); color: var(--tinta); font: 400 1.0625rem/1.6 var(--texto); }
+a { color: inherit; } img { display: block; max-width: 100%; }
+:focus-visible { outline: 3px solid var(--jade); outline-offset: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-group(*) { animation-duration: .5s; animation-timing-function: var(--curva); }
+}
+.cabecera { display: flex; align-items: center; gap: 12px; padding: 14px var(--margen); }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 400 1.125rem/1 var(--serif); }
+.marca img { width: 44px; height: 44px; }
+.carrito { margin-left: auto; position: relative; display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--filete); background: var(--papel); }
+.carrito svg { width: 22px; height: 22px; }
+.contador { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--salvia); color: var(--papel); font: 700 .75rem/20px var(--texto); text-align: center; }
+.contador.salta { animation: salta .45s var(--curva); } @keyframes salta { 40% { transform: scale(1.35); } }
+
+.campo { background: var(--liquen); padding: 16px var(--margen) 32px; }
+.ruta { margin: 0 0 12px; font-size: .9375rem; color: var(--tinta-suave); }
+.ficha { display: grid; gap: 20px; }
+@media (min-width: 900px) { .ficha { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 48px; align-items: start; } }
+
+.lamina { background: var(--papel); padding: 20px; box-shadow: 0 1px 0 var(--sombra); }
+.lamina .principal { width: 100%; aspect-ratio: 1; object-fit: contain; }
+.miniaturas { display: flex; gap: 10px; margin-top: 12px; }
+.miniaturas button { width: 72px; height: 72px; padding: 4px; background: var(--papel); border: 1px solid var(--filete); cursor: pointer; }
+.miniaturas button[aria-pressed="true"] { border-color: var(--salvia); box-shadow: inset 0 0 0 1px var(--salvia); }
+.miniaturas img { width: 100%; height: 100%; object-fit: contain; }
+
+.datos .linea { margin: 0; display: flex; gap: 14px; font-size: .9375rem; color: var(--tinta-suave); font-variant-numeric: tabular-nums; }
+.datos h1 { margin: 6px 0 2px; font: 400 clamp(2.1rem, 8vw, 3.5rem)/1.04 var(--serif); letter-spacing: -.01em; }
+.datos .presentacion { margin: 0; color: var(--tinta-suave); }
+.precio { margin: 16px 0 0; font: 700 1.875rem/1 var(--texto); font-variant-numeric: tabular-nums; }
+.corta { margin: 12px 0 0; max-width: 46ch; }
+.compra { display: grid; grid-template-columns: auto 1fr; gap: 10px; margin-top: 20px; }
+.cantidad { display: inline-flex; align-items: center; background: var(--papel); border: 1px solid var(--filete); border-radius: 999px; }
+.cantidad button { width: 44px; height: 48px; border: 0; background: none; font: 500 1.25rem/1 var(--texto); color: var(--tinta); cursor: pointer; border-radius: 999px; }
+.cantidad output { min-width: 2ch; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.agregar { height: 50px; border: 0; border-radius: 999px; background: var(--salvia); color: var(--papel); font: 700 1.0625rem/1 var(--texto); cursor: pointer; }
+.agregar:hover { background: var(--salvia-hundido); }
+.consulta { display: inline-block; margin-top: 14px; font-weight: 500; }
+
+/* Bloque de datos: único lugar con filetes, porque separa información */
+.registro { margin: 26px 0 0; display: grid; grid-template-columns: auto 1fr; border-top: 1px solid var(--filete); }
+.registro dt, .registro dd { margin: 0; padding: 8px 0; border-bottom: 1px solid var(--filete); }
+.registro dt { padding-right: 20px; color: var(--tinta-suave); font-size: .9375rem; }
+.registro dd { font-variant-numeric: tabular-nums; }
+
+.detalle { padding: 36px var(--margen) 0; display: grid; gap: 28px; }
+@media (min-width: 900px) { .detalle { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; } }
+.detalle h2 { margin: 0 0 8px; font: 400 1.375rem/1.2 var(--serif); }
+.detalle p { margin: 0; }
+.detalle ul { margin: 0; padding-left: 1.1em; } .detalle li { margin: 4px 0; } .detalle li::marker { color: var(--jade); }
+
+.pie { margin-top: 64px; padding: 32px var(--margen) 96px; background: var(--salvia); color: var(--papel); }
+.pie p { margin: 0 0 10px; } .pie .aviso-legal { font-size: .875rem; opacity: .85; }
+.flotante { position: fixed; right: 16px; bottom: 16px; width: 56px; height: 56px; border-radius: 50%; background: var(--salvia); color: var(--papel); display: grid; place-items: center; box-shadow: 0 6px 18px var(--sombra); }
+.flotante svg { width: 28px; height: 28px; }
+.aviso { position: fixed; left: 50%; bottom: 88px; translate: -50% 0; padding: 10px 16px; background: var(--tinta); color: var(--papel); opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .3s var(--curva); pointer-events: none; white-space: nowrap; }
+.aviso.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<header class="cabecera">
+  <a class="marca" href="portada.html"><img src="../img/logo-192.webp" alt="" width="44" height="44">El Chico Naturista</a>
+  <a class="carrito" href="#" aria-label="Carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.4 10.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="contador" data-contador hidden>0</span></a>
+</header>
+<main>
+  <div class="campo">
+    <p class="ruta" id="ruta"></p>
+    <div class="ficha" id="ficha" data-producto></div>
+  </div>
+  <div class="detalle" id="detalle"></div>
+</main>
+<footer class="pie">
+  <p><strong>El Chico Naturista</strong>. Productos naturales del Perú.</p>
+  <p class="aviso-legal">Los suplementos no son medicamentos y no reemplazan una alimentación variada.</p>
+</footer>
+<a class="flotante" href="#" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg></a>
+<div class="aviso" data-aviso role="status" aria-live="polite"></div>
+<script src="../datos.js"></script>
+<script src="../comun.js"></script>
+<script>
+(function () {
+  var E = window.ECN;
+  var p = E.buscar(new URLSearchParams(location.search).get('p') || 'ECN-001') || E.productos[0];
+  document.title = p.nombre + ' · B · El Chico Naturista';
+  document.getElementById('ruta').innerHTML = '<a href="portada.html">Inicio</a> / ' + p.categoria + ' / ' + p.subcategoria;
+
+  var mini = p.imagenes.length > 1 ? '<div class="miniaturas">' + p.imagenes.map(function (u, i) {
+    return '<button type="button" data-foto="' + E.foto(u, 900, 'cuadro') + '" aria-pressed="' + (i === 0) + '" aria-label="Ver ' + (i === 0 ? 'frente' : 'reverso') + '"><img src="' + E.foto(u, 160, 'cuadro') + '" alt=""></button>';
+  }).join('') + '</div>' : '';
+
+  document.getElementById('ficha').innerHTML =
+    '<div class="lamina"><img class="principal" id="principal" src="' + E.foto(p.imagenes[0], 900, 'cuadro') + '" alt="' + p.nombre + '" style="view-transition-name:f-' + p.codigo + '">' + mini + '</div>' +
+    '<div class="datos">' +
+      '<p class="linea"><span>' + p.codigo + '</span><span>' + p.marca + '</span></p>' +
+      '<h1>' + p.nombre + '</h1><p class="presentacion">' + p.presentacion + '</p>' +
+      '<p class="precio">' + E.soles(p.precio) + '</p><p class="corta">' + p.corta + '</p>' +
+      '<div class="compra"><div class="cantidad" data-cantidad><button type="button" data-menos aria-label="Quitar uno">−</button><output aria-live="polite">1</output><button type="button" data-mas aria-label="Agregar uno">+</button></div>' +
+      '<button class="agregar" type="button" data-agregar="' + p.nombre + '">Agregar al carrito</button></div>' +
+      '<a class="consulta" href="#">Consultar por WhatsApp</a>' +
+      '<dl class="registro"><dt>Código</dt><dd>' + p.codigo + '</dd><dt>Presentación</dt><dd>' + p.presentacion + '</dd><dt>Marca</dt><dd>' + p.marca + '</dd><dt>Familia</dt><dd>' + p.categoria + ', ' + p.subcategoria.toLowerCase() + '</dd></dl>' +
+    '</div>';
+
+  var sec = function (t, c) { return c ? '<section><h2>' + t + '</h2>' + c + '</section>' : ''; };
+  document.getElementById('detalle').innerHTML =
+    sec('Qué es', p.larga ? '<p>' + p.larga + '</p>' : '') +
+    sec('Beneficios', p.beneficios.length ? '<ul>' + p.beneficios.map(function (b) { return '<li>' + b + '</li>'; }).join('') + '</ul>' : '') +
+    sec('Modo de uso', p.uso ? '<p>' + p.uso + '</p>' : '');
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest('[data-foto]');
+    if (!b) return;
+    document.getElementById('principal').src = b.dataset.foto;
+    document.querySelectorAll('[data-foto]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+  });
+})();
+</script>
+</body>
+</html>

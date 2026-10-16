@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<title>Marco de prueba</title>
+<style>body { margin: 0; background: #888; } iframe { display: block; border: 0; background: #fff; }</style>
+</head>
+<body>
+<!-- Ayuda de QA: muestra una página a un ancho exacto. Uso: _marco.html?u=a-repisa/portada.html&w=390&h=2600 -->
+<iframe id="m" title="Página en prueba"></iframe>
+<script>
+  var q = new URLSearchParams(location.search);
+  var m = document.getElementById('m');
+  m.width = q.get('w') || 390;
+  m.height = q.get('h') || 2600;
+  m.src = q.get('u');
+  m.onload = function () {
+    var d = m.contentDocument;
+    document.title = 'ancho=' + m.contentWindow.innerWidth + ' desborde=' + (d.documentElement.scrollWidth > m.contentWindow.innerWidth);
+  };
+</script>
+</body>
+</html>

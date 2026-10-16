@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>B · Herbario · El Chico Naturista</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+@font-face { font-family: 'Young Serif'; src: url('../fuentes/young-serif-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Amulya'; src: url('../fuentes/amulya-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Amulya'; src: url('../fuentes/amulya-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Amulya'; src: url('../fuentes/amulya-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+
+:root {
+  --niebla: #F7F7F7;
+  --liquen: #E4ECE7;
+  --papel: #FFFFFF;
+  --tinta: #22312B;
+  --salvia: #2F5D50;
+  --jade: #7A9B87;
+  --tinta-suave: color-mix(in srgb, var(--tinta) 70%, var(--papel));
+  --filete: color-mix(in srgb, var(--jade) 55%, var(--papel));
+  --sombra: color-mix(in srgb, var(--tinta) 10%, transparent);
+  --serif: 'Young Serif', Georgia, serif;
+  --texto: 'Amulya', system-ui, sans-serif;
+  --curva: cubic-bezier(.2, .7, .2, 1);
+  --margen: 16px;
+}
+@media (min-width: 900px) { :root { --margen: 48px; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--niebla); color: var(--tinta); font: 400 1.0625rem/1.6 var(--texto); }
+a { color: inherit; } img { display: block; max-width: 100%; }
+:focus-visible { outline: 3px solid var(--jade); outline-offset: 3px; }
+
+.cabecera { display: flex; align-items: center; gap: 12px; padding: 14px var(--margen); }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 400 1.125rem/1 var(--serif); }
+.marca img { width: 44px; height: 44px; }
+.cabecera nav { margin-left: auto; display: flex; align-items: center; gap: 20px; font-weight: 500; }
+.cabecera nav .solo-ancho { display: none; } @media (min-width: 900px) { .cabecera nav .solo-ancho { display: inline; } }
+.carrito { position: relative; display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--filete); background: var(--papel); }
+.carrito svg { width: 22px; height: 22px; }
+.contador { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--salvia); color: var(--papel); font: 700 .75rem/20px var(--texto); text-align: center; }
+.contador.salta { animation: salta .45s var(--curva); } @keyframes salta { 40% { transform: scale(1.35); } }
+
+.entrada { padding: 24px var(--margen) 28px; }
+.entrada h1 { margin: 0; font: 400 clamp(2.5rem, 10vw, 5.25rem)/1.02 var(--serif); letter-spacing: -.01em; max-width: 13ch; }
+.entrada p { margin: 14px 0 0; max-width: 40ch; color: var(--tinta-suave); }
+@media (min-width: 900px) { .entrada { display: grid; grid-template-columns: 1.4fr 1fr; align-items: end; gap: 40px; padding-top: 48px; } .entrada p { margin: 0; } }
+
+/* Láminas */
+.campo { background: var(--liquen); padding: 20px var(--margen) 40px; }
+.laminas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.lamina { position: relative; display: flex; flex-direction: column; background: var(--papel); padding: 12px 12px 12px; text-decoration: none; box-shadow: 0 1px 0 var(--sombra); }
+.lamina img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+.rotulo { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--filete); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 10px; font-size: .8125rem; line-height: 1.3; }
+.rotulo .codigo, .rotulo .presentacion { color: var(--tinta-suave); font-variant-numeric: tabular-nums; }
+.rotulo .codigo { white-space: nowrap; }
+.rotulo .presentacion { text-align: right; }
+.rotulo h3 { grid-column: 1 / -1; margin: 4px 0 2px; font: 400 1.0625rem/1.2 var(--serif); }
+.rotulo .precio { grid-column: 1 / -1; font: 700 1rem/1.2 var(--texto); font-variant-numeric: tabular-nums; }
+
+.lamina.mayor { grid-column: 1 / -1; padding: 18px; }
+.lamina.mayor .rotulo { font-size: .875rem; }
+.lamina.mayor h3 { font-size: clamp(1.6rem, 6vw, 2.25rem); line-height: 1.05; }
+.lamina.mayor .precio { font-size: 1.25rem; }
+.lamina.mayor .corta { grid-column: 1 / -1; margin: 6px 0 0; font-size: 1rem; color: var(--tinta-suave); }
+@media (min-width: 900px) {
+  .laminas.portada { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+  .laminas.portada .lamina.mayor { grid-column: 1 / 4; grid-row: 1 / 3; padding: 28px; }
+  .laminas.portada .lamina:not(.mayor) { grid-column: span 1; }
+  .laminas.portada .lamina:nth-child(n+2) { grid-column: auto / span 1; }
+  .laminas.todas { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+}
+.campo h2 { margin: 0 0 14px; font: 400 clamp(1.5rem, 4vw, 2.125rem)/1.1 var(--serif); }
+.campo + .campo { padding-top: 8px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not(.listo) .laminas.portada .lamina { opacity: 0; transform: translateY(14px); }
+  .laminas.portada .lamina { transition: opacity .45s ease calc(var(--i) * 70ms + 120ms), transform .7s var(--curva) calc(var(--i) * 70ms + 120ms); }
+  @view-transition { navigation: auto; }
+  ::view-transition-group(*) { animation-duration: .5s; animation-timing-function: var(--curva); }
+}
+
+/* Índice de la tienda: la forma de un índice de herbario, con líneas de puntos hasta el número */
+.indice { padding: 44px var(--margen) 8px; }
+.indice h2 { margin: 0 0 18px; font: 400 clamp(1.5rem, 4vw, 2.125rem)/1.1 var(--serif); }
+.familias { display: grid; gap: 28px; }
+@media (min-width: 900px) { .familias { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; } }
+.familia h3 { margin: 0 0 8px; font: 400 1.375rem/1.2 var(--serif); }
+.familia ol { list-style: none; margin: 0; padding: 0; }
+.familia li a { display: flex; align-items: baseline; gap: 6px; padding: 5px 0; text-decoration: none; }
+.familia li a::after { content: ''; order: 1; flex: 1; border-bottom: 1px dotted var(--filete); translate: 0 -4px; }
+.familia li b { order: 2; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--tinta-suave); }
+
+.servicio { display: grid; gap: 16px; margin: 40px var(--margen) 0; }
+.servicio p { margin: 0; } .servicio strong { display: block; font: 400 1.125rem/1.3 var(--serif); }
+@media (min-width: 900px) { .servicio { grid-template-columns: repeat(3, 1fr); gap: 40px; } }
+
+.pie { margin-top: 64px; padding: 32px var(--margen) 96px; background: var(--salvia); color: var(--papel); }
+.pie p { margin: 0 0 10px; } .pie .aviso-legal { font-size: .875rem; opacity: .85; }
+.flotante { position: fixed; right: 16px; bottom: 16px; width: 56px; height: 56px; border-radius: 50%; background: var(--salvia); color: var(--papel); display: grid; place-items: center; box-shadow: 0 6px 18px var(--sombra); }
+.flotante svg { width: 28px; height: 28px; }
+.aviso { position: fixed; left: 50%; bottom: 88px; translate: -50% 0; padding: 10px 16px; background: var(--tinta); color: var(--papel); opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .3s var(--curva); pointer-events: none; white-space: nowrap; }
+.aviso.visible { opacity: 1; transform: none; }
+.agregar { grid-column: 1 / -1; justify-self: start; margin-top: 12px; height: 46px; padding: 0 22px; border: 0; border-radius: 999px; background: var(--salvia); color: var(--papel); font: 700 1rem/1 var(--texto); cursor: pointer; }
+</style>
+</head>
+<body>
+<header class="cabecera">
+  <a class="marca" href="portada.html"><img src="../img/logo-192.webp" alt="" width="44" height="44">El Chico Naturista</a>
+  <nav aria-label="Principal">
+    <a class="solo-ancho" href="#indice">Índice</a>
+    <a class="carrito" href="#" aria-label="Carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.4 10.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="contador" data-contador hidden>0</span></a>
+  </nav>
+</header>
+<main>
+  <section class="entrada">
+    <h1>Productos naturales del Perú</h1>
+    <p>Arma tu pedido aquí y lo coordinamos por WhatsApp. Delivery el mismo día en Lima; envío gratis desde S/&nbsp;120.</p>
+  </section>
+
+  <section class="campo" aria-label="Productos destacados">
+    <div class="laminas portada" id="destacadas"></div>
+  </section>
+
+  <section class="indice" id="indice" aria-labelledby="t-indice">
+    <h2 id="t-indice">Índice de la tienda</h2>
+    <div class="familias" id="familias"></div>
+  </section>
+
+  <section class="servicio" aria-label="Cómo trabajamos">
+    <p><strong>Envío gratis desde S/&nbsp;120</strong>A todo el Perú. En Lima y Callao el envío cuesta S/&nbsp;10.</p>
+    <p><strong>Delivery el mismo día en Lima</strong>Confirmamos disponibilidad y hora por WhatsApp.</p>
+    <p><strong>Pagas al confirmar</strong>Yape, Plin o transferencia bancaria.</p>
+  </section>
+
+  <section class="campo" style="margin-top: 44px; padding-top: 32px" aria-labelledby="t-todas">
+    <h2 id="t-todas">Las 23 láminas</h2>
+    <div class="laminas todas" id="todas"></div>
+  </section>
+</main>
+<footer class="pie">
+  <p><strong>El Chico Naturista</strong>. Productos naturales del Perú.</p>
+  <p id="contacto"></p>
+  <p class="aviso-legal">Los suplementos no son medicamentos y no reemplazan una alimentación variada.</p>
+</footer>
+<a class="flotante" href="#" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg></a>
+<div class="aviso" data-aviso role="status" aria-live="polite"></div>
+
+<script src="../datos.js"></script>
+<script src="../comun.js"></script>
+<script>
+(function () {
+  var E = window.ECN, P = E.productos;
+  document.getElementById('contacto').textContent = 'WhatsApp ' + E.tienda.whatsappVisible + '. ' + E.tienda.horario + '. ' + E.tienda.direccion + '.';
+
+  function lamina(p, i, mayor, conNombreTransicion) {
+    var tam = mayor ? 900 : 480;
+    return '<a class="lamina' + (mayor ? ' mayor' : '') + '" href="ficha.html?p=' + p.codigo + '" style="--i:' + i + '"' + (mayor ? ' data-producto' : '') + '>' +
+      '<img src="' + E.foto(p.imagenes[0], tam, 'cuadro') + '" alt="" loading="' + (i < 7 ? 'eager' : 'lazy') + '"' +
+      (conNombreTransicion ? ' style="view-transition-name:f-' + p.codigo + '"' : '') + '>' +
+      '<div class="rotulo"><span class="codigo">' + p.codigo + '</span><span class="presentacion">' + p.presentacion + '</span>' +
+      '<h3>' + p.nombre + '</h3>' +
+      (mayor ? '<p class="corta">' + p.corta + '</p>' : '') +
+      '<span class="precio">' + E.soles(p.precio) + '</span>' +
+      '</div></a>';
+  }
+
+  var elegidos = ['ECN-001', 'ECN-005', 'ECN-004', 'ECN-020', 'ECN-009', 'ECN-006', 'ECN-025'].map(E.buscar);
+  document.getElementById('destacadas').innerHTML = elegidos.map(function (p, i) { return lamina(p, i, i === 0, true); }).join('');
+  document.getElementById('todas').innerHTML = P.map(function (p, i) { return lamina(p, i, false, false); }).join('');
+
+  var cats = ['Frescos', 'Abarrotes', 'Cuidado personal'];
+  document.getElementById('familias').innerHTML = cats.map(function (c) {
+    var subs = {};
+    P.filter(function (p) { return p.categoria === c; }).forEach(function (p) { subs[p.subcategoria] = (subs[p.subcategoria] || 0) + 1; });
+    return '<div class="familia"><h3>' + c + '</h3><ol>' + Object.keys(subs).map(function (s) {
+      return '<li><a href="#">' + s + '<b>' + subs[s] + '</b></a></li>';
+    }).join('') + '</ol></div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

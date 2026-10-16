@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>A · La repisa · El Chico Naturista</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+@font-face { font-family: 'Hind'; src: url('../fuentes/hind-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('../fuentes/hind-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Amulya'; src: url('../fuentes/amulya-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Amulya'; src: url('../fuentes/amulya-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+
+:root {
+  --niebla: #F7F7F7;
+  --monte: #1C3A31;
+  --salvia: #2F5D50;
+  --jade: #7A9B87;
+  --papel: #FFFFFF;
+  --cafe: #211E1E;
+  --monte-suave: color-mix(in srgb, var(--monte) 72%, var(--niebla));
+  --sombra: color-mix(in srgb, var(--monte) 22%, transparent);
+  --linea: color-mix(in srgb, var(--monte) 14%, transparent);
+
+  --titular: 'Hind', system-ui, sans-serif;
+  --texto: 'Amulya', Georgia, serif;
+  --canto: color-mix(in srgb, var(--salvia) 22%, var(--niebla));
+  --lado: 100px;            /* lado del cuadrado de área igual para cada producto */
+  --etiqueta: 92px;         /* alto reservado bajo la repisa para la etiqueta */
+  --ancho-etiqueta: 118px;
+  --curva: cubic-bezier(.2, .7, .2, 1);
+  --margen: 16px;
+}
+@media (min-width: 900px) { :root { --lado: 122px; --margen: 48px; --ancho-etiqueta: 128px; } }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--niebla); color: var(--monte); font: 400 1.0625rem/1.6 var(--texto); }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+:focus-visible { outline: 3px solid var(--jade); outline-offset: 3px; border-radius: 2px; }
+
+/* Cintillo y cabecera */
+.cintillo { margin: 0; padding: 8px var(--margen); font-size: .875rem; color: var(--monte-suave); border-bottom: 1px solid var(--linea); }
+.cabecera { display: flex; align-items: center; gap: 12px; padding: 14px var(--margen); }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 1.125rem/1 var(--titular); }
+.marca img { width: 44px; height: 44px; }
+.cabecera nav { margin-left: auto; display: flex; gap: 20px; align-items: center; font: 600 1rem/1 var(--titular); }
+.cabecera nav a { text-decoration: none; }
+.cabecera nav .solo-ancho { display: none; }
+@media (min-width: 900px) { .cabecera nav .solo-ancho { display: inline; } }
+.carrito { position: relative; display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; background: var(--papel); border: 1px solid var(--linea); }
+.carrito svg { width: 22px; height: 22px; }
+.contador { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--salvia); color: var(--papel); font: 600 .75rem/20px var(--titular); text-align: center; }
+.contador.salta { animation: salta .45s var(--curva); }
+@keyframes salta { 40% { transform: scale(1.35); } }
+
+/* Portada */
+.entrada { padding: 28px var(--margen) 8px; display: grid; gap: 14px; }
+.entrada h1 { margin: 0; font: 700 clamp(2.6rem, 11vw, 6rem)/.92 var(--titular); letter-spacing: -.025em; max-width: 11ch; }
+.entrada p { margin: 0; max-width: 34ch; color: var(--monte-suave); }
+@media (min-width: 900px) {
+  .entrada { grid-template-columns: 1.3fr 1fr; align-items: end; padding-top: 56px; }
+  .entrada p { justify-self: end; font-size: 1.1875rem; }
+}
+
+/* La repisa */
+.repisa { overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: thin; padding-top: 24px; }
+.repisa ul {
+  list-style: none; margin: 0; padding: 0 var(--margen) 12px; display: flex; gap: clamp(18px, 3vw, 34px); width: max-content;
+  /* tabla de la repisa: cara superior salvia y canto claro debajo */
+  background:
+    linear-gradient(var(--salvia), var(--salvia)) no-repeat 0 calc(100% - var(--etiqueta) - 16px) / 100% 5px,
+    linear-gradient(var(--canto), var(--canto)) no-repeat 0 calc(100% - var(--etiqueta) - 4px) / 100% 12px;
+}
+.pieza { display: grid; grid-template-rows: 1fr var(--etiqueta); justify-items: center; min-width: var(--ancho-etiqueta); scroll-snap-align: start; scroll-margin-left: var(--margen); }
+.pieza > a { position: relative; align-self: end; display: block; padding-bottom: 21px; }
+.pieza img {
+  width: calc(var(--lado) / sqrt(var(--r)));
+  aspect-ratio: 1 / var(--r);
+  height: auto; mix-blend-mode: multiply;
+}
+.pieza .sombra { position: absolute; left: 8%; right: 8%; bottom: 15px; height: 10px; background: radial-gradient(closest-side, var(--sombra), transparent); }
+/* Etiqueta colgante: hilo café, ojal y precio como contenido principal */
+.etiqueta { position: relative; margin-top: 14px; width: var(--ancho-etiqueta); padding: 16px 10px 9px; background: var(--papel); border: 1px solid var(--linea); border-radius: 2px 2px 3px 3px; text-align: left; }
+.etiqueta::before { content: ''; position: absolute; left: 50%; top: -14px; height: 19px; border-left: 1px solid var(--cafe); }
+.etiqueta::after { content: ''; position: absolute; left: calc(50% - 4px); top: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--niebla); border: 1px solid var(--linea); }
+.etiqueta b { display: block; font: 600 1.125rem/1.1 var(--titular); font-variant-numeric: tabular-nums; }
+.etiqueta span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 2px; font-size: .8125rem; line-height: 1.25; color: var(--monte-suave); }
+.fin-repisa { align-self: center; padding: 0 8px 80px; font: 600 1rem/1.3 var(--titular); white-space: nowrap; }
+
+/* Entrada orquestada: los productos se asientan una sola vez */
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not(.listo) .entrada-repisa .pieza img { opacity: 0; transform: translateY(-22px); }
+  html.js:not(.listo) .entrada-repisa .pieza .sombra { opacity: 0; transform: scaleX(.4); }
+  .entrada-repisa .pieza img { transition: opacity .35s ease calc(var(--i) * 45ms + 150ms), transform .6s var(--curva) calc(var(--i) * 45ms + 150ms); }
+  .entrada-repisa .pieza .sombra { transition: opacity .4s ease calc(var(--i) * 45ms + 350ms), transform .5s var(--curva) calc(var(--i) * 45ms + 350ms); }
+  @view-transition { navigation: auto; }
+  ::view-transition-group(*) { animation-duration: .45s; animation-timing-function: var(--curva); }
+}
+
+/* Franja de servicio */
+.servicio { display: grid; gap: 18px; margin: 40px var(--margen) 0; padding: 22px 0; border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
+.servicio p { margin: 0; }
+.servicio strong { display: block; font: 600 1.0625rem/1.3 var(--titular); }
+@media (min-width: 900px) { .servicio { grid-template-columns: repeat(3, 1fr); gap: 40px; } }
+
+/* Recorrer la tienda */
+.secciones { padding: 48px var(--margen) 24px; }
+.secciones h2 { margin: 0 0 6px; font: 700 clamp(1.75rem, 5vw, 2.75rem)/1 var(--titular); letter-spacing: -.015em; }
+.categoria { margin-top: 36px; }
+.categoria header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.categoria h3 { margin: 0; font: 700 1.5rem/1.1 var(--titular); }
+.categoria header a { font: 600 1rem/1 var(--titular); }
+.subs { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--monte-suave); font-size: .9375rem; }
+.categoria .repisa ul { --etiqueta: 0px; padding-left: 0; }
+.categoria .pieza { min-width: 0; }
+.categoria .repisa { --lado: 78px; margin-inline: calc(-1 * var(--margen)); padding-inline: var(--margen); }
+@media (min-width: 900px) {
+  .categorias { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+  .categoria .repisa { --lado: 84px; margin-inline: 0; padding-inline: 0; }
+}
+
+/* Cómo pedir: es una secuencia real, por eso va numerada */
+.pasos { margin: 32px var(--margen) 0; padding: 0; list-style: none; counter-reset: paso; display: grid; gap: 16px; }
+.pasos li { counter-increment: paso; display: grid; grid-template-columns: 2.2rem 1fr; gap: 10px; align-items: baseline; }
+.pasos li::before { content: counter(paso); font: 700 1.75rem/1 var(--titular); color: var(--jade); }
+@media (min-width: 900px) { .pasos { grid-template-columns: repeat(3, 1fr); gap: 40px; } }
+
+/* Pie */
+.pie { margin-top: 64px; padding: 36px var(--margen) 96px; background: var(--salvia); color: var(--papel); display: grid; gap: 18px; }
+.pie p { margin: 0; }
+.pie .aviso-legal { font-size: .875rem; opacity: .85; max-width: 60ch; }
+
+/* WhatsApp flotante y aviso */
+.flotante { position: fixed; right: 16px; bottom: 16px; width: 56px; height: 56px; border-radius: 50%; background: var(--salvia); color: var(--papel); display: grid; place-items: center; box-shadow: 0 6px 18px var(--sombra); }
+.flotante svg { width: 28px; height: 28px; }
+.aviso { position: fixed; left: 50%; bottom: 88px; translate: -50% 0; padding: 10px 16px; background: var(--monte); color: var(--papel); font: 500 .9375rem/1.3 var(--texto); opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .3s var(--curva); pointer-events: none; }
+.aviso.visible { opacity: 1; transform: none; }
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<p class="cintillo" id="cintillo"></p>
+<header class="cabecera">
+  <a class="marca" href="portada.html"><img src="../img/logo-192.webp" alt="" width="44" height="44">El Chico Naturista</a>
+  <nav aria-label="Principal">
+    <a class="solo-ancho" href="#tienda">Catálogo</a>
+    <a class="carrito" href="#" aria-label="Carrito">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.4 10.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span class="contador" data-contador hidden>0</span>
+    </a>
+  </nav>
+</header>
+
+<main>
+  <section class="entrada" aria-labelledby="titulo">
+    <h1 id="titulo">Productos naturales del Perú.</h1>
+    <p>Arma tu pedido aquí y lo coordinamos por WhatsApp. Delivery el mismo día en Lima.</p>
+  </section>
+
+  <div class="repisa entrada-repisa" aria-label="Todos los productos">
+    <ul id="repisa"></ul>
+  </div>
+
+  <section class="servicio" aria-label="Cómo trabajamos">
+    <p><strong>Envío gratis desde S/&nbsp;120</strong>A todo el Perú. En Lima y Callao el envío cuesta S/&nbsp;10.</p>
+    <p><strong>Delivery el mismo día en Lima</strong>Confirmamos disponibilidad y hora por WhatsApp.</p>
+    <p><strong>Pagas al confirmar</strong>Yape, Plin o transferencia bancaria.</p>
+  </section>
+
+  <section class="secciones" id="tienda" aria-labelledby="t-tienda">
+    <h2 id="t-tienda">Recorre la tienda</h2>
+    <div class="categorias" id="categorias"></div>
+  </section>
+
+  <section aria-labelledby="t-pasos">
+    <h2 id="t-pasos" class="oculto">Cómo pedir</h2>
+    <ol class="pasos">
+      <li><span>Agrega al carrito lo que necesitas.</span></li>
+      <li><span>Envía el pedido: se abre WhatsApp con todo escrito.</span></li>
+      <li><span>Coordinamos el pago y la entrega contigo.</span></li>
+    </ol>
+  </section>
+</main>
+
+<footer class="pie">
+  <p><strong>El Chico Naturista</strong>. Productos naturales del Perú.</p>
+  <p id="contacto"></p>
+  <p class="aviso-legal">Los suplementos no son medicamentos y no reemplazan una alimentación variada.</p>
+</footer>
+
+<a class="flotante" href="#" aria-label="Escribir por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg>
+</a>
+<div class="aviso" data-aviso role="status" aria-live="polite"></div>
+
+<script src="../datos.js"></script>
+<script src="../comun.js"></script>
+<script>
+(function () {
+  var E = window.ECN, P = E.productos;
+  document.getElementById('cintillo').textContent = E.tienda.avisos[2];
+  document.getElementById('contacto').textContent = 'WhatsApp ' + E.tienda.whatsappVisible + '. ' + E.tienda.horario + '. ' + E.tienda.direccion + '.';
+
+  // Orden de repisa: como se acomodaría en la tienda, por familia.
+  var orden = ['Bebidas frescas', 'Bebidas probióticas', 'Mermeladas y mieles', 'Café y cacao', 'Aceites vegetales', 'Proteínas y suplementos', 'Cuidado de cabello', 'Cuidado corporal'];
+  var enRepisa = P.slice().sort(function (a, b) { return orden.indexOf(a.subcategoria) - orden.indexOf(b.subcategoria); });
+
+  function pieza(p, i, conEtiqueta) {
+    var alto = Math.round(Math.min(560, 150 * Math.sqrt(p.proporcion) * 2));
+    return '<li class="pieza" style="--r:' + p.proporcion + ';--i:' + i + '">' +
+      '<a href="ficha.html?p=' + p.codigo + '" aria-label="' + p.nombre + ', ' + E.soles(p.precio) + '">' +
+      '<img src="' + E.foto(p.imagenes[0], alto, 'silueta') + '" alt="" loading="' + (i < 8 ? 'eager' : 'lazy') + '" style="view-transition-name:f-' + p.codigo + '">' +
+      '<span class="sombra"></span></a>' +
+      (conEtiqueta ? '<div class="etiqueta" aria-hidden="true"><b>' + E.soles(p.precio) + '</b><span>' + p.nombre + '</span></div>' : '') +
+      '</li>';
+  }
+
+  document.getElementById('repisa').innerHTML =
+    enRepisa.map(function (p, i) { return pieza(p, i, true); }).join('') +
+    '<li class="fin-repisa"><a href="#tienda">Ver por categoría</a></li>';
+
+  var cats = ['Frescos', 'Abarrotes', 'Cuidado personal'];
+  document.getElementById('categorias').innerHTML = cats.map(function (c) {
+    var deCat = enRepisa.filter(function (p) { return p.categoria === c; });
+    var subs = {};
+    deCat.forEach(function (p) { subs[p.subcategoria] = (subs[p.subcategoria] || 0) + 1; });
+    return '<article class="categoria"><header><h3>' + c + '</h3><a href="#">Ver los ' + deCat.length + '</a></header>' +
+      '<ul class="subs">' + Object.keys(subs).map(function (s) { return '<li>' + s + ' (' + subs[s] + ')</li>'; }).join('') + '</ul>' +
+      '<div class="repisa"><ul>' + deCat.slice(0, 6).map(function (p, i) { return pieza(p, i, false).replace(/ style="view-transition-name:[^"]+"/, ''); }).join('') + '</ul></div></article>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

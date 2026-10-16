@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>C · Sello · El Chico Naturista</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+@font-face { font-family: 'Zilla Slab'; src: url('../fuentes/zilla-slab-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Zilla Slab'; src: url('../fuentes/zilla-slab-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('../fuentes/hind-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('../fuentes/hind-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('../fuentes/hind-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+
+:root {
+  --salvia: #2F5D50;
+  --jade: #7A9B87;
+  --papel: #FFFFFF;
+  --niebla: #F7F7F7;
+  --monte: #1C3A31;
+  --cafe: #211E1E;
+  --papel-suave: color-mix(in srgb, var(--papel) 86%, var(--salvia));
+  --monte-suave: color-mix(in srgb, var(--monte) 72%, var(--niebla));
+  --sombra: color-mix(in srgb, var(--monte) 20%, transparent);
+  --losa: 'Zilla Slab', Rockwell, serif;
+  --texto: 'Hind', system-ui, sans-serif;
+  --curva: cubic-bezier(.2, .7, .2, 1);
+  --rebote: cubic-bezier(.3, 1.4, .5, 1);
+  --margen: 16px;
+}
+@media (min-width: 900px) { :root { --margen: 48px; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--niebla); color: var(--monte); font: 400 1.0625rem/1.6 var(--texto); }
+a { color: inherit; } img { display: block; max-width: 100%; }
+:focus-visible { outline: 3px solid var(--jade); outline-offset: 3px; }
+
+/* Campo salvia */
+.campo { background: var(--salvia); color: var(--papel); }
+.cabecera { display: flex; align-items: center; gap: 12px; padding: 14px var(--margen); }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 1.1875rem/1 var(--losa); }
+.marca img { width: 46px; height: 46px; }
+.cabecera nav { margin-left: auto; display: flex; gap: 20px; align-items: center; font-weight: 600; }
+.cabecera nav .solo-ancho { display: none; } @media (min-width: 900px) { .cabecera nav .solo-ancho { display: inline; } }
+.carrito { position: relative; display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; border: 1.5px solid var(--papel-suave); }
+.carrito svg { width: 22px; height: 22px; }
+.contador { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--papel); color: var(--salvia); font: 600 .75rem/20px var(--texto); text-align: center; }
+.contador.salta { animation: salta .45s var(--curva); } @keyframes salta { 40% { transform: scale(1.35); } }
+
+.entrada { display: grid; gap: 28px; padding: 16px var(--margen) 40px; }
+.entrada h1 { margin: 0; font: 700 clamp(2.75rem, 12vw, 6rem)/.94 var(--losa); letter-spacing: -.015em; max-width: 10ch; }
+.entrada p { margin: 14px 0 0; max-width: 34ch; color: var(--papel-suave); }
+.boton-claro { display: inline-flex; align-items: center; height: 50px; margin-top: 22px; padding: 0 26px; border-radius: 999px; background: var(--papel); color: var(--salvia); font: 600 1.0625rem/1 var(--texto); text-decoration: none; }
+@media (min-width: 900px) { .entrada { grid-template-columns: 1fr 1fr; align-items: center; padding-bottom: 56px; } }
+
+/* Composición de discos: uno al centro y seis alrededor, como el sello */
+.constelacion { position: relative; width: min(100%, 560px); aspect-ratio: 1; justify-self: center; }
+.disco { position: absolute; display: block; border-radius: 50%; background: var(--papel); border: clamp(3px, .9vw, 6px) solid var(--jade); text-decoration: none; }
+.disco img { position: absolute; inset: 16%; width: 68%; height: 68%; object-fit: contain; border-radius: 0; }
+.constelacion .disco { width: 23%; aspect-ratio: 1; left: calc(50% + 38% * cos(var(--a)) - 11.5%); top: calc(50% + 38% * sin(var(--a)) - 11.5%); }
+.constelacion .disco.centro { width: 46%; left: 27%; top: 27%; border-width: clamp(4px, 1.2vw, 8px); }
+/* El precio va a las 3 en punto: es el único hueco libre entre los discos de ±30° */
+.sello-precio { position: absolute; right: -12%; top: 50%; translate: 0 -50%; min-width: 64px; padding: 8px 10px; border-radius: 999px; background: var(--monte); color: var(--papel); border: 2px solid var(--papel); font: 700 1rem/1 var(--losa); text-align: center; white-space: nowrap; }
+.constelacion .disco:not(.centro) .sello-precio { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not(.listo) .constelacion .disco { opacity: 0; transform: scale(.82); }
+  .constelacion .disco { transition: opacity .35s ease calc(var(--i) * 70ms + 150ms), transform .65s var(--rebote) calc(var(--i) * 70ms + 150ms); }
+  @view-transition { navigation: auto; }
+  ::view-transition-group(*) { animation-duration: .5s; animation-timing-function: var(--curva); }
+}
+
+/* Greca del anillo del logo: una sola vez, como borde entre secciones */
+.greca { display: block; width: 100%; height: 22px; color: var(--jade); background: var(--salvia); }
+
+/* Catálogo sobre niebla */
+.catalogo { padding: 40px var(--margen) 8px; }
+.catalogo h2 { margin: 0; font: 700 clamp(1.9rem, 6vw, 3rem)/1 var(--losa); }
+.filtros { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 26px; padding: 0; list-style: none; }
+.filtros button { height: 40px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--jade); background: var(--papel); color: var(--monte); font: 500 .9375rem/1 var(--texto); cursor: pointer; }
+.filtros button[aria-pressed="true"] { background: var(--salvia); border-color: var(--salvia); color: var(--papel); }
+.rejilla { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 16px; }
+@media (min-width: 700px) { .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .rejilla { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 40px 28px; } }
+.rejilla .disco { position: relative; width: 100%; aspect-ratio: 1; border-width: 4px; }
+.rejilla h3 { margin: 12px 0 0; font: 600 1.0625rem/1.25 var(--texto); }
+.rejilla .presentacion { margin: 2px 0 0; font-size: .875rem; color: var(--monte-suave); }
+.rejilla .precio { margin: 4px 0 0; font: 700 1.1875rem/1 var(--losa); font-variant-numeric: tabular-nums; }
+
+.servicio { display: grid; gap: 16px; margin: 48px var(--margen) 0; padding-top: 28px; border-top: 2px solid var(--jade); }
+.servicio p { margin: 0; } .servicio strong { display: block; font: 700 1.1875rem/1.2 var(--losa); }
+@media (min-width: 900px) { .servicio { grid-template-columns: repeat(3, 1fr); gap: 40px; } }
+
+.pie { margin-top: 64px; padding: 32px var(--margen) 96px; }
+.pie p { margin: 0 0 10px; } .pie .aviso-legal { font-size: .875rem; color: var(--papel-suave); }
+.flotante { position: fixed; right: 16px; bottom: 16px; width: 56px; height: 56px; border-radius: 50%; background: var(--salvia); color: var(--papel); border: 2px solid var(--papel); display: grid; place-items: center; box-shadow: 0 6px 18px var(--sombra); }
+.flotante svg { width: 28px; height: 28px; }
+.aviso { position: fixed; left: 50%; bottom: 88px; translate: -50% 0; padding: 10px 16px; border-radius: 999px; background: var(--monte); color: var(--papel); opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .3s var(--curva); pointer-events: none; white-space: nowrap; }
+.aviso.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<div class="campo">
+  <header class="cabecera">
+    <a class="marca" href="portada.html"><img src="../img/logo-192.webp" alt="" width="46" height="46">El Chico Naturista</a>
+    <nav aria-label="Principal">
+      <a class="solo-ancho" href="#catalogo">Catálogo</a>
+      <a class="carrito" href="#" aria-label="Carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.4 10.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="contador" data-contador hidden>0</span></a>
+    </nav>
+  </header>
+  <section class="entrada">
+    <div>
+      <h1>Productos naturales del Perú</h1>
+      <p>Arma tu pedido aquí y lo coordinamos por WhatsApp. Delivery el mismo día en Lima.</p>
+      <a class="boton-claro" href="#catalogo">Ver catálogo</a>
+    </div>
+    <div class="constelacion" id="constelacion" aria-label="Algunos productos"></div>
+  </section>
+</div>
+
+<svg class="greca" aria-hidden="true" preserveAspectRatio="none">
+  <defs>
+    <pattern id="g" width="24" height="22" patternUnits="userSpaceOnUse">
+      <path d="M0 3h24M0 19h24" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M0 16l6-10 6 10 6-10 6 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M6 16v-3M18 16v-3" stroke="currentColor" stroke-width="1.5"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g)"/>
+</svg>
+
+<main>
+  <section class="catalogo" id="catalogo" aria-labelledby="t-cat">
+    <h2 id="t-cat">Catálogo</h2>
+    <ul class="filtros" id="filtros"></ul>
+    <ul class="rejilla" id="rejilla"></ul>
+  </section>
+  <section class="servicio" aria-label="Cómo trabajamos">
+    <p><strong>Envío gratis desde S/&nbsp;120</strong>A todo el Perú. En Lima y Callao el envío cuesta S/&nbsp;10.</p>
+    <p><strong>Delivery el mismo día en Lima</strong>Confirmamos disponibilidad y hora por WhatsApp.</p>
+    <p><strong>Pagas al confirmar</strong>Yape, Plin o transferencia bancaria.</p>
+  </section>
+</main>
+<footer class="pie campo">
+  <p><strong>El Chico Naturista</strong>. Productos naturales del Perú.</p>
+  <p id="contacto"></p>
+  <p class="aviso-legal">Los suplementos no son medicamentos y no reemplazan una alimentación variada.</p>
+</footer>
+<a class="flotante" href="#" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg></a>
+<div class="aviso" data-aviso role="status" aria-live="polite"></div>
+
+<script src="../datos.js"></script>
+<script src="../comun.js"></script>
+<script>
+(function () {
+  var E = window.ECN, P = E.productos;
+  document.getElementById('contacto').textContent = 'WhatsApp ' + E.tienda.whatsappVisible + '. ' + E.tienda.horario + '. ' + E.tienda.direccion + '.';
+
+  var centro = E.buscar('ECN-001');
+  var anillo = ['ECN-005', 'ECN-004', 'ECN-020', 'ECN-006', 'ECN-009', 'ECN-025'].map(E.buscar);
+  var html = '<a class="disco centro" href="ficha.html?p=' + centro.codigo + '" style="--i:0" aria-label="' + centro.nombre + ', ' + E.soles(centro.precio) + '">' +
+    '<img src="' + E.foto(centro.imagenes[0], 600, 'cuadro') + '" alt="" style="view-transition-name:f-' + centro.codigo + '"><span class="sello-precio">' + E.soles(centro.precio) + '</span></a>';
+  anillo.forEach(function (p, k) {
+    html += '<a class="disco" href="ficha.html?p=' + p.codigo + '" style="--a:' + (-90 + k * 60) + 'deg;--i:' + (k + 1) + '" aria-label="' + p.nombre + ', ' + E.soles(p.precio) + '">' +
+      '<img src="' + E.foto(p.imagenes[0], 300, 'cuadro') + '" alt="" style="view-transition-name:f-' + p.codigo + '"></a>';
+  });
+  document.getElementById('constelacion').innerHTML = html;
+
+  var cats = ['Frescos', 'Abarrotes', 'Cuidado personal'];
+  document.getElementById('filtros').innerHTML = '<li><button type="button" aria-pressed="true" data-cat="">Todo (' + P.length + ')</button></li>' +
+    cats.map(function (c) { return '<li><button type="button" aria-pressed="false" data-cat="' + c + '">' + c + ' (' + P.filter(function (p) { return p.categoria === c; }).length + ')</button></li>'; }).join('');
+
+  function pintar(cat) {
+    document.getElementById('rejilla').innerHTML = P.filter(function (p) { return !cat || p.categoria === cat; }).map(function (p) {
+      return '<li><a class="disco" href="ficha.html?p=' + p.codigo + '"><img src="' + E.foto(p.imagenes[0], 360, 'cuadro') + '" alt="" loading="lazy"></a>' +
+        '<h3>' + p.nombre + '</h3><p class="presentacion">' + p.presentacion + '</p><p class="precio">' + E.soles(p.precio) + '</p></li>';
+    }).join('');
+  }
+  pintar('');
+  document.getElementById('filtros').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#filtros button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    var cambiar = function () { pintar(b.dataset.cat); };
+    if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.startViewTransition(cambiar); else cambiar();
+  });
+})();
+</script>
+</body>
+</html>

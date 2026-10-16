@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es-PE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>C · Ficha · El Chico Naturista</title>
+<style>
+@font-face { font-family: 'Zilla Slab'; src: url('../fuentes/zilla-slab-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('../fuentes/hind-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('../fuentes/hind-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Hind'; src: url('../fuentes/hind-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+:root {
+  --salvia: #2F5D50; --jade: #7A9B87; --papel: #FFFFFF; --niebla: #F7F7F7; --monte: #1C3A31; --cafe: #211E1E;
+  --papel-suave: color-mix(in srgb, var(--papel) 86%, var(--salvia));
+  --monte-suave: color-mix(in srgb, var(--monte) 72%, var(--niebla));
+  --sombra: color-mix(in srgb, var(--monte) 20%, transparent);
+  --salvia-hundido: color-mix(in srgb, var(--salvia) 85%, var(--monte));
+  --losa: 'Zilla Slab', Rockwell, serif; --texto: 'Hind', system-ui, sans-serif;
+  --curva: cubic-bezier(.2, .7, .2, 1); --margen: 16px;
+}
+@media (min-width: 900px) { :root { --margen: 48px; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--niebla); color: var(--monte); font: 400 1.0625rem/1.6 var(--texto); }
+a { color: inherit; } img { display: block; max-width: 100%; }
+:focus-visible { outline: 3px solid var(--jade); outline-offset: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-group(*) { animation-duration: .5s; animation-timing-function: var(--curva); }
+}
+.campo { background: var(--salvia); color: var(--papel); }
+.cabecera { display: flex; align-items: center; gap: 12px; padding: 14px var(--margen); }
+.marca { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 1.1875rem/1 var(--losa); }
+.marca img { width: 46px; height: 46px; }
+.carrito { margin-left: auto; position: relative; display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 50%; border: 1.5px solid var(--papel-suave); }
+.carrito svg { width: 22px; height: 22px; }
+.contador { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--papel); color: var(--salvia); font: 600 .75rem/20px var(--texto); text-align: center; }
+.contador.salta { animation: salta .45s var(--curva); } @keyframes salta { 40% { transform: scale(1.35); } }
+
+.ficha { display: grid; }
+@media (min-width: 900px) { .ficha { grid-template-columns: 1fr 1fr; min-height: calc(100vh - 74px); } }
+.escena { position: relative; padding: 8px var(--margen) 48px; display: grid; grid-template-rows: auto 1fr; justify-items: center; align-items: center; }
+.ruta { justify-self: start; margin: 0 0 20px; font-size: .9375rem; color: var(--papel-suave); }
+.disco { position: relative; width: min(78vw, 440px); aspect-ratio: 1; border-radius: 50%; background: var(--papel); border: 8px solid var(--jade); }
+.disco img { position: absolute; inset: 15%; width: 70%; height: 70%; object-fit: contain; }
+.disco.chico { position: absolute; width: min(26vw, 140px); border-width: 5px; right: var(--margen); bottom: 24px; cursor: pointer; padding: 0; }
+.sello-precio { position: absolute; left: -2%; bottom: 6%; padding: 10px 14px; border-radius: 999px; background: var(--monte); color: var(--papel); border: 2px solid var(--papel); font: 700 1.375rem/1 var(--losa); white-space: nowrap; }
+@media (min-width: 900px) { .escena { padding-top: 32px; } .ficha .escena { position: sticky; top: 0; align-self: start; min-height: calc(100vh - 74px); } }
+
+.datos { padding: 32px var(--margen) 0; }
+@media (min-width: 900px) { .datos { padding: 48px var(--margen) 0; max-width: 620px; } }
+.datos .marca-producto { margin: 0; font-weight: 600; color: var(--monte-suave); }
+.datos h1 { margin: 4px 0 4px; font: 700 clamp(2.2rem, 8vw, 3.75rem)/.98 var(--losa); }
+.datos .presentacion { margin: 0; color: var(--monte-suave); }
+.corta { margin: 14px 0 0; }
+.compra { display: grid; grid-template-columns: auto 1fr; gap: 10px; margin-top: 22px; }
+.cantidad { display: inline-flex; align-items: center; background: var(--papel); border: 1.5px solid var(--jade); border-radius: 999px; }
+.cantidad button { width: 44px; height: 48px; border: 0; background: none; font: 600 1.25rem/1 var(--texto); color: var(--monte); cursor: pointer; border-radius: 999px; }
+.cantidad output { min-width: 2ch; text-align: center; font-weight: 600; font-variant-numeric: tabular-nums; }
+.agregar { height: 50px; border: 0; border-radius: 999px; background: var(--salvia); color: var(--papel); font: 600 1.0625rem/1 var(--texto); cursor: pointer; }
+.agregar:hover { background: var(--salvia-hundido); }
+.consulta { display: inline-block; margin-top: 14px; font-weight: 600; }
+.detalle { margin-top: 36px; display: grid; gap: 26px; }
+.detalle h2 { margin: 0 0 6px; font: 700 1.375rem/1.2 var(--losa); }
+.detalle p { margin: 0; }
+.beneficios { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.beneficios li { padding: 6px 14px; border-radius: 999px; background: var(--papel); border: 1.5px solid var(--jade); font-size: .9375rem; }
+
+.pie { margin-top: 64px; padding: 32px var(--margen) 96px; }
+.pie p { margin: 0 0 10px; } .pie .aviso-legal { font-size: .875rem; color: var(--papel-suave); }
+.flotante { position: fixed; right: 16px; bottom: 16px; width: 56px; height: 56px; border-radius: 50%; background: var(--salvia); color: var(--papel); border: 2px solid var(--papel); display: grid; place-items: center; box-shadow: 0 6px 18px var(--sombra); }
+.flotante svg { width: 28px; height: 28px; }
+.aviso { position: fixed; left: 50%; bottom: 88px; translate: -50% 0; padding: 10px 16px; border-radius: 999px; background: var(--monte); color: var(--papel); opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .3s var(--curva); pointer-events: none; white-space: nowrap; }
+.aviso.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<div class="campo">
+  <header class="cabecera">
+    <a class="marca" href="portada.html"><img src="../img/logo-192.webp" alt="" width="46" height="46">El Chico Naturista</a>
+    <a class="carrito" href="#" aria-label="Carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.4 10.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="contador" data-contador hidden>0</span></a>
+  </header>
+</div>
+<main class="ficha" id="ficha" data-producto></main>
+<footer class="pie campo">
+  <p><strong>El Chico Naturista</strong>. Productos naturales del Perú.</p>
+  <p class="aviso-legal">Los suplementos no son medicamentos y no reemplazan una alimentación variada.</p>
+</footer>
+<a class="flotante" href="#" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/></svg></a>
+<div class="aviso" data-aviso role="status" aria-live="polite"></div>
+<script src="../datos.js"></script>
+<script src="../comun.js"></script>
+<script>
+(function () {
+  var E = window.ECN;
+  var p = E.buscar(new URLSearchParams(location.search).get('p') || 'ECN-001') || E.productos[0];
+  document.title = p.nombre + ' · C · El Chico Naturista';
+  var fotos = p.imagenes.map(function (u) { return E.foto(u, 800, 'cuadro'); });
+  var chico = fotos[1] ? '<button class="disco chico" type="button" data-cambiar aria-label="Ver la otra cara del empaque"><img src="' + E.foto(p.imagenes[1], 300, 'cuadro') + '" alt=""></button>' : '';
+  var sec = function (t, c) { return c ? '<section><h2>' + t + '</h2>' + c + '</section>' : ''; };
+
+  document.getElementById('ficha').innerHTML =
+    '<div class="escena campo"><p class="ruta"><a href="portada.html">Inicio</a> / ' + p.categoria + ' / ' + p.subcategoria + '</p>' +
+      '<div class="disco"><img id="principal" src="' + fotos[0] + '" alt="' + p.nombre + '" style="view-transition-name:f-' + p.codigo + '"><span class="sello-precio">' + E.soles(p.precio) + '</span></div>' + chico + '</div>' +
+    '<div class="datos">' +
+      '<p class="marca-producto">' + p.marca + '</p><h1>' + p.nombre + '</h1><p class="presentacion">' + p.presentacion + '</p>' +
+      '<p class="corta">' + p.corta + '</p>' +
+      '<div class="compra"><div class="cantidad" data-cantidad><button type="button" data-menos aria-label="Quitar uno">−</button><output aria-live="polite">1</output><button type="button" data-mas aria-label="Agregar uno">+</button></div>' +
+      '<button class="agregar" type="button" data-agregar="' + p.nombre + '">Agregar al carrito</button></div>' +
+      '<a class="consulta" href="#">Consultar por WhatsApp</a>' +
+      '<div class="detalle">' +
+        sec('Beneficios', p.beneficios.length ? '<ul class="beneficios">' + p.beneficios.map(function (b) { return '<li>' + b + '</li>'; }).join('') + '</ul>' : '') +
+        sec('Qué es', p.larga ? '<p>' + p.larga + '</p>' : '') +
+        sec('Modo de uso', p.uso ? '<p>' + p.uso + '</p>' : '') +
+      '</div></div>';
+
+  var actual = 0;
+  document.addEventListener('click', function (ev) {
+    if (!ev.target.closest('[data-cambiar]')) return;
+    actual = 1 - actual;
+    document.getElementById('principal').src = fotos[actual];
+    ev.target.closest('[data-cambiar]').querySelector('img').src = E.foto(p.imagenes[1 - actual], 300, 'cuadro');
+  });
+})();
+</script>
+</body>
+</html>

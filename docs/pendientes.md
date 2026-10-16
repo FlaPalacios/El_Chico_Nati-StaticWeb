@@ -27,3 +27,5 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 | T5 | Volver privado el repositorio anterior `ElCHichoNaturista` | Cuando Fernando pueda |
 | T6 | Requisitos legales de venta en línea en Perú (libro de reclamaciones virtual, política de datos personales) | Antes de v1.0 |
 | T7 | Para las pruebas en navegador, dejar Chrome abierto y sin minimizar | Siempre |
+| T8 | Las fotos usan transformaciones de Cloudinary (`e_trim`, tamaños). El plan gratuito tiene un cupo mensual de transformaciones: revisar el consumo en el panel de Cloudinary después del lanzamiento | v1.0 y luego mensual |
+| T9 | El logo limpio sale de un PNG con el fondo a cuadros pintado. Si existe el archivo original (vectorial o con transparencia real), reemplazarlo | Cuando aparezca |
