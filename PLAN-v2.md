@@ -523,7 +523,9 @@ Listo cuando: un pedido de prueba completo abre WhatsApp con el mensaje correcto
 | 7.5 | Flujo manual: editar la hoja, descargar la pestaña como TSV a `data/catalogo-inicial.tsv`, `npm run sync`, commit | Un cambio de precio de prueba se ve publicado |
 | 7.6 | `docs/guia-equipo.md`, primera parte: cómo editar la pestaña y qué columnas no tocar | Revisada por ti |
 
-Límite a tener en cuenta: el plan gratuito de Cloudflare Pages permite 500 compilaciones al mes. Por eso la Fase 8 solo hace commit (y por tanto compila) cuando la hoja cambió.
+Cómo quedó (17-oct-2026): el proyecto se creó como Worker con archivos estáticos (`wrangler.jsonc` apunta a `dist/`, sin código de servidor), que es lo que Cloudflare recomienda hoy en lugar de Pages; `_headers` funciona igual. Web Analytics de Cloudflare activo (sin cookies) y permitido en la CSP.
+
+Límite a tener en cuenta: el plan gratuito de compilaciones de Cloudflare tiene un cupo mensual. Por eso la Fase 8 solo hace commit (y por tanto compila) cuando la hoja cambió.
 
 ### Fase 8 (v0.8). Actualización automática desde la hoja
 
