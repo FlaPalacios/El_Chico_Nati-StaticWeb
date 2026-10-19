@@ -38,7 +38,7 @@ Usuarios: el cliente (compra como invitado) y el equipo (Fernando y colaboradore
 | Arquitectura | Web estática. Sin backend, sin base de datos. Supabase queda descartado |
 | Compra | Carrito en el navegador. Al confirmar se abre WhatsApp con el pedido escrito. Sin pago en línea, sin cuentas |
 | Entrega | Todo pedido es delivery |
-| Catálogo | Pestaña "Catálogo web" dentro del Excel Master (Google Sheets), separada de los costos |
+| Catálogo | Archivo propio "El Chico Naturista – Tienda web (administración)" (18-oct-2026, reemplaza al Master): se edita en Productos y se publica solo la pestaña automática "Web (publicada)", sin costos ni clientes |
 | Stock | No se publica ni se muestra. Nunca aparece "agotado" ni se bloquea una compra. Si algo no hay, se pide al proveedor. El stock se controla solo en la hoja |
 | Fotos | Cloudinary. Las URLs ya están en el TSV. No se usa la API. Fotos nuevas: subir a mano y pegar el link en la hoja |
 | Categorías | Se mantienen: 3 categorías (Abarrotes, Frescos, Cuidado personal), 8 subcategorías y 7 marcas |
@@ -79,7 +79,7 @@ Usuarios: el cliente (compra como invitado) y el equipo (Fernando y colaboradore
 Reglas:
 
 - Si el Master y el TSV dicen cosas distintas sobre lo mismo, gana el Master.
-- La pestaña nueva "Catálogo web" lee nombre, presentación y precio del Master con fórmula, así hay una sola fuente de precio.
+- Desde el 18-oct-2026 el Master se dejó de usar: el archivo "Tienda web (administración)" tiene Resumen, Productos, Pedidos, Compras y ajustes, Caja, Proveedores, Listas y "Web (publicada)". Esta última copia por fórmula las columnas públicas de Productos con los nombres de 5.1, así hay una sola fuente de precio.
 - Los archivos originales viven en `-recursos/` (ignorado por git). Al repo solo sube lo que genera `scripts/preparar-datos.mjs` (Fase 1).
 - Nunca se copian al repo ni a un JSON: costo, proveedor, margen, stock, compras, ventas, clientes, contactos de proveedores.
 
@@ -145,7 +145,7 @@ Abarrotes concentra 16 de 23: por eso el catálogo da peso a subcategorías y ma
 
 ## 5. Contrato de datos
 
-### 5.1 Pestaña "Catálogo web"
+### 5.1 Pestaña "Web (publicada)" (antes "Catálogo web")
 
 Una fila por producto. Solo columnas públicas. Encabezado verde: se escribe a mano. Gris: fórmula.
 
@@ -220,7 +220,7 @@ No se copia nada más de `backend/`, ni `.env.example`, ni las páginas de `admi
 
 ```
 Google Sheets (Excel Master)
-  pestaña "Catálogo web" --CSV publicado--> scripts/sync-catalogo.mjs --valida--> src/data/*.json
+  pestaña "Web (publicada)" --CSV publicado--> scripts/sync-catalogo.mjs --valida--> src/data/*.json
                                                                                      |
 Astro (output: static) + scripts de módulo <-------------------------------------+
   portada, catálogo, ficha, carrito, checkout
@@ -531,8 +531,8 @@ Límite a tener en cuenta: el plan gratuito de compilaciones de Cloudflare tiene
 
 | ID | Tarea | Verificación |
 |---|---|---|
-| 8.1 | Publicar solo la pestaña "Catálogo web" como CSV (Archivo, Compartir, Publicar en la web) | La URL devuelve solo esas columnas |
-| 8.2 | Guardar la URL como variable del repositorio `CATALOGO_URL` en GitHub | No aparece en el código |
+| 8.1 | Publicar solo la pestaña "Web (publicada)" como CSV (Archivo, Compartir, Publicar en la web) | La URL devuelve solo esas columnas |
+| 8.2 | Guardar la URL como **secreto** del repositorio `CATALOGO_URL` en GitHub (secreto y no variable: GitHub lo oculta en los registros) | No aparece en el código ni en los registros |
 | 8.3 | Workflow `actualizar-catalogo.yml`: cada hora y con botón manual (`workflow_dispatch`), baja el CSV, lo valida con el mismo `sync`, y si es válido y distinto de `data/catalogo-inicial.tsv` hace commit `ECN-datos catálogo actualizado desde la hoja`. Permisos: solo `contents: write` | Un cambio en la hoja se ve en la web en menos de 2 horas |
 | 8.4 | Si el CSV no cambió, no hay commit (no gasta compilaciones del hosting). Si no es válido, el workflow falla, no hay commit y queda publicada la versión anterior | El log lo indica en ambos casos |
 | 8.5 | `docs/guia-equipo.md`, segunda parte: cuánto tarda, cómo forzar la actualización, qué hacer si el workflow falla | Revisada por ti |
@@ -558,9 +558,9 @@ Dominio `elchiconaturista.com` activo, `robots.txt` abierto, `sitemap.xml`, quit
 
 | ID | Tarea | Antes de |
 |---|---|---|
-| S1 | Crear la pestaña "Catálogo web" con las columnas de 5.1; nombre, presentación y precio por fórmula desde Productos (por código) | Fase 8 (en la Fase 7 se puede trabajar con el TSV) |
+| S1 | ~~Crear la pestaña "Catálogo web"~~ Hecho el 18-oct-2026 en el archivo nuevo "Tienda web (administración)" | Cerrado |
 | S2 | Reescribir la pestaña Inicio: el stock se controla aquí, los pedidos entran por WhatsApp y se registran a mano en "Importar pedidos". Quitar las líneas que mandan a "la web" a subir stock, exportar CSV o registrar ventas en el panel | Fase 7 |
-| S3 | Definir quién edita "Catálogo web" y quién revisa antes de que se publique | Fase 8 |
+| S3 | Definir quién edita Productos y quién revisa antes de que se publique | Fase 8 |
 | S4 | Verificar las 11 descripciones de `descripciones-faltantes.tsv` contra la etiqueta (especialmente ECN-022, 023, 024, 025, 026, que ya están o estarían visibles) | Fase 4 |
 | S5 | Marcar `mas_vendido` (propuesta D11) y revisar `destacado` (hoy ECN-001 y ECN-005) | Fase 4 |
 | S6 | Corregir en la pestaña D4 (fotos ECN-004) y D6 ("Cuidado personal"); quitar "Inactivo en la web" de ECN-022 en Productos (D2) | Fase 7 |
@@ -572,7 +572,7 @@ Dominio `elchiconaturista.com` activo, `robots.txt` abierto, `sitemap.xml`, quit
 ## 12. Riesgos
 
 - **Productos sin stock que se venden igual.** Decisión del negocio. Se mitiga con el aviso de disponibilidad y avisando pronto al cliente si hay demora.
-- **Costos expuestos por error.** Solo se publica la pestaña "Catálogo web". El validador rechaza columnas prohibidas. Si preocupa, mover el catálogo a un archivo aparte que lea el Master con `IMPORTRANGE`.
+- **Costos expuestos por error.** Solo se publica la pestaña "Web (publicada)", que se arma por fórmula con columnas públicas. El validador rechaza columnas prohibidas. Si preocupa, mover el catálogo a un archivo aparte que lea el Master con `IMPORTRANGE`.
 - **Repo público.** Cualquier archivo subido es visible. `-recursos/` está en `.gitignore` y el revisor de seguridad lo verifica en cada fase. Si algún día se sube algo privado por error, no basta con borrarlo: hay que reescribir el historial.
 - **Afirmaciones de salud.** Varios beneficios publicados prometen efectos en la salud. Conviene revisarlos con el proveedor o un especialista. Se mantiene el aviso del pie.
 - **Descripciones borrador.** Se verifican antes de publicar (S4).

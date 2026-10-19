@@ -3,11 +3,15 @@
 // Si hay errores no escribe nada y termina con código 1: queda publicada la versión anterior.
 //
 //   npm run sync
+//   node scripts/sync-catalogo.mjs --guardar-tsv   (Fase 8: además copia la hoja validada a
+//                                                   data/catalogo-inicial.tsv, solo columnas públicas)
 
 import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { leerTabla } from './lib/csv.mjs';
+import { escribirTsv } from './lib/tsv.mjs';
+import { COLUMNAS_PUBLICAS } from './lib/columnas.mjs';
 import { procesarCatalogo } from './lib/catalogo.mjs';
 
 // En Windows, el antivirus o el servidor de desarrollo pueden tener el archivo abierto un instante (EPERM/EBUSY)
@@ -38,7 +42,7 @@ async function leerOrigen() {
     }
     if (!respuesta.ok) throw new Error(`La hoja publicada respondió ${respuesta.status}. Revisa que siga publicada como CSV.`);
     const texto = await respuesta.text();
-    if (texto.length > 2_000_000) throw new Error('La hoja publicada pesa más de 2 MB: no parece la pestaña "Catálogo web".');
+    if (texto.length > 2_000_000) throw new Error('La hoja publicada pesa más de 2 MB: no parece la pestaña "Web (publicada)".');
     return { texto, origen: 'CATALOGO_URL (hoja publicada)' };
   }
   return { texto: await readFile(path.join(raiz, 'data', 'catalogo-inicial.tsv'), 'utf8'), origen: 'data/catalogo-inicial.tsv' };
@@ -69,6 +73,19 @@ async function main() {
   }
   for (const nombre of Object.keys(archivos)) {
     await renombrarConReintento(path.join(salida, `${nombre}.tmp`), path.join(salida, nombre));
+  }
+
+  // Copia de la hoja en el repositorio: el sitio se puede compilar sin la URL y queda historial de cambios
+  if (process.argv.includes('--guardar-tsv')) {
+    if (!process.env.CATALOGO_URL) throw new Error('--guardar-tsv solo tiene sentido leyendo CATALOGO_URL.');
+    // Un salto de línea dentro de una celda se vuelve espacio (en la web se ve igual)
+    const limpias = filas
+      .filter((f) => String(f.codigo ?? '').trim())
+      .map((f) => Object.fromEntries(COLUMNAS_PUBLICAS.map((c) => [c, String(f[c] ?? '').replace(/\s*[\t\r\n]+\s*/g, ' ').trim()])));
+    const destino = path.join(raiz, 'data', 'catalogo-inicial.tsv');
+    await writeFile(`${destino}.tmp`, escribirTsv(COLUMNAS_PUBLICAS, limpias), 'utf8');
+    await renombrarConReintento(`${destino}.tmp`, destino);
+    console.log(`data/catalogo-inicial.tsv actualizado: ${limpias.length} filas.`);
   }
 
   const subs = categorias.reduce((n, c) => n + c.subcategorias.length, 0);

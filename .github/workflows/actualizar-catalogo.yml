@@ -1,0 +1,61 @@
+# Actualización automática del catálogo desde la hoja (PLAN-v2.md, Fase 8).
+# Cada hora (y con el botón "Run workflow"): baja la pestaña "Web (publicada)" publicada como CSV,
+# la valida con el mismo sync que usa la web, compila y, solo si cambió, hace commit.
+# Ese commit hace que Cloudflare vuelva a publicar. Si la hoja tiene un error, el workflow
+# falla, no hay commit y la web sigue con la versión anterior.
+name: Actualizar catálogo
+
+on:
+  schedule:
+    - cron: '17 * * * *' # minuto 17 de cada hora (UTC)
+  workflow_dispatch:
+
+# Única escritura: el commit de data/catalogo-inicial.tsv
+permissions:
+  contents: write
+
+# Nunca dos a la vez (un cambio manual mientras corre el de la hora)
+concurrency:
+  group: actualizar-catalogo
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.15.0
+          cache: npm
+      - run: npm ci
+
+      - name: Leer y validar la hoja
+        env:
+          # Secreto del repositorio: GitHub lo oculta en los registros
+          CATALOGO_URL: ${{ secrets.CATALOGO_URL }}
+        run: |
+          if [ -z "$CATALOGO_URL" ]; then
+            echo "::error::Falta el secreto CATALOGO_URL (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          node scripts/sync-catalogo.mjs --guardar-tsv
+
+      - name: Probar y compilar con los datos nuevos
+        run: |
+          npm test
+          npm run build
+
+      - name: Commit solo si la hoja cambió
+        run: |
+          if git diff --quiet -- data/catalogo-inicial.tsv; then
+            echo "La hoja no cambió: no hay commit ni nueva publicación."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/catalogo-inicial.tsv
+          git commit -m "ECN-datos catálogo actualizado desde la hoja"
+          git push
+          echo "Catálogo actualizado: Cloudflare publica en 1 o 2 minutos."
