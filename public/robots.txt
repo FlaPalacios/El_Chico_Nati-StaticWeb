@@ -1,3 +1,5 @@
-# Mientras no sea v1.0, el sitio no se indexa (PLAN-v2.md, tarea 6.6).
+# Abierto a buscadores desde el 21-oct-2026. Carrito, checkout y /guia llevan noindex en la página.
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://elchiconaturista.com/sitemap.xml

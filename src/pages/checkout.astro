@@ -5,7 +5,7 @@ import Base from '../layouts/Base.astro';
 import Icono from '../components/Icono.astro';
 import { LARGOS } from '../lib/pedido.js';
 ---
-<Base titulo="Finalizar pedido" flotante="escritorio" mensajeWhatsapp="Hola, tengo una consulta antes de hacer mi pedido.">
+<Base indexar={false} titulo="Finalizar pedido" flotante="escritorio" mensajeWhatsapp="Hola, tengo una consulta antes de hacer mi pedido.">
   <main class="contenedor checkout" data-checkout>
     <h1 data-ck-titulo>Finalizar pedido</h1>
     <noscript><p>Para finalizar el pedido aquí hace falta activar JavaScript. También puedes escribirnos por WhatsApp con el botón de la esquina.</p></noscript>

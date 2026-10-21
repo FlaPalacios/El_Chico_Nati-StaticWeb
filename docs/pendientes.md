@@ -22,7 +22,7 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 |---|---|---|
 | T1 | ~~Licencia web de Amulya~~: resuelto, la dirección elegida usa Zilla Slab y Hind (ambas OFL) | Cerrado en v0.2 |
 | T2 | El test de `data/catalogo-inicial.tsv` fija 29 productos / 23 visibles: actualizarlo cuando cambie la hoja | Fases 7 y 8 |
-| T3 | Quitar `noindex` y abrir `robots.txt` | v1.0 |
+| ~~T3~~ | ~~Quitar `noindex` y abrir `robots.txt`~~ Hecho el 21-oct-2026 (pedido por Fernando antes de v1.0) | Cerrado |
 | T4 | Verificar que `contacto@elchiconaturista.com` recibe correo | Antes de v1.0 |
 | T5 | Volver privado el repositorio anterior `ElCHichoNaturista` | Cuando Fernando pueda |
 | T6 | Requisitos legales de venta en línea en Perú: **libro de reclamaciones virtual** (se define con Fernando) y política de datos personales | Antes de v1.0 |
@@ -33,7 +33,7 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 | T14 | Redes del pie: hoy TikTok y LinkedIn (enlaces reales del sitio anterior). Si hay Instagram o Facebook, pasar los enlaces | Antes de v1.0 |
 | T12 | ~~En celular, el botón flotante de WhatsApp puede tapar el "+" de las láminas de la columna derecha mientras se desliza. En el prototipo se ocultó solo en la ficha (tapaba "Agregar al carrito" y ahí ya está "Consultar por WhatsApp"). Decidir la regla final en la Fase 4~~ Resuelto: en celular el flotante se oculta en ficha, carrito y checkout (ahí ya hay un WhatsApp a mano); en la portada se mantiene. | Cerrado en v0.6 |
 | T13 | ~~Cloudflare Pages debe publicar solo `dist/`, nunca la raíz del repo (`prototipos/` no debe quedar en línea)~~ Resuelto: `wrangler.jsonc` publica solo `dist/` | Cerrado en v0.7 |
-| T15 | `/guia` (guía de estilos para QA) está publicada en elchiconaturista.com/guia con `noindex` y sin enlaces. No tiene datos privados. Decidir antes de v1.0 si se excluye del build | v1.0 |
+| T15 | `/guia` (guía de estilos para QA) está publicada en elchiconaturista.com/guia con `noindex` y sin enlaces (fuera del sitemap). No tiene datos privados. Decidir antes de v1.0 si se excluye del build | v1.0 |
 | T18 | Los paneles 2 y 3 del carrusel no repiten productos que ya están en la constelación del panel 1: por eso el panel 2 muestra Té Matcha, Algarrobina y Miel con Propóleo en lugar de Nibs y Kéfir (que ya están en el panel 1). Se cambia en `src/data/portada.json` | Cuando Fernando quiera |
 | T16 | El plan v1 tenía un cintillo de avisos arriba de la cabecera; la dirección elegida no lo usa (los avisos están en el hero y en la franja de servicio). Si se quiere, se agrega en la Fase 4 | Fase 4, decisión de Fernando |
 | T17 | ~~`public/img/logo-512.png` y `.webp` todavía no se usan: quedan para la imagen al compartir en redes (Open Graph) en la Fase 6~~ Resuelto: Open Graph con el logo de 512 px en general y la foto del producto (JPG 1200 px) en cada ficha. | Cerrado en v0.6 |
@@ -47,6 +47,7 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 | T26 | Activar **Always Use HTTPS** en Cloudflare (SSL/TLS, Edge Certificates): hoy `http://elchiconaturista.com` responde sin redirigir. Chrome y la mayoría de navegadores pasan solos a https, pero otros enlaces o clientes no | Ahora (Fernando) |
 | T27 | Probar el flujo manual de actualización (7.5) con un cambio real cuando exista la pestaña "Catálogo web" (S1) | Fase 8 |
 | T28 | Botón para descargar el catálogo en PDF (archivo propio o enlace a un PDF en Drive). Decidir de dónde sale el PDF y dónde va el botón (portada, pie o ambos) | Después de v0.8, cuando Fernando lo pida |
-| T29 | Antes de v1.0, en este orden: quitar `noindex` del layout, abrir `robots.txt` con la línea `Sitemap:`, generar `sitemap.xml` (lo hace Claude); verificar el dominio en Google Search Console y enviar el sitemap (lo hace Fernando, con guía) | v1.0 |
-| T30 | Fase 9 opcional: registrar en el Sheets los pedidos enviados desde la web. Si se hace, que escriban en una pestaña aparte "Pedidos web (por revisar)" y no en Pedidos | Decisión de Fernando |
+| T29 | Código hecho el 21-oct-2026 (`noindex` solo en carrito, checkout, 404 y `/guia`; `robots.txt` abierto; `sitemap.xml`; `canonical`). Falta: verificar el dominio en Google Search Console y enviar el sitemap (Fernando, con guía) | Ahora |
+| T30 | Fase 9 opcional: registrar en el Sheets los pedidos enviados desde la web. Si se hace, que escriban en una pestaña aparte "Pedidos web (por revisar)" y no en Pedidos | En espera: solo cuando Fernando lo pida |
+| T31 | Documentación final del proyecto: dónde vive cada cosa (repositorio, Cloudflare, dominio, GitHub Actions y secreto, Sheets y Apps Script, Cloudinary, Web Analytics, Search Console, correo), cómo funciona el Sheets pestaña por pestaña, qué hacer si algo falla y a quién pertenece cada cuenta | Al final |
 | T9 | El logo limpio sale de un PNG con el fondo a cuadros pintado. Si existe el archivo original (vectorial o con transparencia real), reemplazarlo | Cuando aparezca |

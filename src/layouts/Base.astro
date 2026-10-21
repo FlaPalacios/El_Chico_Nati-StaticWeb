@@ -17,6 +17,8 @@ interface Props {
   flotante?: 'siempre' | 'escritorio';
   /** Imagen al compartir el enlace (Open Graph). Por defecto, el logo. */
   imagen?: string;
+  /** false en páginas sin contenido para buscadores (carrito, checkout, 404, guía): llevan noindex */
+  indexar?: boolean;
 }
 
 const {
@@ -25,6 +27,7 @@ const {
   mensajeWhatsapp,
   flotante = 'siempre',
   imagen,
+  indexar = true,
 } = Astro.props;
 const imagenCompartir = imagen ?? new URL('/img/logo-512.png', Astro.site).href;
 const urlCanonica = new URL(Astro.url.pathname, Astro.site).href;
@@ -40,8 +43,7 @@ const tituloCompleto = titulo === tienda.nombre ? titulo : `${titulo} · ${tiend
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Mientras no sea v1.0: fuera de buscadores (PLAN-v2.md, Fase 6) -->
-    <meta name="robots" content="noindex, nofollow" />
+    {indexar ? <link rel="canonical" href={urlCanonica} /> : <meta name="robots" content="noindex" />}
     <meta name="description" content={descripcion} />
     <!-- Única excepción a "colores solo en global.css": meta theme-color no admite var(). Es --papel. -->
     <meta name="theme-color" content="#FFFFFF" />

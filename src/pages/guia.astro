@@ -1,6 +1,6 @@
 ---
 // Guía de estilos interna para QA: tokens, tipografía, botones y piezas base.
-// No está enlazada desde el sitio. Se decide en la Fase 7 si se publica (con noindex) o se excluye.
+// No está enlazada desde el sitio y lleva noindex: no aparece en buscadores.
 import Base from '../layouts/Base.astro';
 import SinFoto from '../components/SinFoto.astro';
 import { fotoCuadro } from '../lib/cloudinary.js';
@@ -10,7 +10,7 @@ import info from '../data/sync-info.json';
 const colores = ['salvia', 'jade', 'niebla', 'cafe', 'papel', 'monte', 'liquen', 'papel-suave', 'monte-suave', 'filete', 'salvia-hundido'];
 const muestra = productos[0];
 ---
-<Base titulo="Guía de estilos">
+<Base indexar={false} titulo="Guía de estilos">
   <main class="contenedor guia">
     <h1>Guía de estilos</h1>
     <p class="nota">Catálogo sincronizado desde {info.origen}: {info.productos} productos, {info.avisos.length} aviso(s).</p>
