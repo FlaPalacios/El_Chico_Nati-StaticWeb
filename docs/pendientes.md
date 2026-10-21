@@ -25,7 +25,7 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 | T3 | Quitar `noindex` y abrir `robots.txt` | v1.0 |
 | T4 | Verificar que `contacto@elchiconaturista.com` recibe correo | Antes de v1.0 |
 | T5 | Volver privado el repositorio anterior `ElCHichoNaturista` | Cuando Fernando pueda |
-| T6 | Requisitos legales de venta en línea en Perú (libro de reclamaciones virtual, política de datos personales) | Antes de v1.0 |
+| T6 | Requisitos legales de venta en línea en Perú: **libro de reclamaciones virtual** (se define con Fernando) y política de datos personales | Antes de v1.0 |
 | T7 | Para las pruebas en navegador, dejar Chrome abierto y sin minimizar | Siempre |
 | T8 | Las fotos usan transformaciones de Cloudinary (`e_trim`, tamaños). El plan gratuito tiene un cupo mensual de transformaciones: revisar el consumo en el panel de Cloudinary después del lanzamiento | v1.0 y luego mensual |
 | T10 | ~~Amulya en el historial~~: Fernando decidió dejar los commits como están (15-oct-2026). Ya no se usa ni se incluye en archivos nuevos | Cerrado |
@@ -46,4 +46,7 @@ Lista viva: se actualiza en cada fase. Al terminar el proyecto se convierte en e
 | T25 | El build en Cloudflare avisa `EBADENGINE`: `undici@8` (dependencia de `unifont`, que Astro usa para fuentes remotas; aquí no se usa) pide Node ≥ 22.19 y el build usa 22.15. No afecta. Al subir Node local y `NODE_VERSION` a 22.19+ desaparece | Cuando se actualice Node |
 | T26 | Activar **Always Use HTTPS** en Cloudflare (SSL/TLS, Edge Certificates): hoy `http://elchiconaturista.com` responde sin redirigir. Chrome y la mayoría de navegadores pasan solos a https, pero otros enlaces o clientes no | Ahora (Fernando) |
 | T27 | Probar el flujo manual de actualización (7.5) con un cambio real cuando exista la pestaña "Catálogo web" (S1) | Fase 8 |
+| T28 | Botón para descargar el catálogo en PDF (archivo propio o enlace a un PDF en Drive). Decidir de dónde sale el PDF y dónde va el botón (portada, pie o ambos) | Después de v0.8, cuando Fernando lo pida |
+| T29 | Antes de v1.0, en este orden: quitar `noindex` del layout, abrir `robots.txt` con la línea `Sitemap:`, generar `sitemap.xml` (lo hace Claude); verificar el dominio en Google Search Console y enviar el sitemap (lo hace Fernando, con guía) | v1.0 |
+| T30 | Fase 9 opcional: registrar en el Sheets los pedidos enviados desde la web. Si se hace, que escriban en una pestaña aparte "Pedidos web (por revisar)" y no en Pedidos | Decisión de Fernando |
 | T9 | El logo limpio sale de un PNG con el fondo a cuadros pintado. Si existe el archivo original (vectorial o con transparencia real), reemplazarlo | Cuando aparezca |

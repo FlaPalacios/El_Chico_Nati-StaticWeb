@@ -56,7 +56,7 @@ Usuarios: el cliente (compra como invitado) y el equipo (Fernando y colaboradore
 | Hosting | Cloudflare Pages (plan gratuito). Local hasta la Fase 7 | Decidido por Fernando el 15-oct-2026: Vercel gratis no permite uso comercial, y el dominio ya está comprado en Cloudflare, así que DNS y hosting quedan en la misma cuenta |
 | Dirección visual | D: portada de C (sello), láminas de B (herbario) redondeadas y sin códigos a 5 columnas, ficha con la información de A y el producto en lámina contenida, carrusel de recomendados, pie como el sitio anterior, contenido a 1360 px máximo con paneles redondeados, cabecera blanca fija con buscador al centro. Zilla Slab + Hind. Detalle y tokens en `docs/direccion-visual.md` | Elegida por Fernando el 15-oct-2026 (Fase 2) |
 | Correo de contacto | `contacto@elchiconaturista.com` | Decidido por Fernando el 15-oct-2026 (reemplaza al `.pe` del sitio anterior) |
-| Actualización desde la hoja | Un flujo de GitHub Actions baja el CSV publicado cada hora y, solo si cambió, hace commit de `data/catalogo-inicial.tsv`. El hosting compila con cada push | Sirve con cualquier hosting, no gasta compilaciones si no hay cambios y deja historial de cada cambio de datos |
+| Actualización desde la hoja | Un flujo de GitHub Actions baja el CSV publicado cada 2 horas de 8 a 22 h (Lima) y, solo si cambió, hace commit de `data/catalogo-inicial.tsv`. El hosting compila con cada push | Sirve con cualquier hosting, no gasta compilaciones si no hay cambios y deja historial de cada cambio de datos |
 | Datos en el repo | Solo un TSV limpio con columnas públicas (`data/catalogo-inicial.tsv`), generado por script | El TSV original trae la columna `stock`; subirlo a un repo público rompería la regla de stock |
 | Productos visibles hoy | 23 (no 26) | Ver sección 4 |
 | Envío | S/ 10 a la provincia de Lima (43 distritos) y al Callao (7 distritos); S/ 15 al resto del Perú; gratis desde S/ 120. Se puede cambiar después en `envio.json` | Confirmado por Fernando el 15-oct-2026; es la misma regla del sistema anterior |
@@ -227,7 +227,7 @@ Astro (output: static) + scripts de módulo <-----------------------------------
         +--> fotos: Cloudinary (URL con transformaciones)
         +--> pedido: localStorage + enlace wa.me
         +--> (Fase 9, opcional) Apps Script: fila en hoja de pedidos + correo
-GitHub Actions: pruebas en cada push (Fase 7) y, cada hora, baja el CSV y hace commit si cambió (Fase 8)
+GitHub Actions: pruebas en cada push (Fase 7) y, cada 2 horas de 8 a 22 h, baja el CSV y hace commit si cambió (Fase 8)
 Cloudflare Pages (Fase 7): compila con cada push a main y publica en elchiconaturista.com
 ```
 
@@ -533,7 +533,7 @@ Límite a tener en cuenta: el plan gratuito de compilaciones de Cloudflare tiene
 |---|---|---|
 | 8.1 | Publicar solo la pestaña "Web (publicada)" como CSV (Archivo, Compartir, Publicar en la web) | La URL devuelve solo esas columnas |
 | 8.2 | Guardar la URL como **secreto** del repositorio `CATALOGO_URL` en GitHub (secreto y no variable: GitHub lo oculta en los registros) | No aparece en el código ni en los registros |
-| 8.3 | Workflow `actualizar-catalogo.yml`: cada hora y con botón manual (`workflow_dispatch`), baja el CSV, lo valida con el mismo `sync`, y si es válido y distinto de `data/catalogo-inicial.tsv` hace commit `ECN-datos catálogo actualizado desde la hoja`. Permisos: solo `contents: write` | Un cambio en la hoja se ve en la web en menos de 2 horas |
+| 8.3 | Workflow `actualizar-catalogo.yml`: cada 2 horas de 8 a 22 h (Lima) y con botón manual (`workflow_dispatch`), baja el CSV, lo valida con el mismo `sync`, y si es válido y distinto de `data/catalogo-inicial.tsv` hace commit `ECN-datos catálogo actualizado desde la hoja`. Permisos: solo `contents: write` | Un cambio en la hoja se ve en la web en la siguiente revisión (menos de 2 h y media en horario de tienda) |
 | 8.4 | Si el CSV no cambió, no hay commit (no gasta compilaciones del hosting). Si no es válido, el workflow falla, no hay commit y queda publicada la versión anterior | El log lo indica en ambos casos |
 | 8.5 | `docs/guia-equipo.md`, segunda parte: cuánto tarda, cómo forzar la actualización, qué hacer si el workflow falla | Revisada por ti |
 

@@ -1,5 +1,5 @@
 # Actualización automática del catálogo desde la hoja (PLAN-v2.md, Fase 8).
-# Cada hora (y con el botón "Run workflow"): baja la pestaña "Web (publicada)" publicada como CSV,
+# Cada 2 horas en horario de tienda (y con el botón "Run workflow"): baja la pestaña "Web (publicada)" publicada como CSV,
 # la valida con el mismo sync que usa la web, compila y, solo si cambió, hace commit.
 # Ese commit hace que Cloudflare vuelva a publicar. Si la hoja tiene un error, el workflow
 # falla, no hay commit y la web sigue con la versión anterior.
@@ -7,7 +7,9 @@ name: Actualizar catálogo
 
 on:
   schedule:
-    - cron: '17 * * * *' # minuto 17 de cada hora (UTC)
+    # Cada 2 horas de 8 a. m. a 10 p. m. de Lima (UTC-5): 13, 15… 23 UTC y 1, 3 UTC.
+    # GitHub puede retrasar unos minutos o saltarse alguna; para algo urgente, "Run workflow".
+    - cron: '17 13-23/2,1,3 * * *'
   workflow_dispatch:
 
 # Única escritura: el commit de data/catalogo-inicial.tsv
@@ -24,8 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22.15.0
           cache: npm
