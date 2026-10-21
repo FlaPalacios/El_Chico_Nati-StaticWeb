@@ -141,6 +141,7 @@ export function procesarCatalogo(columnasCrudas, filasCrudas) {
     if (activo === true && !(precio > 0) && !Number.isNaN(precio)) aviso('está activo pero no tiene precio: no se publica.');
     if (!visible) return;
 
+    if (!f.nombre) error('nombre', 'está vacío.');
     if (precioAntes !== null && !Number.isNaN(precioAntes) && precioAntes <= precio) {
       aviso(`precio_antes (${precioAntes}) no es mayor que el precio (${precio}): se ignora.`);
       precioAntes = null;

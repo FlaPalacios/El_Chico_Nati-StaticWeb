@@ -70,6 +70,11 @@ test('error: precio no numérico, con código, columna y valor', () => {
   assert.match(procesar([base({ precio: 'cuarenta' })]).errores.join('\n'), /ECN-900 \(fila 2\), columna precio: «cuarenta» no es un número/);
 });
 
+test('error: producto visible sin nombre', () => {
+  assert.match(procesar([base({ nombre: '' })]).errores.join('\n'), /ECN-900 \(fila 2\), columna nombre: está vacío/);
+  assert.deepEqual(procesar([base(), otro({ nombre: '', activo: 'no' })]).errores, []);
+});
+
 test('error: activo con valor raro', () => {
   assert.match(procesar([base({ activo: 'quizás' })]).errores.join('\n'), /columna activo/);
 });
@@ -129,14 +134,19 @@ test('leerTabla distingue TSV de CSV', () => {
   assert.deepEqual(leerTabla('a,b\n1,2\n').filas, [{ a: '1', b: '2' }]);
 });
 
-test('el catálogo real da 23 productos, 3 categorías, 8 subcategorías y 6 marcas', async () => {
+// El catálogo real cambia desde la hoja (Fase 8): se revisan reglas, no cantidades fijas
+test('el catálogo real es válido y coherente', async () => {
   const { columnas, filas } = leerTabla(await readFile(new URL('../data/catalogo-inicial.tsv', import.meta.url), 'utf8'));
   const r = procesarCatalogo(columnas, filas);
   assert.deepEqual(r.errores, []);
-  assert.equal(r.productos.length, 23);
-  assert.equal(r.categorias.length, 3);
-  assert.equal(r.categorias.reduce((n, c) => n + c.subcategorias.length, 0), 8);
-  assert.equal(r.marcas.length, 6);
+  assert.ok(r.productos.length > 0, 'al menos un producto visible');
+  assert.ok(r.categorias.length > 0 && r.marcas.length > 0);
+  const subcategorias = new Set(r.categorias.flatMap((c) => c.subcategorias.map((s) => s.slug)));
+  for (const p of r.productos) {
+    assert.ok(p.nombre, `${p.codigo} sin nombre`);
+    assert.ok(subcategorias.has(p.subcategoriaSlug), `${p.codigo} en una subcategoría que no está en el árbol`);
+    assert.ok(r.marcas.some((m) => m.slug === p.marcaSlug), `${p.codigo} con una marca que no está en la lista`);
+  }
 });
 
 test('error: columna con nombre parecido a uno privado ("Stock actual", "Costo unitario")', () => {
